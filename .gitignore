@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+data
+!src/data
+.vscode
+globalConfig.json
+*.sqlite
+tsconfig-build.tsbuildinfo
+.env
+__triggers
+__scripts
+download
