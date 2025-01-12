@@ -145,6 +145,17 @@
             "description": "OK"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/v1/products/{id}": {

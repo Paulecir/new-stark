@@ -1,17 +1,18 @@
-import { JwtAdapter } from "@/infra/criptography/jwt-adapter"
-import bcrypt from "bcrypt"
 import { Router } from "express"
 
-import Prisma from "@/infra/db/prisma"
 import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
-import { signInController } from "@/presentations/controllers/auth/signIn.controller"
-import { signUpController } from "@/presentations/controllers/auth/signUp.controller"
+import { createProductController } from "@/presentations/controllers/products/create.controller"
 
 const router = Router()
 
 router.get("/",
   // #swagger.tags = ['Product']
   (req, res) => { res.json({}) }
+)
+
+router.post("/",
+  // #swagger.tags = ['Product']
+  expressRouteAdapter(createProductController)
 )
 
 router.get("/{id}",
