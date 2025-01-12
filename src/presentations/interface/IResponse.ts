@@ -5,5 +5,6 @@ export interface IResponse {
     data: any
     message: string
     metadata?: any
+    raw?: boolean
   }
   

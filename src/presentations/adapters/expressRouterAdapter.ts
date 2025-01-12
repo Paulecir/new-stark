@@ -1,5 +1,4 @@
 import { IRequest } from "../interface/IRequest"
-import bcrypt from "bcrypt"
 
 /* eslint-disable dot-notation */
 export const expressRouteAdapter = (controler: any) => {
@@ -12,9 +11,9 @@ export const expressRouteAdapter = (controler: any) => {
     delete req.query.page
     delete req.query.offset
     delete req.query.limit
-    
+
     delete req.body.pagination
-    
+
     const pagination = {
       page: 1,
       offset: 0,
@@ -55,18 +54,18 @@ export const expressRouteAdapter = (controler: any) => {
     try {
       const appResponse = await controler(appRequest)
 
-      if (req.query.__raw === "true") {
-        res.status(appResponse.statusCode).send(appResponse.body)
+      if (appResponse) {
+        res.status(appResponse.status_code).send(appResponse.data)
         return
       }
 
-      if (appResponse.body === null) {
+      if (appResponse.data === null) {
         res.status(appResponse.statusCode).send()
         return
       }
 
       if (appResponse.statusCode !== 200 && appResponse.statusCode !== 201) {
-        const { message, name, stack, error, ...data } = appResponse.body
+        const { message, name, stack, error, ...data } = appResponse.data
         res.status(appResponse.statusCode || 500).send({
           message,
           name,

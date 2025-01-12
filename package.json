@@ -30,7 +30,9 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.18.2",
     "swagger-ui-express": "^5.0.1",
-    "technicalindicators": "^3.1.0"
+    "technicalindicators": "^3.1.0",
+    "web3": "^4.16.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -56,6 +58,9 @@
     "tsconfig-paths": "4.2.0",
     "tscpaths": "0.0.9",
     "typescript": "^5.7.3"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "_moduleAliases": {
     "@": "dist"

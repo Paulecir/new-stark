@@ -1,77 +1,63 @@
-import { JwtAdapter } from "@/infra/criptography/jwt-adapter"
-import bcrypt from "bcrypt"
 import Prisma from "@/infra/db/prisma"
 import { HttpResponse } from "@/presentations/helpers/httpResponse"
 import { IRequest } from "@/presentations/interface/IRequest"
+import { UserService } from "@/services/user"
+import { registerUser } from "@/services/user/registerUser"
+import * as yup from 'yup'
 
-export const signUpController = async (httpRequest: IRequest) => {
+export const signUpController = async (requestData: IRequest) => {
+
+    // Esquema de validação com Yup
+    const schema = yup.object().shape({
+        name: yup.string().required('Name is required').min(8, 'Name must be at least 8 characters'),
+        login: yup.string()
+            .required('Login is required')
+            .matches(/^[a-zA-Z0-9]+$/, 'Login must contain only alphanumeric characters')
+            .test('unique', 'Login must be unique', async (value) => {
+                const userExists = await Prisma.user.findUnique({ where: { login: value } });
+                return !userExists;
+            }),
+        email: yup.string()
+            .required('Email is required')
+            .email('Invalid email format')
+            .test('unique', 'Email must be unique', async (value) => {
+                const emailExists = await Prisma.user.findUnique({ where: { email: value } });
+                return !emailExists;
+            }),
+        phone: yup.string()
+            .required('Phone is required')
+            .test('unique', 'Phone must be unique', async (value) => {
+                const phoneExists = await Prisma.user.findUnique({ where: { phone: value } });
+                return !phoneExists;
+            }),
+        country_name: yup.string().required('Country name is required'),
+        country_code: yup.string().required('Country code is required'),
+        sponsor_login: yup.string()
+            .required('Sponsor login is required')
+            .test('exists', 'Sponsor login does not exist', async (value) => {
+                const sponsorExists = await Prisma.user.findUnique({ where: { login: value } });
+                return !!sponsorExists;
+            }),
+        password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+    });
 
     try {
-        if (httpRequest.body.email) httpRequest.body.email = httpRequest.body.email.toLowerCase()
-        const { email, password, username, sponsor } = httpRequest.body
+        // Validar os dados da requisição
+        const validatedData = await schema.validate(requestData.body, { abortEarly: false });
 
+        // Criar o usuário no banco de dados
+        const user = await UserService.registerUser(validatedData)
 
-        let user = await Prisma.user.findFirst({
-            where: {
-                OR: [
-                    { email: httpRequest.body.email },
-                    { username: httpRequest.body.email }
-                ]
-            }
-        })
+        return HttpResponse.successResponse({
+            message: 'User registered successfully',
+            data: user,
+            status: 201
 
-        if (user) {
-            HttpResponse.notCreate({
-                code: 0x000001,
-                key: "USER_FOUNT",
-                message: "Este usuário já está cadastrado",
-                error: {
-                    email: "USER_FOUNT",
-                    reference: "USER_FOUNT"
-                }
-            })
-
-            return
+        });
+    } catch (err) {
+        if (err.name === 'ValidationError') {
+            return HttpResponse.serverError(err.errors,);
         }
-
-        let userFb = null
-        const passwordHash = await bcrypt.hash(password, 10)
-
-        let userSponsor = null
-        if (sponsor) {
-            userSponsor = await Prisma.user.findFirst({
-                where: {
-                    username: sponsor
-                }
-            })
-
-            if (!userSponsor) {
-                httpRequest.body.sponsor = null
-            }
-        } else {
-            userSponsor = await Prisma.user.findFirst({
-                where: {
-                    id: 1
-                }
-            })
-        }
-
-        user = await Prisma.user.create({
-            data: {
-                name: httpRequest.body.name,
-                username: httpRequest.body.username.toLowerCase(),
-                email: httpRequest.body.email.toLowerCase(),
-                sponsorId: userSponsor.id,
-                password: passwordHash,
-            }
-        })
-
-        return HttpResponse.ok({
-            message: "OK", data: {
-                user,
-            }
-        })
-    } catch (error) {
-        return HttpResponse.serverError(error)
+        return HttpResponse.serverError(err.message,);
     }
 }

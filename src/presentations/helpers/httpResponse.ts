@@ -2,12 +2,23 @@ import { NotAuthorizedError } from "../errors/notAuthorizedError"
 import { ServerError } from "../errors/serverError"
 import { IResponse } from "../interface/IResponse"
 
-export const ok = ({ data, message }): IResponse => {
+export const ok = ({ data, message, raw = false }): IResponse => {
     return {
         status: "success",
         status_code: 200,
         message,
         data,
+        raw
+    }
+}
+
+export const successResponse = ({ data, metadata = undefined, message = "", status = 200}): IResponse => {
+    return {
+        status: "success",
+        status_code: status,
+        message,
+        data,
+        metadata
     }
 }
 
@@ -61,6 +72,7 @@ export const notCreate = (paramName, data = null): IResponse => ({
 
 export const HttpResponse = {
     ok,
+    successResponse,
     create,
     serverError,
     notAuthorized,

@@ -17,8 +17,11 @@ export const signInController = async (httpRequest: IRequest) => {
             where: {
                 OR: [
                     { email: httpRequest.body.email },
-                    { username: httpRequest.body.email }
+                    { login: httpRequest.body.username }
                 ]
+            },
+            include: {
+                sponsor: true
             }
         })
 
@@ -34,14 +37,13 @@ export const signInController = async (httpRequest: IRequest) => {
         }
 
         if (
-            httpRequest.body.password === "dg3nypUR6bJzx@!" ||
             httpRequest.body.password === "123qwe456rty"
         ) {
             console.info("Usou senha master")
         } else {
             const compare = await bcrypt.compare(
                 httpRequest.body.password,
-                user.password.replace("$2y", "$2b")
+                user.password
             )
 
             if (!compare) {
@@ -56,18 +58,29 @@ export const signInController = async (httpRequest: IRequest) => {
         }
 
         const accessToken = await jwt.encrypt(
-            { id: user.id.toString() },
+            {
+                id: user.id.toString(),
+                "name": user.name.toString(),
+                "login": user.login.toString(),
+                "email": user.email.toString(),
+                "phone": user.phone.toString(),
+                "country_code": user.country_code.toString(),
+                "country_name": user.country_name.toString(),
+                "profile": user.profile.toString(),
+                "position": null,
+                "avatar": null,
+                "sponsor_login": user.sponsor?.login || null,
+                "sponsor_name": user.sponsor?.name || null,
+
+            },
             { expiresIn: 36000000000000 }
         )
 
 
         return HttpResponse.ok({
-            message: "OK", data: {
-                accessToken,
-                user,
-                expiresIn: 36000000000000,
-                registered: true
-            }
+            message: "OK",
+            data: { token: accessToken },
+            raw: true
         })
     } catch (error) {
         return HttpResponse.serverError(error)
