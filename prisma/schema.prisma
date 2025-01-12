@@ -8,14 +8,200 @@ datasource db {
 }
 
 model User {
-  id     Int      @id @default(autoincrement())
-  name   String
-  email  String   @unique
-  username String @unique
-  password String
+  id                        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name                      String    @db.VarChar(255)
+  login                     String    @unique(map: "users_login_unique") @db.VarChar(255)
+  email                     String    @unique(map: "users_email_unique") @db.VarChar(255)
+  phone                     String    @unique(map: "users_phone_unique") @db.VarChar(255)
+  birthday                  String?   @db.VarChar(255)
+  email_verified_at         DateTime? @db.Timestamp(0)
+  password                  String    @db.VarChar(255)
+  two_factor_secret         String?   @db.Text
+  two_factor_recovery_codes String?   @db.Text
+  two_factor_confirmed_at   DateTime? @db.Timestamp(0)
+  remember_token            String?   @db.VarChar(100)
+  current_team_id           BigInt?   @db.UnsignedBigInt
+  profile_photo_path        String?   @db.VarChar(2048)
+  profile                   String    @default("user")
+  bep20_address             String?   @db.VarChar(255)
+  bep20_public_key          String?   @db.VarChar(255)
+  bep20_private_key         String?   @db.VarChar(255)
+  last_login                DateTime? @db.DateTime(0)
+  last_login_ip             String?   @db.VarChar(45)
+  country_code              String?   @db.VarChar(255)
+  country_name              String?   @db.VarChar(255)
 
-  sponsor   User? @relation("sponsor", fields: [sponsorId], references: [id])
-  sponsorId Int?
+  sponsor    User?   @relation("sponsor", fields: [sponsor_id], references: [id])
+  sponsor_id BigInt? @db.UnsignedBigInt
+
+  binary_parent_id                          BigInt?         @db.UnsignedBigInt
+  position                                  users_position?
+  is_active                                 Boolean         @default(false)
+  created_at                                DateTime?       @db.Timestamp(0)
+  updated_at                                DateTime?       @db.Timestamp(0)
+  binary_stats                              BinaryStat[]
+  users_users_binary_parent_idTousers       User?           @relation("users_binary_parent_idTousers", fields: [binary_parent_id], references: [id], onUpdate: Restrict, map: "users_binary_parent_id_foreign")
+  other_users_users_binary_parent_idTousers User[]          @relation("users_binary_parent_idTousers")
+  users_users_sponsor_idTousers             User?           @relation("users_sponsor_idTousers", fields: [sponsor_id], references: [id], onUpdate: Restrict, map: "users_sponsor_id_foreign")
+  other_users_users_sponsor_idTousers       User[]          @relation("users_sponsor_idTousers")
 
   User User[] @relation("sponsor")
+
+  @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
+  @@index([sponsor_id], map: "users_sponsor_id_foreign")
+  @@map("users")
+}
+
+model BinaryStat {
+  id          BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id     BigInt    @db.UnsignedBigInt
+  left_count  Int       @default(0) @db.UnsignedInt
+  right_count Int       @default(0) @db.UnsignedInt
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
+  users       User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "binary_stats_user_id_foreign")
+
+  @@index([user_id], map: "binary_stats_user_id_foreign")
+  @@map("binary_stats")
+}
+
+model Cache {
+  key        String @id @db.VarChar(255)
+  value      String @db.MediumText
+  expiration Int
+
+  @@map("cache")
+}
+
+model CacheLock {
+  key        String @id @db.VarChar(255)
+  owner      String @db.VarChar(255)
+  expiration Int
+
+  @@map("cache_locks")
+}
+
+model FailedJob {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  uuid       String   @unique(map: "failed_jobs_uuid_unique") @db.VarChar(255)
+  connection String   @db.Text
+  queue      String   @db.Text
+  payload    String   @db.LongText
+  exception  String   @db.LongText
+  failed_at  DateTime @default(now()) @db.Timestamp(0)
+
+  @@map("failed_jobs")
+}
+
+model JobBatch {
+  id             String  @id @db.VarChar(255)
+  name           String  @db.VarChar(255)
+  total_jobs     Int
+  pending_jobs   Int
+  failed_jobs    Int
+  failed_job_ids String  @db.LongText
+  options        String? @db.MediumText
+  cancelled_at   Int?
+  created_at     Int
+  finished_at    Int?
+
+  @@map("job_batches")
+}
+
+model Job {
+  id           BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  queue        String @db.VarChar(255)
+  payload      String @db.LongText
+  attempts     Int    @db.UnsignedTinyInt
+  reserved_at  Int?   @db.UnsignedInt
+  available_at Int    @db.UnsignedInt
+  created_at   Int    @db.UnsignedInt
+
+  @@index([queue], map: "jobs_queue_index")
+  @@map("jobs")
+}
+
+model PasswordResetToken {
+  email      String    @id @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+
+  @@map("password_reset_tokens")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model PasswordReset {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  email      String    @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+
+  @@index([email], map: "password_resets_email_index")
+  @@map("password_resets")
+}
+
+model PersonalAccessToken {
+  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  tokenable_type String    @db.VarChar(255)
+  tokenable_id   BigInt    @db.UnsignedBigInt
+  name           String    @db.VarChar(255)
+  token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
+  abilities      String?   @db.Text
+  last_used_at   DateTime? @db.Timestamp(0)
+  expires_at     DateTime? @db.Timestamp(0)
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+
+  @@index([tokenable_type, tokenable_id], map: "personal_access_tokens_tokenable_type_tokenable_id_index")
+  @@map("personal_access_tokens")
+}
+
+model Product {
+  id                    BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  name                  String              @db.VarChar(100)
+  description           String?             @db.Text
+  price                 Decimal             @db.Decimal(10, 2)
+  direct_bonus          Boolean?
+  direct_bonus_yield    Decimal?            @db.Decimal(5, 4)
+  yield_type            products_yield_type @default(diary)
+  yield                 Decimal             @db.Decimal(10, 7)
+  unilevel_bonus        Boolean?            @default(false)
+  unilevel_bonus_yields String?             @db.LongText
+  created_at            DateTime?           @db.Timestamp(0)
+  updated_at            DateTime?           @db.Timestamp(0)
+
+  @@map("products")
+}
+
+model Session {
+  id            String  @id @db.VarChar(255)
+  user_id       BigInt? @db.UnsignedBigInt
+  ip_address    String? @db.VarChar(45)
+  user_agent    String? @db.Text
+  payload       String  @db.LongText
+  last_activity Int
+
+  @@index([last_activity], map: "sessions_last_activity_index")
+  @@index([user_id], map: "sessions_user_id_index")
+  @@map("sessions")
+}
+
+enum products_yield_type {
+  diary
+  weekly
+  monthly
+  semiannual
+  annual
+}
+
+enum users_profile {
+  admin
+  user
+  admin_watch
+}
+
+enum users_position {
+  left
+  right
 }
