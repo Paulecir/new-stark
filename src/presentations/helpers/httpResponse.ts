@@ -12,6 +12,17 @@ export const ok = ({ data, message, raw = false }): IResponse => {
     }
 }
 
+export const successRawResponse = ({ data, metadata = undefined, message = "", status = 200}): IResponse => {
+    return {
+        status: "success",
+        status_code: status,
+        message,
+        data,
+        metadata,
+        raw: true
+    }
+}
+
 export const successResponse = ({ data, metadata = undefined, message = "", status = 200}): IResponse => {
     return {
         status: "success",
@@ -19,6 +30,15 @@ export const successResponse = ({ data, metadata = undefined, message = "", stat
         message,
         data,
         metadata
+    }
+}
+
+export const errorResponse = ({ data = null, message = "", status = 400}): IResponse => {
+    return {
+        status: "success",
+        status_code: status,
+        message,
+        data,
     }
 }
 
@@ -73,10 +93,12 @@ export const notCreate = (paramName, data = null): IResponse => ({
 export const HttpResponse = {
     ok,
     successResponse,
+    successRawResponse,
     create,
     serverError,
     notAuthorized,
-    notCreate
+    notCreate,
+    errorResponse
     // serverError,
     // notPermited,
     // notFound,

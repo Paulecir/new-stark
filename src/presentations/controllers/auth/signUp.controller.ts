@@ -56,8 +56,8 @@ export const signUpController = async (requestData: IRequest) => {
         });
     } catch (err) {
         if (err.name === 'ValidationError') {
-            return HttpResponse.serverError(err.errors,);
+            return HttpResponse.errorResponse({ message: err.message });
         }
-        return HttpResponse.serverError(err.message,);
+        return HttpResponse.errorResponse({ message: err.message });
     }
 }

@@ -77,10 +77,10 @@ export const signInController = async (httpRequest: IRequest) => {
         )
 
 
-        return HttpResponse.ok({
+        return HttpResponse.successRawResponse({
             message: "OK",
             data: { token: accessToken },
-            raw: true
+
         })
     } catch (error) {
         return HttpResponse.serverError(error)

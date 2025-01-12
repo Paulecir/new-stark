@@ -53,30 +53,10 @@ export const expressRouteAdapter = (controler: any) => {
     }
     try {
       const appResponse = await controler(appRequest)
-
-      if (appResponse) {
-        res.status(appResponse.status_code).send(appResponse.data)
-        return
+      if (appResponse.raw) {
+        return res.status(appResponse.status_code).send(appResponse.data)
       }
-
-      if (appResponse.data === null) {
-        res.status(appResponse.statusCode).send()
-        return
-      }
-
-      if (appResponse.statusCode !== 200 && appResponse.statusCode !== 201) {
-        const { message, name, stack, error, ...data } = appResponse.data
-        res.status(appResponse.statusCode || 500).send({
-          message,
-          name,
-          stack,
-          ...{ ...data, error: error || undefined }
-        })
-        return
-      }
-      res
-        .status(appResponse.statusCode)
-        .send({ data: appResponse.body, metadata: appResponse.metadata })
+      res.status(appResponse.status_code).send(appResponse)
     } catch (err) {
       const { message, name, stack, ...data } = err
       res.status(err.statusCode || 500).send({
