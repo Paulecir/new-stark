@@ -7,6 +7,7 @@
     "sourceMap": true,
     "rootDir": "src",
     "baseUrl": "src",
+    "resolveJsonModule": true,
     "paths": {
       "@/*": ["./*"]
     },
@@ -14,8 +15,11 @@
     "experimentalDecorators": true,
     "declaration": true,
     "removeComments": true,
-    "incremental": true
+    "incremental": true,
+    "types": ["reflect-metadata", "swagger-express-ts"],
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*"
+  ],
   "exclude": ["node_modules", "dist"]
 }
