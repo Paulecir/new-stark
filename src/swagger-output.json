@@ -14,7 +14,7 @@
     "/v1/auth/signin": {
       "post": {
         "tags": [
-          "Auth"
+          "User"
         ],
         "summary": "Realiza o login do usuário",
         "description": "Endpoint para autenticar o usuário e retornar um token JWT.",
@@ -22,7 +22,7 @@
           {
             "name": "body",
             "in": "body",
-            "description": "Add new user.",
+            "description": "Login de usuário.",
             "schema": {
               "type": "object",
               "properties": {
@@ -85,13 +85,143 @@
     "/v1/auth/signup": {
       "post": {
         "tags": [
-          "Auth"
+          "User"
         ],
-        "summary": "Cadastro do usuário",
-        "description": "Cadastro",
+        "summary": "Realiza o cadastro do usuário",
+        "description": "Endpoint para cadastrar o usuário.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Add new user.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login": {
+                  "type": "string",
+                  "example": "johndoe"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "sponsor_login": {
+                  "type": "string",
+                  "example": "master"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "johndoe@gmail.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "+5599999999999"
+                },
+                "country_code": {
+                  "type": "string",
+                  "example": "55"
+                },
+                "country_name": {
+                  "type": "string",
+                  "example": "Brasil"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "123456789"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "Get a specific user.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "success"
+                },
+                "status_code": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Usuário registrado com sucesso"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 2
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "login": {
+                      "type": "string",
+                      "example": "johndoe"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "johndoe@gmail.com"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "+5599999999999"
+                    },
+                    "profile": {
+                      "type": "string",
+                      "example": "user"
+                    },
+                    "country_code": {
+                      "type": "string",
+                      "example": "55"
+                    },
+                    "country_name": {
+                      "type": "string",
+                      "example": "Brasil"
+                    },
+                    "sponsor_id": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "USER_NOT_FOUND"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": "USER_NOT_FOUND"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

@@ -8,50 +8,105 @@ const router = Router()
 
 router.post("/signin",
   expressRouteAdapter(loginController)
-  // #swagger.tags = ['Auth']
-  // #swagger.summary = 'Realiza o login do usuário'
-  // #swagger.description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
-  /*  #swagger.parameters['body'] = {
-          in: 'body',
-          description: 'Add new user.',
-          schema: {
-              username: 'johndoe',
-              password: '123456'
-          }
-  } */
-  /* #swagger.responses[200] = {
-             description: 'Get a specific user.',
-             schema: {
-                 token: '****',
-             }
-     } */
-  /* #swagger.responses[401] = {
-          description: 'Credenciais inválidas',
-          content: {
-              "application/json": {
-                  schema: {
-                      type: "object",
-                      properties: {
-                          message: { type: "string", example: "USER_NOT_FOUND" },
-                          error: {
-                              type: "object",
-                              properties: {
-                                  email: { type: "string", example: "USER_NOT_FOUND" }
-                              }
-                          }
-                      }
-                  }
-              }
-          }
-      }
+  /* 
+    #swagger.tags = ['User']
+    #swagger.summary = 'Realiza o login do usuário'
+    #swagger.description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
+    #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Login de usuário.',
+        schema: {
+            username: 'johndoe',
+            password: '123456'
+        }
+    }
+    #swagger.responses[200] = {
+        description: 'Get a specific user.',
+        schema: {
+            token: '****',
+        }
+    } 
+    #swagger.responses[401] = {
+        description: 'Credenciais inválidas',
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        message: { type: "string", example: "USER_NOT_FOUND" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                email: { type: "string", example: "USER_NOT_FOUND" }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
   */
 )
 
 router.post("/signup",
-  // #swagger.summary = 'Cadastro do usuário'
-  // #swagger.description = 'Cadastro'
-  // #swagger.tags = ['Auth']
   expressRouteAdapter(registerController)
+  /* 
+    #swagger.tags = ['User']
+    #swagger.summary = 'Realiza o cadastro do usuário'
+    #swagger.description = 'Endpoint para cadastrar o usuário.'
+    #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Add new user.',
+        schema: {
+          "login": "johndoe",
+          "name": "John Doe",
+          "sponsor_login": "master",
+          "email": "johndoe@gmail.com",
+          "phone": "+5599999999999",
+          "country_code": "55",
+          "country_name": "Brasil",
+          "password": "123456789"
+        }
+    }
+    #swagger.responses[200] = {
+        description: 'Get a specific user.',
+        schema: {
+            "status": "success",
+            "status_code": 201,
+            "message": "Usuário registrado com sucesso",
+            "data": {
+                "id": 2,
+                "name": "John Doe",
+                "login": "johndoe",
+                "email": "johndoe@gmail.com",
+                "phone": "+5599999999999",
+                "profile": "user",
+                "country_code": "55",
+                "country_name": "Brasil",
+                "sponsor_id": 1,
+            }
+        }
+    } 
+    #swagger.responses[401] = {
+        description: 'Credenciais inválidas',
+        content: {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        message: { type: "string", example: "USER_NOT_FOUND" },
+                        error: {
+                            type: "object",
+                            properties: {
+                                email: { type: "string", example: "USER_NOT_FOUND" }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+  */
 )
 
 router.post("/logout",
