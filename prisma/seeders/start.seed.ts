@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 async function startSeed() {
 
-    await Prisma.user.create({
+    const user = await Prisma.user.create({
         data: {
             "name": "Luis Priscillo",
             "login": "luispriscillo",
@@ -18,13 +18,21 @@ async function startSeed() {
             "bep20_address": null,
             "bep20_public_key": null,
             "bep20_private_key": null,
-            "last_login": new Date(), 
+            "last_login": new Date(),
             "last_login_ip": '127.0.0.1',
             "country_name": "Brasil",
             "country_code": "BR",
             "sponsor_id": null,
             "binary_parent_id": null,
             "position": null,
+        }
+    })
+
+    await Prisma.strategyBinary.create({
+        data: {
+            user_id: user.id,
+            ref: 'F',
+            hier: `F`
         }
     })
 

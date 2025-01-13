@@ -7,6 +7,7 @@
     "dev": "ts-node-dev --respawn -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts src/server.ts"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.3.0",
     "@prisma/client": "^6.2.1",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
@@ -60,7 +61,7 @@
     "typescript": "^5.7.3"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/seed.ts"
   },
   "_moduleAliases": {
     "@": "dist"
