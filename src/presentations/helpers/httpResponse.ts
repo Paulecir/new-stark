@@ -33,12 +33,32 @@ export const successResponse = ({ data, metadata = undefined, message = "", stat
     }
 }
 
-export const errorResponse = ({ data = null, message = "", status = 400}): IResponse => {
+export const errorResponse = ({ errors = null, message = "", status = 400}): IResponse => {
     return {
-        status: "success",
+        status: "error",
         status_code: status,
         message,
-        data,
+        errors,
+    }
+}
+
+export const validationError = (errors): IResponse => {
+
+    let vali = {}
+
+    for (const error of errors) {
+        if (!vali[error.path]) {
+            vali[error.path] = []
+        }
+
+        vali[error.path].push(...error.errors)
+    }
+
+    return {
+        status: "success",
+        status_code: 422,
+        message: "",
+        errors: vali,
     }
 }
 
@@ -98,7 +118,8 @@ export const HttpResponse = {
     serverError,
     notAuthorized,
     notCreate,
-    errorResponse
+    errorResponse,
+    validationError
     // serverError,
     // notPermited,
     // notFound,

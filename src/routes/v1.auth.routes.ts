@@ -1,11 +1,8 @@
-import { JwtAdapter } from "@/infra/criptography/jwt-adapter"
-import bcrypt from "bcrypt"
 import { Router } from "express"
 
-import Prisma from "@/infra/db/prisma"
 import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
-import { signInController } from "@/presentations/controllers/auth/signIn.controller"
-import { signUpController } from "@/presentations/controllers/auth/signUp.controller"
+import { loginController } from "@/presentations/controllers/auth/login.controller"
+import { registerController } from "@/presentations/controllers/users/register.controller"
 
 const router = Router()
 
@@ -13,14 +10,14 @@ router.post("/signin",
   // #swagger.summary = 'Autenticação do usuário'
   // #swagger.description = 'Autenticação do usuário'
   // #swagger.tags = ['Auth']
-  expressRouteAdapter(signInController)
+  expressRouteAdapter(loginController)
 )
 
 router.post("/signup",
   // #swagger.summary = 'Cadastro do usuário'
   // #swagger.description = 'Cadastro'
   // #swagger.tags = ['Auth']
-  expressRouteAdapter(signUpController)
+  expressRouteAdapter(registerController)
 )
 
 router.post("/logout",

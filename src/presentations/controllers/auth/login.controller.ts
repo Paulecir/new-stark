@@ -4,7 +4,7 @@ import Prisma from "@/infra/db/prisma"
 import { HttpResponse } from "@/presentations/helpers/httpResponse"
 import { IRequest } from "@/presentations/interface/IRequest"
 
-export const signInController = async (httpRequest: IRequest) => {
+export const loginController = async (httpRequest: IRequest) => {
 
     try {
         const jwt = new JwtAdapter(process.env.JWT_SECRET)
@@ -20,8 +20,17 @@ export const signInController = async (httpRequest: IRequest) => {
                     { login: httpRequest.body.username }
                 ]
             },
-            include: {
-                sponsor: true
+            select: {
+                id: true,
+                login: true,
+                password: true,
+                sponsor: true,
+                name: true,
+                email: true,
+                country_code: true,
+                country_name: true,
+                phone: true,
+                profile: true
             }
         })
 

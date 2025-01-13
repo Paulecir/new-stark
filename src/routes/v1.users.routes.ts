@@ -1,11 +1,8 @@
-import { JwtAdapter } from "@/infra/criptography/jwt-adapter"
-import bcrypt from "bcrypt"
+import { authMiddleware } from "@/middlewares/authMiddleware"
+import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
+import { getUserController } from "@/presentations/controllers/users/get.controller"
 import { Router } from "express"
 
-import Prisma from "@/infra/db/prisma"
-import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
-import { signInController } from "@/presentations/controllers/auth/signIn.controller"
-import { signUpController } from "@/presentations/controllers/auth/signUp.controller"
 
 const router = Router()
 
@@ -14,12 +11,12 @@ router.get("/",
   (req, res) => { res.json({}) }
 )
 
-router.get("/{id}",
+router.get("/:id",
   // #swagger.tags = ['User']
-  (req, res) => { res.json({}) }
+  expressRouteAdapter(getUserController)
 )
 
-router.put("/{id}",
+router.put("/:id",
   // #swagger.tags = ['User']
   (req, res) => { res.json({}) }
 )
