@@ -16,11 +16,68 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Autenticação do usuário",
-        "description": "Autenticação do usuário",
+        "summary": "Realiza o login do usuário",
+        "description": "Endpoint para autenticar o usuário e retornar um token JWT.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Add new user.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "johndoe"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "Get a specific user.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "example": "****"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "USER_NOT_FOUND"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": "USER_NOT_FOUND"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

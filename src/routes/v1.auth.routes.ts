@@ -7,10 +7,44 @@ import { registerController } from "@/presentations/controllers/users/register.c
 const router = Router()
 
 router.post("/signin",
-  // #swagger.summary = 'Autenticação do usuário'
-  // #swagger.description = 'Autenticação do usuário'
-  // #swagger.tags = ['Auth']
   expressRouteAdapter(loginController)
+  // #swagger.tags = ['Auth']
+  // #swagger.summary = 'Realiza o login do usuário'
+  // #swagger.description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
+  /*  #swagger.parameters['body'] = {
+          in: 'body',
+          description: 'Add new user.',
+          schema: {
+              username: 'johndoe',
+              password: '123456'
+          }
+  } */
+  /* #swagger.responses[200] = {
+             description: 'Get a specific user.',
+             schema: {
+                 token: '****',
+             }
+     } */
+  /* #swagger.responses[401] = {
+          description: 'Credenciais inválidas',
+          content: {
+              "application/json": {
+                  schema: {
+                      type: "object",
+                      properties: {
+                          message: { type: "string", example: "USER_NOT_FOUND" },
+                          error: {
+                              type: "object",
+                              properties: {
+                                  email: { type: "string", example: "USER_NOT_FOUND" }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  */
 )
 
 router.post("/signup",

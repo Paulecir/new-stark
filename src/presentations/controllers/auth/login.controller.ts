@@ -4,6 +4,7 @@ import Prisma from "@/infra/db/prisma"
 import { HttpResponse } from "@/presentations/helpers/httpResponse"
 import { IRequest } from "@/presentations/interface/IRequest"
 
+
 export const loginController = async (httpRequest: IRequest) => {
 
     try {

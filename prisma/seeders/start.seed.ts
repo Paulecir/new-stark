@@ -11,7 +11,7 @@ async function startSeed() {
             "email": "priscilloluis@gmail.com",
             "phone": "+5544991854666",
             "birthday": "1985-07-12",
-            "password": await bcrypt.hash("123456789", 10),
+            "password": await bcrypt.hash("123456789", 12),
             "profile_photo_path": null,
             "profile": 'admin',
             "is_active": true,
