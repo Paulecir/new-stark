@@ -332,7 +332,9 @@
             "description": ""
           }
         }
-      },
+      }
+    },
+    "/v1/products/create": {
       "post": {
         "tags": [
           "Product"
@@ -378,6 +380,19 @@
             "type": "string"
           }
         ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/orders/buy": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "description": "",
         "responses": {
           "default": {
             "description": ""
