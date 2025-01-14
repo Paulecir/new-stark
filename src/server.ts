@@ -1,6 +1,5 @@
 import dotenv from "dotenv"
 import moment from "moment-timezone";
-import swaggerAutogen from 'swagger-autogen';
 
 dotenv.config()
 
@@ -17,6 +16,10 @@ const outputFile = './src/swagger-output.json';
 const endpointsFiles = ['./src/routes/index.ts'];
 
 moment.tz.setDefault("America/Sao_Paulo")
+
+process.on('uncaughtException', err => {
+  console.log(err);
+});
 
 ;(async () => {
   // await swaggerAutogen()(outputFile, endpointsFiles)
