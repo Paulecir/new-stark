@@ -15,23 +15,18 @@ router.get("/",
   expressRouteAdapter(filterProductController)
 )
 
-router.post("/",
-  // #swagger.tags = ['Product']
-  expressRouteAdapter(createProductController)
-)
-
 router.post("/create",
   // #swagger.tags = ['Product']
   expressRouteAdapter(createProductController)
 )
 
-router.get("/{id}",
+router.get("/:id",
   // #swagger.tags = ['Product']
   authMiddleware,
   expressRouteAdapter(getProductController)
 )
 
-router.put("/{id}",
+router.put("/:id",
   // #swagger.tags = ['Product']
   authMiddleware,
   expressRouteAdapter(updateProductController)
