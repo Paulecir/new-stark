@@ -20,6 +20,11 @@ router.post("/",
   expressRouteAdapter(createProductController)
 )
 
+router.post("/create",
+  // #swagger.tags = ['Product']
+  expressRouteAdapter(createProductController)
+)
+
 router.get("/{id}",
   // #swagger.tags = ['Product']
   authMiddleware,

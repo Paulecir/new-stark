@@ -47,12 +47,11 @@ model User {
   User           User[]           @relation("sponsor")
   StrategyBinary StrategyBinary[] @relation("user")
   UserSession    UserSession[]    @relation("user")
-  Order          Order[]
-  Order          Order[]          @relation("user")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
   @@map("users")
+  Order Order[] @relation("user")
 }
 
 model PasswordResetToken {
@@ -106,6 +105,7 @@ model Product {
   updated_at            DateTime?           @db.Timestamp(0)
 
   @@map("products")
+  OrderItem OrderItem[] @relation("product")
 }
 
 model UserSession {
@@ -178,6 +178,7 @@ model Order {
   updatedAt DateTime? @updatedAt
 
   @@map("order")
+  OrderItem OrderItem[] @relation("order")
 }
 
 model OrderItem {
