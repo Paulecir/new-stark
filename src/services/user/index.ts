@@ -1,3 +1,4 @@
+import { filterUser } from "./filterUser";
 import { getUserById } from "./getUserById";
 import { registerUser } from "./registerUser";
 import { updateUser } from "./updateUser";
@@ -5,5 +6,6 @@ import { updateUser } from "./updateUser";
 export const UserService = {
     getUserById,
     registerUser,
-    updateUser
+    updateUser,
+    filterUser
 }

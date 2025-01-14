@@ -45,11 +45,12 @@ model User {
   other_users_users_sponsor_idTousers       User[]          @relation("users_sponsor_idTousers")
 
   User           User[]           @relation("sponsor")
+  StrategyBinary StrategyBinary[] @relation("user")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
   @@map("users")
-  StrategyBinary StrategyBinary[] @relation("user")
+  UserSession UserSession[] @relation("user")
 }
 
 model PasswordResetToken {
@@ -105,9 +106,24 @@ model Product {
   @@map("products")
 }
 
+model UserSession {
+  id           BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  access_token String  @db.LongText
+  ip_address   String? @db.VarChar(45)
+
+  user    User?   @relation("user", fields: [user_id], references: [id])
+  user_id BigInt? @db.UnsignedBigInt
+
+  status user_session @default(active)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
 model Session {
-  id            String  @id @db.VarChar(255)
-  user_id       BigInt? @db.UnsignedBigInt
+  id      String  @id @db.VarChar(255)
+  user_id BigInt? @db.UnsignedBigInt
+
   ip_address    String? @db.VarChar(45)
   user_agent    String? @db.Text
   payload       String  @db.LongText
@@ -137,33 +153,38 @@ enum users_position {
   right
 }
 
+enum user_session {
+  active
+  inactive
+}
+
 model StrategyBinary {
   id      BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
   user    User?   @relation("user", fields: [user_id], references: [id])
   user_id BigInt? @db.UnsignedBigInt
 
-  ref String @default("")
-  hier String @default("") @db.LongText()
-  level Int @default(0)
+  ref           String @default("")
+  hier          String @db.LongText()
+  level         Int    @default(0)
   autoDirection String @default("L")
-  
-  parent StrategyBinary? @relation("parent", fields: [parent_id], references: [id])
-  parent_id BigInt? @db.UnsignedBigInt
 
-  left StrategyBinary? @relation("left", fields: [left_id], references: [id])
-  left_id BigInt? @db.UnsignedBigInt
-  left_count BigInt @default(0)
+  parent    StrategyBinary? @relation("parent", fields: [parent_id], references: [id])
+  parent_id BigInt?         @db.UnsignedBigInt
 
-  right StrategyBinary? @relation("right", fields: [right_id], references: [id])
-  right_id BigInt? @db.UnsignedBigInt
-  right_count BigInt @default(0)
+  left       StrategyBinary? @relation("left", fields: [left_id], references: [id])
+  left_id    BigInt?         @db.UnsignedBigInt
+  left_count BigInt          @default(0)
 
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime?              @updatedAt
+  right       StrategyBinary? @relation("right", fields: [right_id], references: [id])
+  right_id    BigInt?         @db.UnsignedBigInt
+  right_count BigInt          @default(0)
 
-  @@map("strategy_binary")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
   ParentStrategyBinary StrategyBinary[] @relation("parent")
-  LeftStrategyBinary StrategyBinary[] @relation("left")
-  RightStrategyBinary StrategyBinary[] @relation("right")
+  LeftStrategyBinary   StrategyBinary[] @relation("left")
+  RightStrategyBinary  StrategyBinary[] @relation("right")
+
+  @@map("strategy_binary")
 }

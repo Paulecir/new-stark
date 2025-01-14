@@ -1,4 +1,7 @@
-import { makeAuthMiddleware } from "@/factories/middlewares/authMiddlewareFactory"
-import { expressMiddlewareAdapter } from "@/presentation/adapters/expressMiddlewareAdapter"
+// import { makeAuthMiddleware } from "@/factories/middlewares/authMiddlewareFactory"
+// import { expressMiddlewareAdapter } from "@/presentation/adapters/expressMiddlewareAdapter"
 
-export const authMiddleware = expressMiddlewareAdapter(makeAuthMiddleware())
+import { expressMiddlewareAdapter } from "@/presentations/adapters/expressMiddlewareAdapter";
+import { makeAuthMiddleware } from "@/presentations/middleware/authMiddleware";
+
+export const authMiddleware = expressMiddlewareAdapter(makeAuthMiddleware)

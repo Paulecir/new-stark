@@ -2,11 +2,13 @@ import { Router } from "express"
 
 import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
 import { createProductController } from "@/presentations/controllers/products/create.controller"
+import { authMiddleware } from "@/middlewares/authMiddleware"
 
 const router = Router()
 
 router.get("/",
   // #swagger.tags = ['Product']
+  authMiddleware,
   (req, res) => { res.json({}) }
 )
 

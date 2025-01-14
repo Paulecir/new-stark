@@ -9,6 +9,7 @@ export interface IRequest {
     pagination?: {
       page: number;
       limit: number;
+      pageSize: number;
       offset?: number;
     };
     user?: any;

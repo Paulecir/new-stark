@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 
-export class JwtAdapter {
+class JwtAdapter {
   constructor(private readonly secret: string) {}
 
   async encrypt(data: any, options: any = {}): Promise<string> {
@@ -13,3 +13,6 @@ export class JwtAdapter {
     return plaintext
   }
 }
+
+
+export default new JwtAdapter(process.env.JWT_SECRET || "123456")

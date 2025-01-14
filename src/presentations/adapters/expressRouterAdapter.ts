@@ -5,7 +5,7 @@ export const expressRouteAdapter = (controler: any) => {
   return async (req, res) => {
     const page = req.query.page || req.body?.pagination?.page
     const offset = req.query.offset || req.body?.pagination?.offset
-    const limit = req.query.limit || req.body?.pagination?.limit
+    const limit = req.query.pageSize || req.query.limit || req.body?.pagination?.limit
     const __ref = req.query.__ref || req.body?.pagination?.__ref
 
     delete req.query.page
@@ -17,11 +17,13 @@ export const expressRouteAdapter = (controler: any) => {
     const pagination = {
       page: 1,
       offset: 0,
-      limit: 20
+      limit: 20,
+      pageSize: 20
     }
 
     if (limit) {
       pagination.limit = Number.parseInt(limit as string)
+      pagination.pageSize = Number.parseInt(limit as string)
     }
 
     if (offset) {

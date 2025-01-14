@@ -1,14 +1,12 @@
-import { JwtAdapter } from "@/infra/criptography/jwt-adapter"
+import JwtAdapter from "@/infra/criptography/jwt-adapter"
 import bcrypt from "bcrypt"
 import Prisma from "@/infra/db/prisma"
 import { HttpResponse } from "@/presentations/helpers/httpResponse"
 import { IRequest } from "@/presentations/interface/IRequest"
 
-
 export const loginController = async (httpRequest: IRequest) => {
 
     try {
-        const jwt = new JwtAdapter(process.env.JWT_SECRET)
 
         if (httpRequest.body.email) httpRequest.body.email = httpRequest.body.email.toLowerCase()
 
@@ -67,7 +65,7 @@ export const loginController = async (httpRequest: IRequest) => {
             }
         }
 
-        const accessToken = await jwt.encrypt(
+        const accessToken = await JwtAdapter.encrypt(
             {
                 id: user.id.toString(),
                 "name": user.name.toString(),

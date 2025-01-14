@@ -46,13 +46,13 @@ export const validationError = (errors): IResponse => {
 
     let vali = {}
 
-    for (const error of errors) {
-        if (!vali[error.path]) {
-            vali[error.path] = []
-        }
+    // for (const error of errors) {
+    //     if (!vali[error.path]) {
+    //         vali[error.path] = []
+    //     }
 
-        vali[error.path].push(...error.errors)
-    }
+    //     vali[error.path].push(...error.errors)
+    // }
 
     return {
         status: "success",
