@@ -32,8 +32,8 @@ export const makeAuthMiddleware = async (httpRequest: IRequest): Promise<IRespon
 
     return HttpResponse.successRawResponse({
         data: {
-            session,
-            user
+            session: session.session,
+            user: session.user
         }
     })
 }

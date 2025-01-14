@@ -8,18 +8,19 @@ export const updateUser = async (id: number, data: any) => {
             }
         })
     
-    
         const user = await Prisma.user.update({
             where: {
                 id
             },
             data
-        });
+        })
     
         return user;
     } catch (err) {
-        console.log("E", err)
-        return null
+        if (err.name === 'PrismaClientValidationError') {
+            const msg = err.message.split("Unknown argument")[1].split(". Available")[0]
+            throw new Error(`Unknow field ${msg}`)
+        }
     }
    
 }

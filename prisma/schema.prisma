@@ -34,41 +34,82 @@ model User {
   sponsor    User?   @relation("sponsor", fields: [sponsor_id], references: [id])
   sponsor_id BigInt? @db.UnsignedBigInt
 
-  binary_parent_id                          BigInt?         @db.UnsignedBigInt
-  position                                  users_position?
-  is_active                                 Boolean         @default(false)
-  created_at                                DateTime?       @db.Timestamp(0)
-  updated_at                                DateTime?       @db.Timestamp(0)
-  users_users_binary_parent_idTousers       User?           @relation("users_binary_parent_idTousers", fields: [binary_parent_id], references: [id], onUpdate: Restrict, map: "users_binary_parent_id_foreign")
-  other_users_users_binary_parent_idTousers User[]          @relation("users_binary_parent_idTousers")
-  users_users_sponsor_idTousers             User?           @relation("users_sponsor_idTousers", fields: [sponsor_id], references: [id], onUpdate: Restrict, map: "users_sponsor_id_foreign")
-  other_users_users_sponsor_idTousers       User[]          @relation("users_sponsor_idTousers")
+  binary_parent_id BigInt?         @db.UnsignedBigInt
+  position         users_position?
+  is_active        Boolean         @default(false)
 
-  User           User[]           @relation("sponsor")
-  StrategyBinary StrategyBinary[] @relation("user")
-  UserSession    UserSession[]    @relation("user")
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  users_users_binary_parent_idTousers       User?  @relation("users_binary_parent_idTousers", fields: [binary_parent_id], references: [id], onUpdate: Restrict, map: "users_binary_parent_id_foreign")
+  other_users_users_binary_parent_idTousers User[] @relation("users_binary_parent_idTousers")
+  users_users_sponsor_idTousers             User?  @relation("users_sponsor_idTousers", fields: [sponsor_id], references: [id], onUpdate: Restrict, map: "users_sponsor_id_foreign")
+  other_users_users_sponsor_idTousers       User[] @relation("users_sponsor_idTousers")
+
+  User                  User[]                  @relation("sponsor")
+  StrategyBinary        StrategyBinary[]        @relation("user")
+  UserSession           UserSession[]           @relation("user")
+  Order                 Order[]                 @relation("user")
+  OrderItemDistribution OrderItemDistribution[] @relation("user")
+  StrategyProgress      StrategyProgress[]      @relation("user")
+  Balance               Balance[]               @relation("user")
+  BalanceHistory        BalanceHistory[]        @relation("user")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
   @@map("users")
-  Order Order[] @relation("user")
+}
+
+model Balance {
+  user    User       @relation("user", fields: [user_id], references: [id])
+  user_id BigInt     @db.UnsignedBigInt
+  wallet  WalletType @default(MAIN)
+  amount  Decimal
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@id(name: "balanceId", [user_id, wallet])
+  @@unique([user_id, wallet])
+  @@map("balance")
+}
+
+model BalanceHistory {
+  id        Int                  @id @default(autoincrement())
+  name      String?
+  user      User                 @relation("user", fields: [user_id], references: [id])
+  user_id   BigInt               @db.UnsignedBigInt
+  wallet    WalletType           @default(MAIN)
+  direction BalanceDirectionType
+  amount    Decimal
+
+  ref_type String?
+  ref_id   BigInt?
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@map("balance_history")
 }
 
 model PasswordResetToken {
-  email      String    @id @db.VarChar(255)
-  token      String    @db.VarChar(255)
-  created_at DateTime? @db.Timestamp(0)
+  email String @id @db.VarChar(255)
+  token String @db.VarChar(255)
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
 
   @@map("password_reset_tokens")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model PasswordReset {
-  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  email      String    @db.VarChar(255)
-  token      String    @db.VarChar(255)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  id    BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  email String @db.VarChar(255)
+  token String @db.VarChar(255)
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
 
   @@index([email], map: "password_resets_email_index")
   @@map("password_resets")
@@ -83,8 +124,9 @@ model PersonalAccessToken {
   abilities      String?   @db.Text
   last_used_at   DateTime? @db.Timestamp(0)
   expires_at     DateTime? @db.Timestamp(0)
-  created_at     DateTime? @db.Timestamp(0)
-  updated_at     DateTime? @db.Timestamp(0)
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
 
   @@index([tokenable_type, tokenable_id], map: "personal_access_tokens_tokenable_type_tokenable_id_index")
   @@map("personal_access_tokens")
@@ -101,11 +143,62 @@ model Product {
   yield                 Decimal             @db.Decimal(10, 7)
   unilevel_bonus        Boolean?            @default(false)
   unilevel_bonus_yields String?             @db.LongText
-  created_at            DateTime?           @db.Timestamp(0)
-  updated_at            DateTime?           @db.Timestamp(0)
+
+  category    Category? @relation(fields: [category_id], references: [id])
+  category_id BigInt?   @db.UnsignedBigInt
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  OrderItem OrderItem[] @relation("product")
 
   @@map("products")
-  OrderItem OrderItem[] @relation("product")
+}
+
+model Category {
+  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  name String @db.VarChar(100)
+
+  direct_bonus        Boolean?
+  direct_bonus_yield  Decimal? @db.Decimal(5, 4)
+  direct_bonus_levels Int?
+
+  unilevel_bonus        Boolean? @default(false)
+  unilevel_bonus_yields Decimal? @db.Decimal(10, 4)
+  unilevel_bonus_levels Int?
+
+  residual_bonus        Boolean?
+  residual_bonus_yield  Decimal? @db.Decimal(10, 4)
+  residual_bonus_levels Int?
+
+  binary_bonus               Boolean? @default(false)
+  binary_bonus_yields        Decimal? @db.Decimal(10, 4)
+  binary_bonus_point_percent Decimal? @db.Decimal(10, 4)
+  binary_bonus_levels        Int?
+
+  CategoryItem CategoryItem[]
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  Product Product[]
+
+  @@map("categories")
+}
+
+model CategoryItem {
+  id           BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  type         StrategyConfigType
+  category     Category           @relation(fields: [category_id], references: [id])
+  category_id  BigInt             @db.UnsignedBigInt
+  max_value    Decimal?           @db.Decimal(10, 2)
+  level_values Json
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@unique([type, category_id, max_value])
+  @@map("category_items")
 }
 
 model UserSession {
@@ -118,8 +211,10 @@ model UserSession {
 
   status user_session @default(active)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@map("user_session")
 }
 
 model Session {
@@ -152,13 +247,15 @@ model StrategyBinary {
   left       StrategyBinary? @relation("left", fields: [left_id], references: [id])
   left_id    BigInt?         @db.UnsignedBigInt
   left_count BigInt          @default(0)
+  left_point BigInt          @default(0)
 
   right       StrategyBinary? @relation("right", fields: [right_id], references: [id])
   right_id    BigInt?         @db.UnsignedBigInt
   right_count BigInt          @default(0)
+  right_point BigInt          @default(0)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
 
   ParentStrategyBinary StrategyBinary[] @relation("parent")
   LeftStrategyBinary   StrategyBinary[] @relation("left")
@@ -167,18 +264,56 @@ model StrategyBinary {
   @@map("strategy_binary")
 }
 
-model Order {
-  id       BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
-  order_id String
-  user     User?   @relation("user", fields: [user_id], references: [id])
-  user_id  BigInt? @db.UnsignedBigInt
+model StrategyConfig {
+  id      BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  type    StrategyConfigType
+  level   Int
+  value   Decimal?           @db.Decimal(10, 2)
+  limit   Decimal?           @db.Decimal(10, 2)
+  percent Decimal?           @db.Decimal(10, 2)
 
-  status    Status
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@unique([type, level, value])
+  @@map("strategy_config")
+}
+
+model StrategyProgress {
+  type    StrategyConfigType
+  user    User               @relation("user", fields: [user_id], references: [id])
+  user_id BigInt             @db.UnsignedBigInt
+
+  amount Decimal @default(0)
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@id([type, user_id])
+  @@unique([type, user_id])
+  @@map("strategy_progress")
+}
+
+enum StrategyConfigType {
+  DIRECT
+  UNILEVER
+  BINARY
+  RESIDUAL
+}
+
+model Order {
+  id       BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  order_id String
+  user     User   @relation("user", fields: [user_id], references: [id])
+  user_id  BigInt @db.UnsignedBigInt
+
+  status                Status                  @default(init)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime?               @updatedAt
+  OrderItem             OrderItem[]             @relation("order")
+  OrderItemDistribution OrderItemDistribution[] @relation("order")
 
   @@map("order")
-  OrderItem OrderItem[] @relation("order")
 }
 
 model OrderItem {
@@ -192,10 +327,34 @@ model OrderItem {
   quantity Int     @default(1)
   amount   Decimal @db.Decimal(10, 2)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime?               @updatedAt
+  OrderItemDistribution OrderItemDistribution[] @relation("orderItem")
 
   @@map("order_item")
+}
+
+model OrderItemDistribution {
+  id       BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  strategy StrategyType
+  status   StrategyStatusType
+  amount   Decimal
+  percent  Decimal
+
+  order    Order  @relation("order", fields: [order_id], references: [id])
+  order_id BigInt @db.UnsignedBigInt
+
+  orderItem     OrderItem @relation("orderItem", fields: [order_item_id], references: [id])
+  order_item_id BigInt    @db.UnsignedBigInt
+
+  user    User   @relation("user", fields: [user_id], references: [id])
+  user_id BigInt @db.UnsignedBigInt
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@unique([order_item_id, user_id, strategy], name: "order_item_distribution_idx")
+  @@map("order_item_distribution")
 }
 
 enum products_yield_type {
@@ -228,4 +387,26 @@ enum Status {
   payed
   done
   canceled
+}
+
+enum StrategyType {
+  DIRECT
+  UNILEVER
+  BINARY
+  RESIDUAL
+}
+
+enum StrategyStatusType {
+  QUEUED
+  ERROR
+  DONE
+}
+
+enum WalletType {
+  MAIN
+}
+
+enum BalanceDirectionType {
+  CREDIT
+  DEBIT
 }

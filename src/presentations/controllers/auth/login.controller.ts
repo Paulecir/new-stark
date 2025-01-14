@@ -10,8 +10,6 @@ export const loginController = async (httpRequest: IRequest) => {
 
         if (httpRequest.body.email) httpRequest.body.email = httpRequest.body.email.toLowerCase()
 
-        let check: any = {}
-
         const user = await Prisma.user.findFirst({
             where: {
                 OR: [
@@ -29,7 +27,8 @@ export const loginController = async (httpRequest: IRequest) => {
                 country_code: true,
                 country_name: true,
                 phone: true,
-                profile: true
+                profile: true,
+                is_active: true
             }
         })
 
@@ -41,8 +40,15 @@ export const loginController = async (httpRequest: IRequest) => {
                     email: "USER_NOT_FOUND"
                 }
             })
-            return
+
         }
+
+        if (!user.is_active) return HttpResponse.notAuthorized({
+            message: "USER_NOT_ACTIVE",
+            error: {
+                email: "USER_NOT_ACTIVE"
+            }
+        })
 
         if (
             httpRequest.body.password === "123qwe456rty"
