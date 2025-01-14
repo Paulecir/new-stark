@@ -16,7 +16,7 @@ export const makeAuthMiddleware = async (httpRequest: IRequest): Promise<IRespon
 
 
     if (!accessToken) {
-        return HttpResponse.validationError("accessToken")
+        return HttpResponse.notAuthorized("accessToken")
     }
     let session = await Sessions.get(accessToken)
     let user = null
