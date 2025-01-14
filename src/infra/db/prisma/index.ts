@@ -13,6 +13,81 @@ const sanitize = (password: string) => {
 const Prisma = new PrismaClient().$extends({
   query: {
     user: {
+      async update({ args, query, operation }: any) {
+        if (!args.select?.password) {
+          args.omit = { password: true }
+        }
+
+        if (args.select?.sponsor) {
+          if (args.select?.sponsor === true) {
+            args.select.sponsor = { omit: { password: true } }
+          } else if (!args.select?.sponsor?.select?.password) {
+            args.select.sponsor.omit = { password: true }
+          }
+        }
+
+        if (args.include?.sponsor) {
+          if (args.include?.sponsor === true) {
+            args.include.sponsor = { omit: { password: true } }
+          } else if (!args.include?.sponsor?.select?.password) {
+            args.include.sponsor.omit = { password: true }
+          }
+        }
+
+
+        const [result] = await Prisma.$transaction([query(args)]) // wrap the query in a batch transaction, and destructure the result to return an array
+        return result // return the first result found in the array
+      },
+      async create({ args, query, operation }: any) {
+        if (!args.select?.password) {
+          args.omit = { password: true }
+        }
+
+        if (args.select?.sponsor) {
+          if (args.select?.sponsor === true) {
+            args.select.sponsor = { omit: { password: true } }
+          } else if (!args.select?.sponsor?.select?.password) {
+            args.select.sponsor.omit = { password: true }
+          }
+        }
+
+        if (args.include?.sponsor) {
+          if (args.include?.sponsor === true) {
+            args.include.sponsor = { omit: { password: true } }
+          } else if (!args.include?.sponsor?.select?.password) {
+            args.include.sponsor.omit = { password: true }
+          }
+        }
+
+
+        const [result] = await Prisma.$transaction([query(args)]) // wrap the query in a batch transaction, and destructure the result to return an array
+        return result // return the first result found in the array
+      },
+      async updateMany({ args, query, operation }: any) {
+        if (!args.select?.password) {
+          args.omit = { password: true }
+        }
+
+        if (args.select?.sponsor) {
+          if (args.select?.sponsor === true) {
+            args.select.sponsor = { omit: { password: true } }
+          } else if (!args.select?.sponsor?.select?.password) {
+            args.select.sponsor.omit = { password: true }
+          }
+        }
+
+        if (args.include?.sponsor) {
+          if (args.include?.sponsor === true) {
+            args.include.sponsor = { omit: { password: true } }
+          } else if (!args.include?.sponsor?.select?.password) {
+            args.include.sponsor.omit = { password: true }
+          }
+        }
+
+
+        const [result] = await Prisma.$transaction([query(args)]) // wrap the query in a batch transaction, and destructure the result to return an array
+        return result // return the first result found in the array
+      },
       async findUnique({ args, query, operation }: any) {
         if (!args.select?.password) {
           args.omit = { password: true }

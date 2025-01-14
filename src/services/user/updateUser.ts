@@ -12,7 +12,7 @@ export const updateUser = async (id: number, data: any) => {
             where: {
                 id
             },
-            data
+            data,
         })
     
         return user;
