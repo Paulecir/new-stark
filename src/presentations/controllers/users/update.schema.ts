@@ -25,11 +25,4 @@ export const updateSchema = yup.object().shape({
         }),
     country_name: yup.string().required('Country name is required'),
     country_code: yup.string().required('Country code is required'),
-    sponsor_login: yup.string()
-        .required('Sponsor login is required')
-        .test('exists', 'Sponsor login does not exist', async (value) => {
-            const sponsorExists = await Prisma.user.findUnique({ where: { login: value } });
-            return !!sponsorExists;
-        }),
-    password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
 });
