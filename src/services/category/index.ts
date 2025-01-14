@@ -1,11 +1,11 @@
-import { createProduct } from "./createProduct";
-import { filterProduct } from "./filterProduct";
-import { getProductById } from "./getProductById";
-import { updateProduct } from "./updateUser";
+import { createCategory } from "./createCategory";
+import { filterCategory } from "./filterCategory";
+import { getCategoryById } from "./getCategoryById";
+import { updateCategory } from "./updateCategory";
 
-export const ProductService = {
-    createProduct,
-    updateProduct,
-    filterProduct,
-    getProductById
+export const CategoryService = {
+    createCategory,
+    updateCategory,
+    filterCategory,
+    getCategoryById
 }

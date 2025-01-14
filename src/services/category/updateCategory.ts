@@ -1,8 +1,8 @@
 import Prisma from "@/infra/db/prisma";
 
-export const updateProduct = async (id: number, data: any) => {
+export const updateCategory = async (id: number, data: any) => {
     try {
-        const modate = await Prisma.product.update({
+        const modate = await Prisma.category.update({
             where: {
                 id
             },

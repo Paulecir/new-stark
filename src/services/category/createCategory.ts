@@ -1,6 +1,6 @@
 import Prisma from "@/infra/db/prisma";
 
-export const createProduct = async (data: any) => {
+export const createCategory = async (data: any) => {
     try {
         const model = Prisma.$transaction(async (tx) => {
             const model = await tx.category.create({

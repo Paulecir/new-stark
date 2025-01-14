@@ -13,7 +13,7 @@ export const getCategoryById = async (id: number) => {
 
     })
 
-    if (!data) throw new NotFoundError("Product not found")
+    if (!data) throw new NotFoundError("Category not found")
         
     return {
         ...data,

@@ -34,7 +34,6 @@ const Prisma = new PrismaClient().$extends({
           }
         }
 
-
         const [result] = await Prisma.$transaction([query(args)]) // wrap the query in a batch transaction, and destructure the result to return an array
         return result // return the first result found in the array
       },
