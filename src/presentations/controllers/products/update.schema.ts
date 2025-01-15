@@ -36,7 +36,7 @@ export const updateSchema = yup.object().shape({
     unilevel_bonus: yup.boolean()
         .required('O campo bônus unilevel é obrigatório.'),
 
-    unilevel_bonus_yields: yup.array()
+    unilevel_bonus_yield: yup.array()
         .nullable()
         .of(
             yup.number()

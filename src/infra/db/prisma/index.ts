@@ -4,6 +4,10 @@ import { PrismaClient, Prisma as PrismaDefault } from '@prisma/client';
 (BigInt.prototype as any).toJSON = function () {
   return Number(this)
 };
+(PrismaDefault.Decimal.prototype as any).toJSON = function () {
+  return Number(this)
+};
+
 // Função para "sanitizar" a senha (por exemplo, esconder a senha real)
 const sanitize = (password: string) => {
   // Exemplo de sanitização, pode ser modificado conforme necessário

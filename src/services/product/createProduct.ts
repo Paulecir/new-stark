@@ -12,7 +12,7 @@ export const createProduct = async (data: any) => {
                 yield_type: data.yield_type || 'diary',
                 yield: data.yield,
                 unilevel_bonus: data.unilevel_bonus || false,
-                unilevel_bonus_yields: JSON.stringify(data.unilevel_bonus_yields || [])
+                unilevel_bonus_yield: JSON.stringify(data.unilevel_bonus_yield || [])
     
             },
         });

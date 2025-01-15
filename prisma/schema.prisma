@@ -142,7 +142,7 @@ model Product {
   yield_type            products_yield_type @default(diary)
   yield                 Decimal             @db.Decimal(10, 7)
   unilevel_bonus        Boolean?            @default(false)
-  unilevel_bonus_yields String?             @db.LongText
+  unilevel_bonus_yield String?             @db.LongText
 
   category    Category? @relation(fields: [category_id], references: [id])
   category_id BigInt?   @db.UnsignedBigInt
@@ -164,7 +164,7 @@ model Category {
   direct_bonus_levels Int?
 
   unilevel_bonus        Boolean? @default(false)
-  unilevel_bonus_yields Decimal? @db.Decimal(10, 4)
+  unilevel_bonus_yield Decimal? @db.Decimal(10, 4)
   unilevel_bonus_levels Int?
 
   residual_bonus        Boolean?
@@ -172,7 +172,7 @@ model Category {
   residual_bonus_levels Int?
 
   binary_bonus               Boolean? @default(false)
-  binary_bonus_yields        Decimal? @db.Decimal(10, 4)
+  binary_bonus_yield        Decimal? @db.Decimal(10, 4)
   binary_bonus_point_percent Decimal? @db.Decimal(10, 4)
   binary_bonus_levels        Int?
 
@@ -296,6 +296,7 @@ model StrategyProgress {
 
 enum StrategyConfigType {
   DIRECT
+  UNILEVEL
   UNILEVER
   BINARY
   RESIDUAL
@@ -391,6 +392,7 @@ enum Status {
 
 enum StrategyType {
   DIRECT
+  UNILEVEL
   UNILEVER
   BINARY
   RESIDUAL

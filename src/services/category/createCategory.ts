@@ -32,7 +32,7 @@ export const createCategory = async (data: any) => {
                 await tx.categoryItem.create({
                     data: {
                         category_id: model.id,
-                        type: "UNILEVER",
+                        type: "UNILEVEL",
                         max_value: item.max_value,
                         level_values: item.level_values
                     }

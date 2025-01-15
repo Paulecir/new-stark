@@ -19,7 +19,7 @@ export const getCategoryById = async (id: number) => {
         ...data,
         CategoryItem: undefined,
         direct_bonus_items: data.CategoryItem.filter(item => item.type === "DIRECT"),
-        unilever_bonus_items: data.CategoryItem.filter(item => item.type === "UNILEVER"),
+        unilever_bonus_items: data.CategoryItem.filter(item => item.type === "UNILEVEL"),
         residual_bonus_items: data.CategoryItem.filter(item => item.type === "RESIDUAL"),
         binary_bonus_items: data.CategoryItem.filter(item => item.type === "BINARY"),
     }
