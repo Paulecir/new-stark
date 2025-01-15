@@ -133,15 +133,15 @@ model PersonalAccessToken {
 }
 
 model Product {
-  id                    BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
-  name                  String              @db.VarChar(100)
-  description           String?             @db.Text
-  price                 Decimal             @db.Decimal(10, 2)
-  direct_bonus          Boolean?
-  direct_bonus_yield    Decimal?            @db.Decimal(5, 4)
-  yield_type            products_yield_type @default(diary)
-  yield                 Decimal             @db.Decimal(10, 7)
-  unilevel_bonus        Boolean?            @default(false)
+  id                   BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  name                 String              @db.VarChar(100)
+  description          String?             @db.Text
+  price                Decimal             @db.Decimal(10, 2)
+  direct_bonus         Boolean?
+  direct_bonus_yield   Decimal?            @db.Decimal(5, 4)
+  yield_type           products_yield_type @default(diary)
+  yield                Decimal             @db.Decimal(10, 7)
+  unilevel_bonus       Boolean?            @default(false)
   unilevel_bonus_yield String?             @db.LongText
 
   category    Category? @relation(fields: [category_id], references: [id])
@@ -164,7 +164,7 @@ model Category {
   direct_bonus_levels Int?
 
   unilevel_bonus        Boolean? @default(false)
-  unilevel_bonus_yield Decimal? @db.Decimal(10, 4)
+  unilevel_bonus_yield  Decimal? @db.Decimal(10, 4)
   unilevel_bonus_levels Int?
 
   residual_bonus        Boolean?
@@ -172,7 +172,7 @@ model Category {
   residual_bonus_levels Int?
 
   binary_bonus               Boolean? @default(false)
-  binary_bonus_yield        Decimal? @db.Decimal(10, 4)
+  binary_bonus_yield         Decimal? @db.Decimal(10, 4)
   binary_bonus_point_percent Decimal? @db.Decimal(10, 4)
   binary_bonus_levels        Int?
 
@@ -307,6 +307,10 @@ model Order {
   order_id String
   user     User   @relation("user", fields: [user_id], references: [id])
   user_id  BigInt @db.UnsignedBigInt
+
+  payment Json?
+
+  payment_result Json?
 
   status                Status                  @default(init)
   createdAt             DateTime                @default(now())

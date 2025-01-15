@@ -3,13 +3,13 @@ import { distributionDirect } from "../strategies/direct/distributionDirect"
 import { distributionUnilevel } from "../strategies/unilevel/distributionUnilevel"
 import { distributionBinary } from "../strategies/binary/distributionBinary"
 
-export const approveOrder = async (data: any) => {
+export const approveOrder = async (orderId: any) => {
 
-    await Prisma.$transaction(async (tx) => {
+    await Prisma.$transaction(async (Prisma) => {
 
-        const order = await tx.order.findFirst({
+        const order = await Prisma.order.findFirst({
             where: {
-                order_id: "bbe00ca0-d5db-437f-9a25-b5cf7265e2f6"
+                order_id: orderId
             },
             include: {
                 OrderItem: {
@@ -41,11 +41,11 @@ export const approveOrder = async (data: any) => {
 
         for (const item of order.OrderItem) {
 
-            if (item.product.category.direct_bonus) distributionDirect({ order, item }, tx)
+            if (item.product.category.direct_bonus) distributionDirect({ order, item }, Prisma)
 
-            if (item.product.category.unilevel_bonus) await distributionUnilevel({ order, item }, tx)
+            if (item.product.category.unilevel_bonus) await distributionUnilevel({ order, item }, Prisma)
 
-            if (item.product.category.binary_bonus) await distributionBinary({ order, item }, tx)
+            if (item.product.category.binary_bonus) await distributionBinary({ order, item }, Prisma)
 
         }
     })
