@@ -139,12 +139,8 @@ model Product {
   name                 String              @db.VarChar(100)
   description          String?             @db.Text
   price                Decimal             @db.Decimal(20, 8)
-  direct_bonus         Boolean?
-  direct_bonus_yield   Decimal?            @db.Decimal(20, 8)
   yield_type           products_yield_type @default(diary)
   yield                Decimal             @db.Decimal(20, 8)
-  unilevel_bonus       Boolean?            @default(false)
-  unilevel_bonus_yield String?             @db.LongText
 
   category    Category? @relation(fields: [category_id], references: [id])
   category_id BigInt?   @db.UnsignedBigInt

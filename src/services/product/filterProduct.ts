@@ -10,6 +10,14 @@ export const filterProduct = async (filter: any[] = [], pagination: any, orderBy
         where: {
             AND: filter
         },
+        include: {
+            category: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
     })
 
     if (!data) throw new NotFoundError("Product not found")
