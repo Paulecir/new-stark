@@ -6,7 +6,7 @@ import startSeed from './seeders/start.seed'
 
     await startSeed()
     await firstLevelBinary()
-    await secondLevelBinary()
+    // await secondLevelBinary()
 
 
 })()

@@ -31,8 +31,8 @@ async function startSeed() {
     await Prisma.strategyBinary.create({
         data: {
             user_id: user.id,
-            ref: 'F',
-            hier: `F`
+            ref: 'T',
+            hier: `T`
         }
     })
 

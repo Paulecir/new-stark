@@ -4,12 +4,12 @@ import { OrderService } from "@/services/order";
 
 export const buyOrderController = async (requestData: IRequest) => {
     try {
-        const user = await OrderService.buyProduct(requestData.body, requestData.user);
+        const order = await OrderService.buyProduct(requestData.body, requestData.user);
 
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
         return HttpResponse.successResponse({
             message: '',
-            data: {},
+            data: order,
             status: 200
         });
     } catch (err) {

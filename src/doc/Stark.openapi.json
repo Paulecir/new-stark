@@ -1,0 +1,985 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Stark",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Autenticação"
+    },
+    {
+      "name": "Categoria"
+    }
+  ],
+  "paths": {
+    "/v1/auth/signin": {
+      "post": {
+        "summary": "Login do usuário",
+        "deprecated": false,
+        "description": "Endpoint para autenticar o usuário e retornar um token JWT.",
+        "tags": [
+          "Autenticação"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              },
+              "example": {
+                "username": "johndoe",
+                "password": "123456"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "token"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/auth/signup": {
+      "post": {
+        "summary": "Cadastro do usuário",
+        "deprecated": false,
+        "description": "Endpoint para autenticar o usuário e retornar um token JWT.",
+        "tags": [
+          "Autenticação"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegisterPost"
+              },
+              "example": {
+                "login": "johndoe",
+                "name": "John Doe",
+                "sponsor_login": "master",
+                "email": "johndoe@gmail.com",
+                "phone": "+5599999999999",
+                "country_code": "55",
+                "country_name": "Brasil",
+                "password": "123456789"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/UserRegisterSaved"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Sucesso",
+                    "value": {
+                      "status": "success",
+                      "status_code": 201,
+                      "message": "Usuário registrado com sucesso",
+                      "data": {
+                        "id": 2,
+                        "name": "John Doe",
+                        "login": "johndoe",
+                        "email": "johndoe@gmail.com",
+                        "phone": "+5599999999999",
+                        "profile": "user",
+                        "country_code": "55",
+                        "country_name": "Brasil",
+                        "sponsor_id": 1
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/categories/create": {
+      "post": {
+        "summary": "Cadastro de categoria",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Categoria"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        {
+                          "type": "object",
+                          "properties": {}
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/category/select": {
+      "get": {
+        "summary": "Lista categorias para um select",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "id"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data",
+                    "name"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/orders/buy": {
+      "post": {
+        "summary": "Criar compra",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuyOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        {
+                          "type": "object",
+                          "properties": {}
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/orders/approve": {
+      "post": {
+        "summary": "Aprovar pagamento",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string",
+                    "description": "Número da ordem de compra"
+                  }
+                },
+                "required": [
+                  "orderId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        {
+                          "type": "object",
+                          "properties": {}
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/binary/1": {
+      "get": {
+        "summary": "Get binary by id",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        {
+                          "type": "object",
+                          "properties": {}
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/product/create": {
+      "post": {
+        "summary": "Cadastro de produto",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Categoria"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductPost"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/product/1": {
+      "put": {
+        "summary": "Atualiza um produto",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Categoria"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductPost"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Recupera um produto",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/product": {
+      "get": {
+        "summary": "Lista de produtos",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Product"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserRegisterPost": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sponsor_login": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "country_code": {
+            "type": "string"
+          },
+          "country_name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "login",
+          "name",
+          "sponsor_login",
+          "email",
+          "phone",
+          "country_code",
+          "country_name",
+          "password"
+        ]
+      },
+      "UserRegisterSaved": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "login": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sponsor_login": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "country_code": {
+            "type": "string"
+          },
+          "country_name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "login",
+          "name",
+          "sponsor_login",
+          "email",
+          "phone",
+          "country_code",
+          "country_name",
+          "password",
+          "id"
+        ]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "direct_bonus": {
+            "type": "boolean"
+          },
+          "direct_bonus_yield": {
+            "type": "integer"
+          },
+          "direct_bonus_levels": {
+            "type": "integer"
+          },
+          "unilevel_bonus": {
+            "type": "boolean"
+          },
+          "unilevel_bonus_yield": {
+            "type": "integer"
+          },
+          "unilevel_bonus_levels": {
+            "type": "integer"
+          },
+          "residual_bonus": {
+            "type": "boolean"
+          },
+          "residual_bonus_yield": {
+            "type": "integer"
+          },
+          "residual_bonus_levels": {
+            "type": "integer"
+          },
+          "binary_bonus": {
+            "type": "boolean"
+          },
+          "binary_bonus_yield": {
+            "type": "integer"
+          },
+          "binary_bonus_point_percent": {
+            "type": "integer"
+          },
+          "binary_bonus_levels": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "null"
+          },
+          "direct_bonus_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryItem"
+            }
+          },
+          "unilever_bonus_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryItem"
+            }
+          },
+          "residual_bonus_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryItem"
+            }
+          },
+          "binary_bonus_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryItem"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "direct_bonus",
+          "direct_bonus_yield",
+          "direct_bonus_levels",
+          "unilevel_bonus",
+          "unilevel_bonus_yield",
+          "unilevel_bonus_levels",
+          "residual_bonus",
+          "residual_bonus_yield",
+          "residual_bonus_levels",
+          "binary_bonus",
+          "binary_bonus_yield",
+          "binary_bonus_point_percent",
+          "binary_bonus_levels",
+          "created_at",
+          "updated_at",
+          "direct_bonus_items",
+          "unilever_bonus_items",
+          "residual_bonus_items",
+          "binary_bonus_items"
+        ]
+      },
+      "CategoryItem": {
+        "type": "object",
+        "properties": {}
+      },
+      "BuyOrder": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BuyOrderItem"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "BuyOrderItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Id do produto a ser comprado"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantidade de produto a ser comprado"
+          }
+        },
+        "required": [
+          "id",
+          "quantity"
+        ]
+      },
+      "ProductPost": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "description": "Preço do produto"
+          },
+          "category_id": {
+            "type": "integer",
+            "description": "Id da categoria"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductImagePost"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "price",
+          "category_id"
+        ]
+      },
+      "ProductImagePost": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "mimetype"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "description": "Preço do produto"
+          },
+          "category_id": {
+            "type": "integer",
+            "description": "Id da categoria"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductImagePost"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "price",
+          "category_id",
+          "id"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": []
+}

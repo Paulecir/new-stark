@@ -3,8 +3,12 @@ import initRoutes from "@/routes"
 import express, { Request, Response } from "express"
 import http from "http"
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger-output.json';
+import swaggerDocument from './doc/Stark.openapi.json';
 import routes from 'routes';
+import YAML from 'yamljs';
+
+// Carrega o arquivo YAML
+// const swaggerDocument = YAML.load('./src/doc/swagger.yaml');
 
 const server = async () => {
   const app = express()

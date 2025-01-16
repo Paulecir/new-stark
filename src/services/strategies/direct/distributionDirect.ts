@@ -1,7 +1,7 @@
-import Prisma from "@/infra/db/prisma";
+import PrismaLocal from "@/infra/db/prisma";
 import { addBalance } from "@/services/balance/addBalance";
 
-export const distributionDirect = async ({ order, item }: any, db = Prisma) => {
+export const distributionDirect = async ({ order, item }: any, Prisma = PrismaLocal) => {
 
     const category = await Prisma.category.findFirst({
         where: {
@@ -11,22 +11,40 @@ export const distributionDirect = async ({ order, item }: any, db = Prisma) => {
 
     const hier = []
 
-    let current = await Prisma.user.findUnique({
+    let currentUser = await Prisma.user.findUnique({
         where: {
             id: order.user_id
         }
     })
 
-
-    if (current.sponsor_id) {
-        current = await Prisma.user.findFirst({
+    if (currentUser.sponsor_id) {
+        const current = await Prisma.user.findFirst({
             where: {
-                id: current.sponsor_id
+                id: currentUser.sponsor_id
             }
         })
 
         if (current) {
-            await addBalance({ name: "Direct strategy", wallet: "MAIN", user_id: current.id, amount: item.amount * (category.direct_bonus_yield.toNumber() / 100), ref_type: 'orderItem', ref_id: item.id }, Prisma)
+            await addBalance({ 
+                name: "Direct strategy"
+                , wallet: "MAIN"
+                , user_id: current.id
+                , amount: item.amount * (category.direct_bonus_yield.toNumber() / 100)
+                , ref_type: 'orderItem'
+                , ref_id: item.id
+                , extra_info: {
+                    from: currentUser.id,
+                    fromName: currentUser.name,
+                    fromLogin: currentUser.login,
+                    to: current?.id,
+                    toName: current?.name,
+                    toLogin: current?.login,
+                    productId: item.product.id,
+                    productName: item.product.name,
+                    productPrice: item.product.price,
+                }
+
+             }, Prisma)
         }
     }
 

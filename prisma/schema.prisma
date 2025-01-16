@@ -64,7 +64,7 @@ model Balance {
   user    User       @relation("user", fields: [user_id], references: [id])
   user_id BigInt     @db.UnsignedBigInt
   wallet  WalletType @default(MAIN)
-  amount  Decimal
+  amount  Decimal    @db.Decimal(20, 8)
 
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
@@ -81,10 +81,12 @@ model BalanceHistory {
   user_id   BigInt               @db.UnsignedBigInt
   wallet    WalletType           @default(MAIN)
   direction BalanceDirectionType
-  amount    Decimal
+  amount    Decimal              @db.Decimal(20, 8)
 
   ref_type String?
   ref_id   BigInt?
+
+  extra_info Json?
 
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
@@ -136,11 +138,11 @@ model Product {
   id                   BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
   name                 String              @db.VarChar(100)
   description          String?             @db.Text
-  price                Decimal             @db.Decimal(10, 2)
+  price                Decimal             @db.Decimal(20, 8)
   direct_bonus         Boolean?
-  direct_bonus_yield   Decimal?            @db.Decimal(5, 4)
+  direct_bonus_yield   Decimal?            @db.Decimal(20, 8)
   yield_type           products_yield_type @default(diary)
-  yield                Decimal             @db.Decimal(10, 7)
+  yield                Decimal             @db.Decimal(20, 8)
   unilevel_bonus       Boolean?            @default(false)
   unilevel_bonus_yield String?             @db.LongText
 
@@ -160,20 +162,21 @@ model Category {
   name String @db.VarChar(100)
 
   direct_bonus        Boolean?
-  direct_bonus_yield  Decimal? @db.Decimal(5, 4)
+  direct_bonus_yield  Decimal? @db.Decimal(20, 8)
   direct_bonus_levels Int?
 
   unilevel_bonus        Boolean? @default(false)
-  unilevel_bonus_yield  Decimal? @db.Decimal(10, 4)
+  unilevel_bonus_yield  Decimal? @db.Decimal(20, 8)
   unilevel_bonus_levels Int?
 
   residual_bonus        Boolean?
-  residual_bonus_yield  Decimal? @db.Decimal(10, 4)
+  residual_bonus_yield  Decimal? @db.Decimal(20, 8)
   residual_bonus_levels Int?
 
   binary_bonus               Boolean? @default(false)
-  binary_bonus_yield         Decimal? @db.Decimal(10, 4)
-  binary_bonus_point_percent Decimal? @db.Decimal(10, 4)
+  binary_bonus_position      Boolean? @default(false)
+  binary_bonus_yield         Decimal? @db.Decimal(20, 8)
+  binary_bonus_point_percent Decimal? @db.Decimal(20, 8)
   binary_bonus_levels        Int?
 
   CategoryItem CategoryItem[]
@@ -191,7 +194,7 @@ model CategoryItem {
   type         StrategyConfigType
   category     Category           @relation(fields: [category_id], references: [id])
   category_id  BigInt             @db.UnsignedBigInt
-  max_value    Decimal?           @db.Decimal(10, 2)
+  max_value    Decimal?           @db.Decimal(20, 8)
   level_values Json
 
   created_at DateTime? @default(now())
@@ -244,15 +247,17 @@ model StrategyBinary {
   parent    StrategyBinary? @relation("parent", fields: [parent_id], references: [id])
   parent_id BigInt?         @db.UnsignedBigInt
 
-  left       StrategyBinary? @relation("left", fields: [left_id], references: [id])
-  left_id    BigInt?         @db.UnsignedBigInt
-  left_count BigInt          @default(0)
-  left_point BigInt          @default(0)
+  left         StrategyBinary? @relation("left", fields: [left_id], references: [id])
+  left_id      BigInt?         @db.UnsignedBigInt
+  left_count   BigInt          @default(0)
+  left_point   BigInt          @default(0)
+  left_qualify Boolean         @default(false)
 
-  right       StrategyBinary? @relation("right", fields: [right_id], references: [id])
-  right_id    BigInt?         @db.UnsignedBigInt
-  right_count BigInt          @default(0)
-  right_point BigInt          @default(0)
+  right         StrategyBinary? @relation("right", fields: [right_id], references: [id])
+  right_id      BigInt?         @db.UnsignedBigInt
+  right_count   BigInt          @default(0)
+  right_point   BigInt          @default(0)
+  right_qualify Boolean         @default(false)
 
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
@@ -268,9 +273,9 @@ model StrategyConfig {
   id      BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
   type    StrategyConfigType
   level   Int
-  value   Decimal?           @db.Decimal(10, 2)
-  limit   Decimal?           @db.Decimal(10, 2)
-  percent Decimal?           @db.Decimal(10, 2)
+  value   Decimal?           @db.Decimal(20, 8)
+  limit   Decimal?           @db.Decimal(20, 8)
+  percent Decimal?           @db.Decimal(20, 8)
 
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
@@ -284,7 +289,7 @@ model StrategyProgress {
   user    User               @relation("user", fields: [user_id], references: [id])
   user_id BigInt             @db.UnsignedBigInt
 
-  amount Decimal @default(0)
+  amount Decimal @default(0) @db.Decimal(20, 8)
 
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
@@ -330,7 +335,7 @@ model OrderItem {
   product_id BigInt  @db.UnsignedBigInt
 
   quantity Int     @default(1)
-  amount   Decimal @db.Decimal(10, 2)
+  amount   Decimal @db.Decimal(20, 8)
 
   createdAt             DateTime                @default(now())
   updatedAt             DateTime?               @updatedAt
@@ -343,8 +348,8 @@ model OrderItemDistribution {
   id       BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
   strategy StrategyType
   status   StrategyStatusType
-  amount   Decimal
-  percent  Decimal
+  amount   Decimal            @db.Decimal(20, 8)
+  percent  Decimal            @db.Decimal(20, 8)
 
   order    Order  @relation("order", fields: [order_id], references: [id])
   order_id BigInt @db.UnsignedBigInt
@@ -410,6 +415,8 @@ enum StrategyStatusType {
 
 enum WalletType {
   MAIN
+  BINARY_LEFT_POINT
+  BINARY_RIGHT_POINT
 }
 
 enum BalanceDirectionType {

@@ -6,6 +6,7 @@ import { authMiddleware } from "@/middlewares/authMiddleware"
 import { filterCategoryController } from "@/presentations/controllers/categories/filter.controller"
 import { updateCategoryController } from "@/presentations/controllers/categories/update.controller"
 import { getCategoryController } from "@/presentations/controllers/categories/get.controller"
+import { selectCategoryController } from "@/presentations/controllers/categories/select.controller"
 
 const router = Router()
 
@@ -15,8 +16,13 @@ router.get("/",
   expressRouteAdapter(filterCategoryController)
 )
 
-router.post("/create",
+router.get("/select",
   // #swagger.tags = ['Category']
+  authMiddleware,
+  expressRouteAdapter(selectCategoryController)
+)
+
+router.post("/create",
   expressRouteAdapter(createCategoryController)
 )
 

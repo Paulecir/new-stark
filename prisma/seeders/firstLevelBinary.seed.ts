@@ -20,7 +20,7 @@ async function firstLevelBinary() {
             }
         })
     
-        await addBinaryStrategy(parseInt(user.id.toString()), "LEFT", "R")
+        // await addBinaryStrategy(parseInt(user.id.toString()), "LEFT", "R")
     }
     
 

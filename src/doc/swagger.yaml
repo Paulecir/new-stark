@@ -1,0 +1,199 @@
+swagger: "2.0"
+info:
+  title: "Minha API"
+  description: "Descrição da API usando Express e TypeScript 111"
+  version: "1.0.0"
+host: "localhost:3000"
+basePath: "/"
+schemes:
+  - "http"
+paths:
+  /v1/auth/signin:
+    post:
+      tags:
+        - "User"
+      summary: "Realiza o login do usuário"
+      description: "Endpoint para autenticar o usuário e retornar um token JWT."
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "Login de usuário."
+          schema:
+            type: "object"
+            properties:
+              username:
+                type: "string"
+                example: "johndoe"
+              password:
+                type: "string"
+                example: "123456"
+      responses:
+        200:
+          description: "Get a specific user."
+          schema:
+            type: "object"
+            properties:
+              token:
+                type: "string"
+                example: "****"
+            xml:
+              name: "main"
+        401:
+          description: "Credenciais inválidas"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "USER_NOT_FOUND"
+                  error:
+                    type: "object"
+                    properties:
+                      email:
+                        type: "string"
+                        example: "USER_NOT_FOUND"
+  /v1/auth/signup:
+    post:
+      tags:
+        - "User"
+      summary: "Realiza o cadastro do usuário"
+      description: "Endpoint para cadastrar o usuário."
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "Add new user."
+          schema:
+            type: "object"
+            properties:
+              login:
+                type: "string"
+                example: "johndoe"
+              name:
+                type: "string"
+                example: "John Doe"
+              sponsor_login:
+                type: "string"
+                example: "master"
+              email:
+                type: "string"
+                example: "johndoe@gmail.com"
+              phone:
+                type: "string"
+                example: "+5599999999999"
+              country_code:
+                type: "string"
+                example: "55"
+              country_name:
+                type: "string"
+                example: "Brasil"
+              password:
+                type: "string"
+                example: "123456789"
+      responses:
+        200:
+          description: "Usuário cadastrado com sucesso."
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                example: "success"
+              status_code:
+                type: "number"
+                example: 201
+              message:
+                type: "string"
+                example: "Usuário registrado com sucesso"
+              data:
+                type: "object"
+                properties:
+                  id:
+                    type: "number"
+                    example: 2
+                  name:
+                    type: "string"
+                    example: "John Doe"
+                  login:
+                    type: "string"
+                    example: "johndoe"
+                  email:
+                    type: "string"
+                    example: "johndoe@gmail.com"
+                  phone:
+                    type: "string"
+                    example: "+5599999999999"
+                  profile:
+                    type: "string"
+                    example: "user"
+                  country_code:
+                    type: "string"
+                    example: "55"
+                  country_name:
+                    type: "string"
+                    example: "Brasil"
+                  sponsor_id:
+                    type: "number"
+                    example: 1
+  /v1/auth/logout:
+    post:
+      tags:
+        - "Auth"
+      summary: "Invalidar token do usuário"
+      description: "Endpoint para deslogar o usuário."
+      responses:
+        200:
+          description: "Logout realizado com sucesso."
+  /v1/auth/reset-password:
+    post:
+      tags:
+        - "Auth"
+      summary: "Resetar senha do usuário"
+      description: "Endpoint para resetar a senha do usuário."
+      responses:
+        200:
+          description: "Senha resetada com sucesso."
+  /v1/auth/send-email-reset-password:
+    post:
+      tags:
+        - "Auth"
+      summary: "Enviar email para resetar senha"
+      description: "Endpoint para envio de email para resetar senha."
+      responses:
+        200:
+          description: "Email enviado com sucesso."
+  /v1/users/:
+    get:
+      tags:
+        - "User"
+      summary: "Obter lista de usuários"
+      description: "Endpoint para retornar todos os usuários."
+      responses:
+        default:
+          description: "Lista de usuários retornada."
+  /v1/users/{id}:
+    get:
+      tags:
+        - "User"
+      summary: "Obter usuário por ID"
+      description: "Retorna os detalhes de um usuário específico."
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "Usuário retornado."
+    put:
+      tags:
+        - "User"
+      summary: "Atualizar usuário por ID"
+      description: "Atualiza os dados de um usuário específico."
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "string"
+      

@@ -1,6 +1,14 @@
-import Prisma from "@/infra/db/prisma"
+import PrismaLocal from "@/infra/db/prisma"
 
-export const addBinaryStrategy = async (userId: number, strategy: string = 'AUTO', priority: string = 'L') => {
+export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 'L' }, Prisma = PrismaLocal) => {
+
+    const check = await Prisma.strategyBinary.findFirst({
+        where: {
+            user_id: userId
+        }
+    })
+
+    if (check) throw new Error('Binary has position')
 
     const user = await Prisma.user.findUnique({
         where: {
@@ -69,7 +77,7 @@ export const addBinaryStrategy = async (userId: number, strategy: string = 'AUTO
                     autoDirection: priority === 'R' ? 'L' : 'R',
                 }
             })
-            updateCtBinary(parseInt(binary.id.toString()))
+            updateCtBinary(parseInt(binary.id.toString()), Prisma)
             break
         }
 
@@ -133,7 +141,7 @@ export const addBinaryStrategy = async (userId: number, strategy: string = 'AUTO
 
 }
 
-export const updateCtBinary = async (binaryId) => {
+export const updateCtBinary = async (binaryId, Prisma = PrismaLocal) => {
     let current = await Prisma.strategyBinary.findFirst({
         where: {
             id: binaryId
@@ -181,7 +189,7 @@ export const updateCtBinary = async (binaryId) => {
 
 }
 
-export const updateCtBinaryAll = async (binaryId: number) => {
+export const updateCtBinaryAll = async (binaryId: number, Prisma = PrismaLocal) => {
 
     const nodes = await Prisma.strategyBinary.findMany();
 

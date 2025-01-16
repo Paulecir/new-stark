@@ -7,127 +7,33 @@ import { registerController } from "@/presentations/controllers/users/register.c
 const router = Router()
 
 router.post("/signin",
-  expressRouteAdapter(loginController)
-  /* 
-    #swagger.tags = ['User']
-    #swagger.summary = 'Realiza o login do usuário'
-    #swagger.description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
-    #swagger.parameters['body'] = {
-        in: 'body',
-        description: 'Login de usuário.',
-        schema: {
-            username: 'johndoe',
-            password: '123456'
-        }
-    }
-    #swagger.responses[200] = {
-        description: 'Get a specific user.',
-        schema: {
-            token: '****',
-        }
-    } 
-    #swagger.responses[401] = {
-        description: 'Credenciais inválidas',
-        content: {
-            "application/json": {
-                schema: {
-                    type: "object",
-                    properties: {
-                        message: { type: "string", example: "USER_NOT_FOUND" },
-                        error: {
-                            type: "object",
-                            properties: {
-                                email: { type: "string", example: "USER_NOT_FOUND" }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-  */
+    // #summary = 'Realiza o login do usuário'
+    // #description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
+    expressRouteAdapter(loginController)
 )
 
 router.post("/signup",
-  expressRouteAdapter(registerController)
-  /* 
-    #swagger.tags = ['User']
-    #swagger.summary = 'Realiza o cadastro do usuário'
-    #swagger.description = 'Endpoint para cadastrar o usuário.'
-    #swagger.parameters['body'] = {
-        in: 'body',
-        description: 'Add new user.',
-        schema: {
-          "login": "johndoe",
-          "name": "John Doe",
-          "sponsor_login": "master",
-          "email": "johndoe@gmail.com",
-          "phone": "+5599999999999",
-          "country_code": "55",
-          "country_name": "Brasil",
-          "password": "123456789"
-        }
-    }
-    #swagger.responses[200] = {
-        description: 'Get a specific user.',
-        schema: {
-            "status": "success",
-            "status_code": 201,
-            "message": "Usuário registrado com sucesso",
-            "data": {
-                "id": 2,
-                "name": "John Doe",
-                "login": "johndoe",
-                "email": "johndoe@gmail.com",
-                "phone": "+5599999999999",
-                "profile": "user",
-                "country_code": "55",
-                "country_name": "Brasil",
-                "sponsor_id": 1,
-            }
-        }
-    } 
-    #swagger.responses[401] = {
-        description: 'Credenciais inválidas',
-        content: {
-            "application/json": {
-                schema: {
-                    type: "object",
-                    properties: {
-                        message: { type: "string", example: "USER_NOT_FOUND" },
-                        error: {
-                            type: "object",
-                            properties: {
-                                email: { type: "string", example: "USER_NOT_FOUND" }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-  */
+    // #summary = 'Realiza o cadastro do usuário'
+    // #description = 'Endpoint para cadastrar o usuário.'
+    expressRouteAdapter(registerController)
 )
 
 router.post("/logout",
-  // #swagger.summary = 'Invalidar token do usuário'
-  // #swagger.description = 'Cadastro'
-  // #swagger.tags = ['Auth']
-  (req, res) => { res.json({}) }
+    // #swagger.summary = 'Invalidar token do usuário'
+    // #swagger.description = 'Cadastro'
+    (req, res) => { res.json({}) }
 )
 
 router.post("/reset-password",
-  // #swagger.summary = 'Resetar senha do usuário'
-  // #swagger.description = 'Usuário'
-  // #swagger.tags = ['Auth']
-  (req, res) => { res.json({}) }
+    // #swagger.summary = 'Resetar senha do usuário'
+    // #swagger.description = 'Usuário'
+    (req, res) => { res.json({}) }
 )
 
 router.post("/send-email-reset-password",
-  // #swagger.summary = 'Enviar email de reset de senha do usuário'
-  // #swagger.description = 'Usuário'
-  // #swagger.tags = ['Auth']
-  (req, res) => { res.json({}) }
+    // #swagger.summary = 'Enviar email de reset de senha do usuário'
+    // #swagger.description = 'Usuário'
+    (req, res) => { res.json({}) }
 )
 
 // router.post("/change_password", async (req: any, res) => {

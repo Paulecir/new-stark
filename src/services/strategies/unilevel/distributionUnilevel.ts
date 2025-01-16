@@ -48,6 +48,12 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
 
     const hier = []
 
+    let currentUser = await Prisma.user.findUnique({
+        where: {
+            id: order.user_id
+        }
+    })
+
     let current = await Prisma.user.findUnique({
         where: {
             id: order.user_id
@@ -67,7 +73,25 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
         if (!current) break
 
         if (categoryItem.level_values[i] > 0) {
-            await addBalance({ name: "Unilevel strategy", wallet: "MAIN", user_id: current.id, amount: item.amount * (categoryItem.level_values[i] / 100), ref_type: 'orderItem', ref_id: item.id }, Prisma)
+            await addBalance({ 
+                name: "Unilevel strategy"
+                , wallet: "MAIN"
+                , user_id: current.id
+                , amount: item.amount * (categoryItem.level_values[i] / 100)
+                , ref_type: 'orderItem'
+                , ref_id: item.id
+                , extra_info: {
+                    from: currentUser.id,
+                    fromName: currentUser.name,
+                    fromLogin: currentUser.login,
+                    to: current?.id,
+                    toName: current?.name,
+                    toLogin: current?.login,
+                    productId: item.product.id,
+                    productName: item.product.name,
+                    productPrice: item.product.price,
+                }
+            }, Prisma)
         }
 
     }
