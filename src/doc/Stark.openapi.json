@@ -3,7 +3,7 @@
   "info": {
     "title": "Stark",
     "description": "",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "tags": [
     {
@@ -11,6 +11,15 @@
     },
     {
       "name": "Categoria"
+    },
+    {
+      "name": "Compras"
+    },
+    {
+      "name": "Binário"
+    },
+    {
+      "name": "Produto"
     }
   ],
   "paths": {
@@ -220,12 +229,14 @@
         ]
       }
     },
-    "/v1/category/select": {
+    "/v1/categories/select": {
       "get": {
         "summary": "Lista categorias para um select",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": [
+          "Categoria"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -246,21 +257,21 @@
                       "properties": {
                         "id": {
                           "type": "number"
+                        },
+                        "name": {
+                          "type": "string"
                         }
                       },
                       "required": [
-                        "id"
+                        "id",
+                        "name"
                       ]
-                    },
-                    "name": {
-                      "type": "string"
                     }
                   },
                   "required": [
                     "status",
                     "status_code",
-                    "data",
-                    "name"
+                    "data"
                   ]
                 }
               }
@@ -280,7 +291,9 @@
         "summary": "Criar compra",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": [
+          "Compras"
+        ],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -341,7 +354,9 @@
         "summary": "Aprovar pagamento",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": [
+          "Compras"
+        ],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -411,7 +426,9 @@
         "summary": "Get binary by id",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": [
+          "Binário"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -464,7 +481,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "Categoria"
+          "Produto"
         ],
         "parameters": [],
         "requestBody": {
@@ -518,7 +535,7 @@
         "deprecated": false,
         "description": "",
         "tags": [
-          "Categoria"
+          "Produto"
         ],
         "parameters": [],
         "requestBody": {
@@ -569,7 +586,9 @@
         "summary": "Recupera um produto",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": [
+          "Produto"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -612,7 +631,9 @@
         "summary": "Lista de produtos",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": [
+          "Produto"
+        ],
         "parameters": [
           {
             "name": "page",
