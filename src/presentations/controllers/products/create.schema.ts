@@ -7,8 +7,7 @@ export const schemaCreateProduct = yup.object().shape({
         .max(100, 'O nome deve ter no máximo 100 caracteres.'),
 
     description: yup.string()
-        .nullable()
-        .max(500, 'A descrição deve ter no máximo 500 caracteres.'),
+        .nullable(),
 
     price: yup.number()
         .required('O campo preço é obrigatório.')
@@ -24,5 +23,5 @@ export const schemaCreateProduct = yup.object().shape({
     yield: yup.number()
         .required('O rendimento é obrigatório.')
         .min(0, 'O rendimento deve ser no mínimo 0.'),
-   
+
 });

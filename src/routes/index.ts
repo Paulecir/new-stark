@@ -9,6 +9,7 @@ import categoriesApiV1 from './v1.categories.routes'
 import webhookApiV1 from './v1.webhook.routes'
 import binaryApiV1 from './v1.binary.routes'
 import rdstationApiV1 from './v1.rdstation.routes'
+import financialApiV1 from './v1.financial.routes'
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use('/v1/categories', categoriesApiV1)
 router.use('/v1/webhook', webhookApiV1)
 router.use('/v1/binary', binaryApiV1)
 router.use('/v1/rdstation', rdstationApiV1)
+router.use('/v1/financial', financialApiV1)
 
 export default router;

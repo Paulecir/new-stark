@@ -135,15 +135,17 @@ model PersonalAccessToken {
 }
 
 model Product {
-  id                   BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
-  name                 String              @db.VarChar(100)
-  description          String?             @db.Text
-  price                Decimal             @db.Decimal(20, 8)
-  yield_type           products_yield_type @default(diary)
-  yield                Decimal             @db.Decimal(20, 8)
+  id          BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  name        String              @db.VarChar(100)
+  description String?             @db.Text
+  price       Decimal             @db.Decimal(20, 8)
+  yield_type  products_yield_type @default(diary)
+  yield       Decimal             @db.Decimal(20, 8)
 
   category    Category? @relation(fields: [category_id], references: [id])
   category_id BigInt?   @db.UnsignedBigInt
+
+  images Json?
 
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
