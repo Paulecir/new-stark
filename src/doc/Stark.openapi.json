@@ -475,7 +475,7 @@
         ]
       }
     },
-    "/v1/product/create": {
+    "/v1/products/create": {
       "post": {
         "summary": "Cadastro de produto",
         "deprecated": false,
@@ -529,7 +529,7 @@
         ]
       }
     },
-    "/v1/product/1": {
+    "/v1/products/1": {
       "put": {
         "summary": "Atualiza um produto",
         "deprecated": false,
@@ -626,7 +626,7 @@
         ]
       }
     },
-    "/v1/product": {
+    "/v1/products": {
       "get": {
         "summary": "Lista de produtos",
         "deprecated": false,
@@ -930,6 +930,21 @@
             "type": "integer",
             "description": "Id da categoria"
           },
+          "yield_type": {
+            "type": "string",
+            "description": "Tipo de rendimento (diary, weekly, monthly, semiannual, annual)",
+            "enum": [
+              "diary",
+              "weekly",
+              "monthly",
+              "semiannual",
+              "annual"
+            ]
+          },
+          "yield": {
+            "type": "number",
+            "description": "Porcentagem do rendimento"
+          },
           "images": {
             "type": "array",
             "items": {
@@ -941,7 +956,9 @@
           "name",
           "description",
           "price",
-          "category_id"
+          "category_id",
+          "yield_type",
+          "yield"
         ]
       },
       "ProductImagePost": {
@@ -979,6 +996,19 @@
             "type": "integer",
             "description": "Id da categoria"
           },
+          "type_yield": {
+            "type": "string",
+            "enum": [
+              "diary",
+              "weekly",
+              "monthly",
+              "semiannual",
+              "annual"
+            ]
+          },
+          "yield": {
+            "type": "number"
+          },
           "images": {
             "type": "array",
             "items": {
@@ -991,7 +1021,9 @@
           "description",
           "price",
           "category_id",
-          "id"
+          "id",
+          "type_yield",
+          "yield"
         ]
       }
     },

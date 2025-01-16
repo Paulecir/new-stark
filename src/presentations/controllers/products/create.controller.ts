@@ -20,7 +20,7 @@ export const createProductController = async (requestData: IRequest) => {
         });
     } catch (err) {
         if (err.name === 'ValidationError') {
-            return HttpResponse.errorResponse({ message: err.message });
+            return HttpResponse.errorResponse({ message: err.message, errors: err.errors });
         }
         return HttpResponse.errorResponse({ message: err.message });
     }
