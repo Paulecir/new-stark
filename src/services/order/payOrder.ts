@@ -12,7 +12,7 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
     if (!data.order_id) {
         throw new Error("ORDER_ID_REQUIRED")
     }
-    const order = await Prisma.order.findFirst({
+    let order = await Prisma.order.findFirst({
         where: {
             user_id: user.id,
             OR: [
@@ -73,9 +73,9 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
                 }
             })
 
-            await approveOrder({ orderId: order.order_id }, Prisma)
+            order = await approveOrder({ orderId: order.order_id }, Prisma)
 
-            break;
+            return order
         }
         case "CRIPTO": {
             const info = await axios.get(`https://api.plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${order.total}&order_number=${order.order_id}&currency=USDT_BSC&email=${order.user.email}&order_name=${order.user.name}&callback_url=${process.env.PLISIO_CALLBACK}&api_key=${process.env.PLISIO_KEY}&return_existing=true`)
@@ -113,24 +113,5 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
 
     }
 
-
-
-    return await PrismaLocal.order.findFirst({
-        where: {
-            id: order.id
-        },
-        include: {
-            OrderItem: {
-                include: {
-                    product: {
-                        include: {
-                            category: true
-                        }
-                    }
-                }
-            }
-        }
-    })
-
-    return null
+    return order
 }

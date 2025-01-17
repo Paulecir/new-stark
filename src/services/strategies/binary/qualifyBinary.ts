@@ -46,4 +46,13 @@ export const qualifyBinary = async ({ order, item }: any, Prisma = PrismaLocal) 
         })
     }
 
+    await Prisma.strategyBinary.updateMany({
+        where: {
+            user_id: currentUser.id
+        },
+        data: {
+            qualify: true
+        }
+    })
+
 }

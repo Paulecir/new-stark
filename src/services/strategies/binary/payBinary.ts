@@ -56,7 +56,7 @@ export const payBinary = async () => {
                             binary_bonus_qualify: true
                         },
                         max_value: {
-                            lte: balanceBinaryCeilingUser?.amount || 0
+                            gte: balanceBinaryCeilingUser?.amount || 0
                         }
                     },
                     orderBy: {
@@ -65,6 +65,7 @@ export const payBinary = async () => {
                 })
 
                 const amount: any = (balanceLeft?.amount || 0) < (balanceRight?.amount || 0) ? (balanceLeft?.amount || 0) : (balanceRight?.amount || 0)
+                const direction = amount === 0 ? 'NONE' : (balanceLeft?.amount || 0) < (balanceRight?.amount || 0) ? "LEFT" : "RIGHT"
                 const amountCalc: any = parseFloat(amount) * 0.1
                 const amountCeilingUser = categoryBinaryQualify?.level_values[0] || 0
 
@@ -76,8 +77,9 @@ export const payBinary = async () => {
                         points: amount,
                         amount: amountCalc,
                         amountCeilingUser: amountCalc > amountCeilingUser ? amountCeilingUser : amountCalc,
-                        qualify: strategy.left_qualify && strategy.right_qualify,
-                        mirror: strategy
+                        qualify: strategy.left_qualify && strategy.right_qualify && strategy.qualify,
+                        mirror: strategy,
+                        direction: direction
                     }
                 })
 

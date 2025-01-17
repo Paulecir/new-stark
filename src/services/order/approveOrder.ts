@@ -8,7 +8,7 @@ import { qualifyBinary } from "../strategies/binary/qualifyBinary"
 export const approveOrder = async ({ orderId }: any, Prisma = PrismaLocal) => {
 
 
-    const order = await Prisma.order.findFirst({
+    let order = await Prisma.order.findFirst({
         where: {
             order_id: orderId
         },
@@ -31,12 +31,23 @@ export const approveOrder = async ({ orderId }: any, Prisma = PrismaLocal) => {
 
     if (order.status === 'done') throw new Error("Order done")
 
-    await Prisma.order.update({
+    order = await Prisma.order.update({
         where: {
             id: order.id
         },
         data: {
             status: 'done'
+        },
+        include: {
+            OrderItem: {
+                include: {
+                    product: {
+                        include: {
+                            category: true
+                        }
+                    }
+                }
+            }
         }
     })
 

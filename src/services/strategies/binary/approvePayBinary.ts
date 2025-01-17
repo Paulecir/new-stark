@@ -37,9 +37,10 @@ export const approvePayBinary = async () => {
 
     let percent = 100
 
+    let totalSellAmount = totalSell._sum.amount.toNumber() * 0.25
 
-    if (totalSell._sum.amount > total._sum.amountCeilingUser) {
-        percent = (total._sum.amountCeilingUser.toNumber() * 100) / totalSell._sum.amount.toNumber()
+    if (totalSellAmount < total._sum.amountCeilingUser.toNumber()) {
+        percent = (total._sum.amountCeilingUser.toNumber() * 100) / totalSellAmount
     }
 
     let strategyPay = null
@@ -89,6 +90,7 @@ export const approvePayBinary = async () => {
                         date
                     },
                     data: {
+                        amountPayed: parseFloat(amountTotalCeiling.toString()),
                         amountTotalCeiling,
                         percentTotalCeiling: percent,
                         status: 'PAYED'
