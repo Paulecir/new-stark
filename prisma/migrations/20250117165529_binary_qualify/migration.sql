@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `order` ADD COLUMN `payment_method` ENUM('UNKNOWN', 'BALANCE', 'CRIPTO') NOT NULL DEFAULT 'UNKNOWN';

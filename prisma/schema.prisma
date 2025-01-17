@@ -54,6 +54,7 @@ model User {
   StrategyProgress      StrategyProgress[]      @relation("user")
   Balance               Balance[]               @relation("user")
   BalanceHistory        BalanceHistory[]        @relation("user")
+  StrategyBinaryPay     StrategyBinaryPay[]     @relation("user")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
@@ -139,6 +140,7 @@ model Product {
   name        String              @db.VarChar(100)
   description String?             @db.Text
   price       Decimal             @db.Decimal(20, 8)
+  points      Decimal             @default(0) @db.Decimal(20, 8)
   yield_type  products_yield_type @default(diary)
   yield       Decimal             @db.Decimal(20, 8)
 
@@ -176,6 +178,7 @@ model Category {
   binary_bonus_yield         Decimal? @db.Decimal(20, 8)
   binary_bonus_point_percent Decimal? @db.Decimal(20, 8)
   binary_bonus_levels        Int?
+  binary_bonus_qualify       Boolean  @default(false)
 
   CategoryItem CategoryItem[]
 
@@ -248,23 +251,53 @@ model StrategyBinary {
   left         StrategyBinary? @relation("left", fields: [left_id], references: [id])
   left_id      BigInt?         @db.UnsignedBigInt
   left_count   BigInt          @default(0)
-  left_point   BigInt          @default(0)
+  // left_point   BigInt          @default(0)
   left_qualify Boolean         @default(false)
 
   right         StrategyBinary? @relation("right", fields: [right_id], references: [id])
   right_id      BigInt?         @db.UnsignedBigInt
   right_count   BigInt          @default(0)
-  right_point   BigInt          @default(0)
+  // right_point   BigInt          @default(0)
   right_qualify Boolean         @default(false)
+
+  qualify Boolean @default(false)
+
+  date_check String?
 
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
 
-  ParentStrategyBinary StrategyBinary[] @relation("parent")
-  LeftStrategyBinary   StrategyBinary[] @relation("left")
-  RightStrategyBinary  StrategyBinary[] @relation("right")
+  ParentStrategyBinary StrategyBinary[]    @relation("parent")
+  LeftStrategyBinary   StrategyBinary[]    @relation("left")
+  RightStrategyBinary  StrategyBinary[]    @relation("right")
+  StrategyBinaryPay    StrategyBinaryPay[] @relation("parent")
 
   @@map("strategy_binary")
+}
+
+model StrategyBinaryPay {
+  id                  BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  date                String
+  binary              StrategyBinary @relation("parent", fields: [binary_id], references: [id])
+  binary_id           BigInt         @db.UnsignedBigInt
+  user                User           @relation("user", fields: [user_id], references: [id])
+  user_id             BigInt         @db.UnsignedBigInt
+  amount              Decimal        @db.Decimal(20, 8)
+  amountCeilingUser   Decimal?       @db.Decimal(20, 8)
+  percentTotalCeiling Decimal?       @db.Decimal(20, 8)
+  amountTotalCeiling  Decimal?       @db.Decimal(20, 8)
+  amountPayed         Decimal?       @default(0) @db.Decimal(20, 8)
+  points              Decimal        @db.Decimal(20, 8)
+  qualify             Boolean        @default(false)
+  mirror              Json?
+
+  status StatusBinaryPay @default(PENDING)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@unique([date, binary_id, user_id])
+  @@map("strategy_binary_pay")
 }
 
 model StrategyConfig {
@@ -306,18 +339,19 @@ enum StrategyConfigType {
 }
 
 model Order {
-  id       BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  id       BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
   order_id String
-  user     User   @relation("user", fields: [user_id], references: [id])
-  user_id  BigInt @db.UnsignedBigInt
+  user     User    @relation("user", fields: [user_id], references: [id])
+  user_id  BigInt  @db.UnsignedBigInt
+  total    Decimal @default(0) @db.Decimal(20, 8)
 
-  payment Json?
-
+  payment_method OrderPaymentmMethod @default(UNKNOWN)
+  payment        Json?
   payment_result Json?
 
   status                Status                  @default(init)
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime?               @updatedAt
+  created_at            DateTime                @default(now())
+  updated_at            DateTime?               @updatedAt
   OrderItem             OrderItem[]             @relation("order")
   OrderItemDistribution OrderItemDistribution[] @relation("order")
 
@@ -335,8 +369,8 @@ model OrderItem {
   quantity Int     @default(1)
   amount   Decimal @db.Decimal(20, 8)
 
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime?               @updatedAt
+  created_at            DateTime                @default(now())
+  updated_at            DateTime?               @updatedAt
   OrderItemDistribution OrderItemDistribution[] @relation("orderItem")
 
   @@map("order_item")
@@ -413,6 +447,10 @@ enum StrategyStatusType {
 
 enum WalletType {
   MAIN
+  PENDING
+  WITHDRAW
+  GENERAL_POINT
+  BINARY_CEILING_USER
   BINARY_LEFT_POINT
   BINARY_RIGHT_POINT
 }
@@ -420,4 +458,17 @@ enum WalletType {
 enum BalanceDirectionType {
   CREDIT
   DEBIT
+}
+
+enum StatusBinaryPay {
+  PENDING
+  PAYED
+  ERROR
+}
+
+enum OrderPaymentmMethod {
+  UNKNOWN
+  BALANCE
+  CRIPTO
+  PLISIO
 }

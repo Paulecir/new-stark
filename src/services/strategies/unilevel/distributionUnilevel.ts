@@ -46,6 +46,8 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
         }
     })
 
+    if (!categoryItem) return null;
+
     const hier = []
 
     let currentUser = await Prisma.user.findUnique({

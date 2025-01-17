@@ -31,21 +31,30 @@ export const buyProduct = async (data: any, user: any) => {
                 }
             })
         }
+        
+        await tx.order.update({
+            where: {
+                id: order.id
+            },
+            data: {
+                total
+            }
+        })
 
         const info = null; 
         // await axios.get(`https://api.plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${total}&order_number=${order.order_id}&currency=USDT_BSC&email=customer@plisio.net&order_name=btc1&callback_url=http://test.com/callback&api_key=xh1vHWERjGLw4lRqN2cxuVXhpcRz0mO7JF39YjhMiMIQGMos72lYlfdCMdriYnQz&json=true&return_existing=true`)
         //     .then(res => res.data?.data)
         //     .catch(err => err.reponse.data)
 
-        order = await tx.order.update({
-            where: {
-                id: order.id
-            },
-            data: {
-                status: "pending",
-                payment: info
-            }
-        })
+        // order = await tx.order.update({
+        //     where: {
+        //         id: order.id
+        //     },
+        //     data: {
+        //         status: "pending",
+        //         payment: info
+        //     }
+        // })
 
         return order
     },{

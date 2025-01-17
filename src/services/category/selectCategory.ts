@@ -1,7 +1,7 @@
 import Prisma from "@/infra/db/prisma"
 import { NotFoundError } from "@/presentations/errors/notFoundException"
 
-export const selectCategory = async (filter: any[] = [], orderBy: any = { createdAt: "desc" }) => {
+export const selectCategory = async (filter: any[] = [], orderBy: any = { created_at: "desc" }) => {
 
     const data = await Prisma.category.findMany({
         where: {

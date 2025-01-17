@@ -2,26 +2,20 @@ import PrismaLocal from "@/infra/db/prisma"
 import { NotFoundError } from "@/presentations/errors/notFoundException"
 import { IFilter } from "@/presentations/interface/IFilter"
 
-export const filterExtract = async (
+export const resume = async (
     {
         filter: { wallet },
-        pagination = {},
-        orderBy = { created_at: "desc" },
         user
     }: IFilter
     , Prisma = PrismaLocal
 ) => {
-    const { page = 1, pageSize = 10 } = pagination
-    const data = await Prisma.balanceHistory.findMany({
-        take: pageSize,
-        skip: pageSize * (page - 1),
+    const data = await Prisma.balance.findMany({
         where: {
             AND: [
                 { wallet: { in: wallet } },
                 { user_id: user.id }
             ]
-        },
-        orderBy
+        }
     })
     if (!data) throw new NotFoundError("Hitory not found")
 
@@ -34,6 +28,6 @@ export const filterExtract = async (
         },
     })
 
-    return { data, metadata: { page, pageSize, total } }
+    return { data }
 
 }

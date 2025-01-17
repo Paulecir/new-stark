@@ -1,7 +1,7 @@
 import Prisma from "@/infra/db/prisma"
 import { NotFoundError } from "@/presentations/errors/notFoundException"
 
-export const filterUser = async (filter: any[] = [], pagination: any, orderBy: any = { createdAt: "desc" }) => {
+export const filterUser = async (filter: any[] = [], pagination: any, orderBy: any = { created_at: "desc" }) => {
     const { page = 1, pageSize = 10 } = pagination
 
     const data = await Prisma.user.findMany({

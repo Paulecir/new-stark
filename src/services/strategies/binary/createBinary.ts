@@ -23,9 +23,15 @@ export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 
         throw new Error('User not found')
     }
 
+    let sponsor = await Prisma.user.findUnique({
+        where: {
+            id: user.sponsor_id
+        }
+    })
+
     let rootNode = await Prisma.strategyBinary.findFirst({
         where: {
-            user_id: user.sponsor.id
+            user_id: sponsor.id
         },
         orderBy: {
             level: 'desc'
@@ -35,12 +41,41 @@ export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 
 
     let parentNode = await Prisma.strategyBinary.findFirst({
         where: {
-            user_id: user.sponsor.id
+            user_id: sponsor.id
         },
         orderBy: {
             level: 'desc'
         }
     })
+
+    while (!rootNode) {
+        sponsor = await Prisma.user.findUnique({
+            where: {
+                id: sponsor.sponsor_id
+            }
+        })
+
+        if (!sponsor) throw new Error("Sponsor not found")
+    
+        rootNode = await Prisma.strategyBinary.findFirst({
+            where: {
+                user_id: sponsor.id
+            },
+            orderBy: {
+                level: 'desc'
+            }
+        })
+    
+    
+        parentNode = await Prisma.strategyBinary.findFirst({
+            where: {
+                user_id: sponsor.id
+            },
+            orderBy: {
+                level: 'desc'
+            }
+        })
+    }
 
     if (strategy === "AUTO") {
         priority = parentNode.autoDirection || 'L'
@@ -64,7 +99,7 @@ export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 
                     id: parentNode.id
                 },
                 data: {
-                    autoDirection: priority === 'R' ? 'L' : 'R',
+                    autoDirection: 'R',
                     right_id: binary.id
                 }
             })
@@ -77,7 +112,7 @@ export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 
                     autoDirection: priority === 'R' ? 'L' : 'R',
                 }
             })
-            updateCtBinary(parseInt(binary.id.toString()), Prisma)
+            updateCtBinaryNew(parseInt(binary.id.toString()), Prisma)
             break
         }
 
@@ -97,7 +132,7 @@ export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 
                     id: parentNode.id
                 },
                 data: {
-                    autoDirection: priority === 'L' ? 'R' : 'L',
+                    autoDirection: 'L',
                     left_id: binary.id
                 }
             })
@@ -111,7 +146,7 @@ export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 
                 }
             })
 
-            updateCtBinary(parseInt(binary.id.toString()))
+            updateCtBinaryNew(parseInt(binary.id.toString()), Prisma)
             break;
         }
 
@@ -138,6 +173,75 @@ export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 
         if (!parentNode) break;
     }
 
+
+}
+
+export const updateCtBinaryNew = async (binaryId, Prisma = PrismaLocal) => {
+
+    let binary = await Prisma.strategyBinary.findFirst({
+        where: {
+            id: binaryId
+        },
+        include: {
+            user: true,
+            parent: {
+                include: {
+                    user: true
+                }
+            }
+        }
+    })
+
+
+    do {
+
+        if (binary.ref === "R") {
+            await Prisma.strategyBinary.update(
+                {
+                    where: {
+                        id: binary.parent.id
+                    },
+                    data: {
+                        right_count: {
+                            increment: 1
+                        }
+                    }
+                })
+        }
+
+        if (binary.ref === "L") {
+
+            await Prisma.strategyBinary.update(
+                {
+                    where: {
+                        id: binary.parent.id
+                    },
+                    data: {
+                        left_count: {
+                            increment: 1
+                        }
+                    }
+                })
+        }
+
+        if (!binary.parent) break;
+
+        binary = await Prisma.strategyBinary.findFirst({
+            where: {
+                id: binary.parent.id
+            },
+            include: {
+                user: true,
+                parent: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        })
+
+
+    } while (binary)
 
 }
 

@@ -1,17 +1,18 @@
 import { HttpResponse } from "@/presentations/helpers/httpResponse"
 import { IRequest } from "@/presentations/interface/IRequest"
-import { schemaExtract } from "./extract.schema";
 import { FinancialService } from "@/services/financial";
+import { schema } from "./my-orders.schema";
+import { OrderService } from "@/services/order";
 
-export const financialExtractController = async (requestData: IRequest) => {
+export const getOrderController = async (requestData: IRequest) => {
 
     try {
-        // Validar os dados da requisição
-        const validatedData = await schemaExtract.validate(requestData.body, { abortEarly: false });
 
         // Criar o usuário no banco de dados
-        const data = await FinancialService.filterExtract({
-            filter: validatedData,
+        const data = await OrderService.getOrder({
+            filter: {
+                orderId: requestData.params.orderId
+            },
             user: requestData.user
         })
 
@@ -21,6 +22,7 @@ export const financialExtractController = async (requestData: IRequest) => {
 
         });
     } catch (err) {
+        console.log("E", err)
         if (err.name === 'ValidationError') {
             return HttpResponse.errorResponse({ message: err.message, errors: err.errors });
         }

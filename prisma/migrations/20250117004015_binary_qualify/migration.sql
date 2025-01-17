@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `StrategyBinaryPay` ADD COLUMN `status` ENUM('PENDING', 'PAYED') NOT NULL DEFAULT 'PENDING';

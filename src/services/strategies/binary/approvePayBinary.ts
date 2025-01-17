@@ -1,0 +1,119 @@
+import Prisma from "@/infra/db/prisma"
+import { addBalance } from "@/services/balance/addBalance"
+import { decBalance } from "@/services/balance/decBalance"
+import moment from "moment"
+
+export const approvePayBinary = async () => {
+
+    const date = moment().format('YYYY-MM-DD')
+
+    console.log("D", date)
+
+    const total = await Prisma.strategyBinaryPay.aggregate({
+        where: {
+            status: "PENDING",
+            date
+        },
+        _sum: {
+            amountCeilingUser: true
+        }
+    })
+
+    const dateNow = moment(date).startOf("day").subtract(1, "day").toDate()
+
+    const totalSell = await Prisma.orderItem.aggregate({
+        where: {
+            order: {
+                status: "done"
+            },
+            created_at: {
+                gte: dateNow
+            }
+        },
+        _sum: {
+            amount: true
+        }
+    })
+
+    let percent = 100
+
+
+    if (totalSell._sum.amount > total._sum.amountCeilingUser) {
+        percent = (total._sum.amountCeilingUser.toNumber() * 100) / totalSell._sum.amount.toNumber()
+    }
+
+    let strategyPay = null
+    do {
+
+        strategyPay = await Prisma.$transaction(async (Prisma) => {
+            try {
+                const strategyPay = await Prisma.strategyBinaryPay.findFirst({
+                    where: {
+                        status: "PENDING",
+                        date
+                    },
+                    orderBy: {
+                        id: "asc"
+                    }
+                })
+
+                if (!strategyPay) return null
+
+                const current = await Prisma.user.findFirst({
+                    where: {
+                        id: strategyPay.user_id
+                    }
+                })
+
+                // const 
+
+                const amountTotalCeiling = strategyPay.amountCeilingUser.toNumber() * (percent / 100)
+
+                await addBalance({
+                    name: "Binary payment"
+                    , wallet: "MAIN"
+                    , user_id: strategyPay.user_id
+                    , amount: parseFloat(amountTotalCeiling.toString())
+                    , ref_type: 'strategyBinaryPay'
+                    , ref_id: strategyPay.id
+                    , extra_info: {
+                        to: strategyPay?.id,
+                        toName: current?.name,
+                        toLogin: current?.login,
+                    }
+                }, Prisma)
+
+                await Prisma.strategyBinaryPay.updateMany({
+                    where: {
+                        status: "PENDING",
+                        date
+                    },
+                    data: {
+                        amountTotalCeiling,
+                        percentTotalCeiling: percent,
+                        status: 'PAYED'
+                    }
+                })
+            } catch (err) {
+                await Prisma.strategyBinaryPay.updateMany({
+                    where: {
+                        status: "PENDING",
+                        date
+                    },
+                    data: {
+                        status: 'ERROR'
+                    }
+                })
+            }
+        })
+
+        if (!strategyPay) break;
+
+
+    } while (strategyPay)
+
+
+    console.log("T", total._sum.amountCeilingUser, total._sum.amountCeilingUser.toNumber() * (percent / 100))
+
+
+}

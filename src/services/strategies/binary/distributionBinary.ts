@@ -54,17 +54,17 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                     productPrice: item.product.price,
                 }
             }, Prisma)
-            await Prisma.strategyBinary.update(
-                {
-                    where: {
-                        id: binary.parent.id
-                    },
-                    data: {
-                        right_point: {
-                            increment: point
-                        }
-                    }
-                })
+            // await Prisma.strategyBinary.update(
+            //     {
+            //         where: {
+            //             id: binary.parent.id
+            //         },
+            //         data: {
+            //             right_point: {
+            //                 increment: point
+            //             }
+            //         }
+            //     })
         }
 
         if (binary.ref === "L") {
@@ -88,17 +88,17 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                 }
             }, Prisma)
 
-            await Prisma.strategyBinary.update(
-                {
-                    where: {
-                        id: binary.parent.id
-                    },
-                    data: {
-                        left_point: {
-                            increment: point
-                        }
-                    }
-                })
+            // await Prisma.strategyBinary.update(
+            //     {
+            //         where: {
+            //             id: binary.parent.id
+            //         },
+            //         data: {
+            //             left_point: {
+            //                 increment: point
+            //             }
+            //         }
+            //     })
         }
 
         if (!binary.parent) break;
