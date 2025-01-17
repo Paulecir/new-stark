@@ -1,13 +1,15 @@
+import Prisma from "@/infra/db/prisma";
 import { HttpResponse } from "@/presentations/helpers/httpResponse";
 import { IRequest } from "@/presentations/interface/IRequest";
 import { OrderService } from "@/services/order";
 
 export const payOrderController = async (requestData: IRequest) => {
     try {
-        const order = await OrderService.payOrder({
+        
+        const order = await Prisma.$transaction(async (tx) => await await OrderService.payOrder({
             order_id: requestData.params.id,
             ...requestData.body
-        }, requestData.user);
+        }, requestData.user, tx), { timeout: 10000, maxWait: 10000 })
 
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
         return HttpResponse.successResponse({

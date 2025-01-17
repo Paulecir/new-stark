@@ -277,6 +277,7 @@ model StrategyBinary {
 
 model StrategyBinaryPay {
   id                  BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  direction           StrategyBinaryPayDirection @default(NONE)
   date                String
   binary              StrategyBinary @relation("parent", fields: [binary_id], references: [id])
   binary_id           BigInt         @db.UnsignedBigInt
@@ -471,4 +472,10 @@ enum OrderPaymentmMethod {
   BALANCE
   CRIPTO
   PLISIO
+}
+
+enum StrategyBinaryPayDirection {
+  NONE
+  LEFT
+  RIGHT
 }

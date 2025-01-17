@@ -2,16 +2,17 @@ import { HttpResponse } from "@/presentations/helpers/httpResponse";
 import { IRequest } from "@/presentations/interface/IRequest";
 import { CategoryService } from "@/services/category";
 import { updateSchema } from "./update.schema";
+import Prisma from "@/infra/db/prisma";
 
 export const updateCategoryController = async (requestData: IRequest) => {
     try {
         const validatedData = await updateSchema.validate(requestData.body, { abortEarly: false });
 
-        const user = await CategoryService.updateCategory(parseInt(requestData.params.id), validatedData);
+        const data = await Prisma.$transaction(async (tx) => await CategoryService.updateCategory(parseInt(requestData.params.id), validatedData, tx), { timeout: 10000, maxWait: 10000 })
 
         return HttpResponse.successResponse({
             message: 'Category updated successfully',
-            data: user,
+            data,
             status: 201
         });
     } catch (err) {
