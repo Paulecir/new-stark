@@ -276,20 +276,20 @@ model StrategyBinary {
 }
 
 model StrategyBinaryPay {
-  id                  BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  id                  BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt
   direction           StrategyBinaryPayDirection @default(NONE)
   date                String
-  binary              StrategyBinary @relation("parent", fields: [binary_id], references: [id])
-  binary_id           BigInt         @db.UnsignedBigInt
-  user                User           @relation("user", fields: [user_id], references: [id])
-  user_id             BigInt         @db.UnsignedBigInt
-  amount              Decimal        @db.Decimal(20, 8)
-  amountCeilingUser   Decimal?       @db.Decimal(20, 8)
-  percentTotalCeiling Decimal?       @db.Decimal(20, 8)
-  amountTotalCeiling  Decimal?       @db.Decimal(20, 8)
-  amountPayed         Decimal?       @default(0) @db.Decimal(20, 8)
-  points              Decimal        @db.Decimal(20, 8)
-  qualify             Boolean        @default(false)
+  binary              StrategyBinary             @relation("parent", fields: [binary_id], references: [id])
+  binary_id           BigInt                     @db.UnsignedBigInt
+  user                User                       @relation("user", fields: [user_id], references: [id])
+  user_id             BigInt                     @db.UnsignedBigInt
+  amount              Decimal                    @db.Decimal(20, 8)
+  amountCeilingUser   Decimal?                   @db.Decimal(20, 8)
+  percentTotalCeiling Decimal?                   @db.Decimal(20, 8)
+  amountTotalCeiling  Decimal?                   @db.Decimal(20, 8)
+  amountPayed         Decimal?                   @default(0) @db.Decimal(20, 8)
+  points              Decimal                    @db.Decimal(20, 8)
+  qualify             Boolean                    @default(false)
   mirror              Json?
 
   status StatusBinaryPay @default(PENDING)
@@ -400,6 +400,11 @@ model OrderItemDistribution {
   @@map("order_item_distribution")
 }
 
+model Webhook {
+  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  request Json?
+}
+
 enum products_yield_type {
   diary
   weekly
@@ -465,6 +470,7 @@ enum StatusBinaryPay {
   PENDING
   PAYED
   ERROR
+  NOTQUALIFY
 }
 
 enum OrderPaymentmMethod {

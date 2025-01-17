@@ -1,4 +1,4 @@
-import Prisma from "@/infra/db/prisma"
+import PrismaLocal from "@/infra/db/prisma"
 import { addBalance } from "@/services/balance/addBalance"
 import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
@@ -9,7 +9,7 @@ export const approvePayBinary = async () => {
 
     console.log("D", date)
 
-    const total = await Prisma.strategyBinaryPay.aggregate({
+    const total = await PrismaLocal.strategyBinaryPay.aggregate({
         where: {
             status: "PENDING",
             date
@@ -21,7 +21,7 @@ export const approvePayBinary = async () => {
 
     const dateNow = moment(date).startOf("day").subtract(1, "day").toDate()
 
-    const totalSell = await Prisma.orderItem.aggregate({
+    const totalSell = await PrismaLocal.orderItem.aggregate({
         where: {
             order: {
                 status: "done"
@@ -46,17 +46,18 @@ export const approvePayBinary = async () => {
     let strategyPay = null
     do {
 
-        strategyPay = await Prisma.$transaction(async (Prisma) => {
+        strategyPay = await PrismaLocal.$transaction(async (Prisma) => {
+            const strategyPay = await Prisma.strategyBinaryPay.findFirst({
+                where: {
+                    status: "PENDING",
+                    date
+                },
+                orderBy: {
+                    id: "asc"
+                }
+            })
             try {
-                const strategyPay = await Prisma.strategyBinaryPay.findFirst({
-                    where: {
-                        status: "PENDING",
-                        date
-                    },
-                    orderBy: {
-                        id: "asc"
-                    }
-                })
+
 
                 if (!strategyPay) return null
 
@@ -70,32 +71,34 @@ export const approvePayBinary = async () => {
 
                 const amountTotalCeiling = strategyPay.amountCeilingUser.toNumber() * (percent / 100)
 
-                await addBalance({
-                    name: "Binary payment"
-                    , wallet: "MAIN"
-                    , user_id: strategyPay.user_id
-                    , amount: parseFloat(amountTotalCeiling.toString())
-                    , ref_type: 'strategyBinaryPay'
-                    , ref_id: strategyPay.id
-                    , extra_info: {
-                        to: strategyPay?.id,
-                        toName: current?.name,
-                        toLogin: current?.login,
-                    }
-                }, Prisma)
+                if (amountTotalCeiling > 0) {
+                    await addBalance({
+                        name: "Binary payment"
+                        , wallet: "MAIN"
+                        , user_id: strategyPay.user_id
+                        , amount: parseFloat(amountTotalCeiling.toString())
+                        , ref_type: 'strategyBinaryPay'
+                        , ref_id: strategyPay.id
+                        , extra_info: {
+                            to: strategyPay?.id,
+                            toName: current?.name,
+                            toLogin: current?.login,
+                        }
+                    }, Prisma)
+                }
 
                 await Prisma.strategyBinaryPay.updateMany({
                     where: {
-                        status: "PENDING",
-                        date
+                        id: strategyPay.id
                     },
                     data: {
                         amountPayed: parseFloat(amountTotalCeiling.toString()),
                         amountTotalCeiling,
                         percentTotalCeiling: percent,
-                        status: 'PAYED'
+                        status: strategyPay.qualify ? 'PAYED' : "NOTQUALIFY"
                     }
                 })
+                
             } catch (err) {
                 await Prisma.strategyBinaryPay.updateMany({
                     where: {
@@ -106,7 +109,13 @@ export const approvePayBinary = async () => {
                         status: 'ERROR'
                     }
                 })
+            } finally {
+                return strategyPay
             }
+
+        }, {
+            timeout: 100000,
+            maxWait: 100000
         })
 
         if (!strategyPay) break;
