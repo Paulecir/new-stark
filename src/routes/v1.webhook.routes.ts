@@ -8,10 +8,18 @@ import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
 
 const router = Router()
 
-router.post("/plisio",
+router.post("/plisio/callback",
   // #swagger.tags = ['Webhook']
-  authMiddleware,
-  expressRouteAdapter(plisioWebhookController)
+  (req, res) => {
+    res.json(req.body)
+  }
+)
+
+router.get("/plisio/callback",
+  // #swagger.tags = ['Webhook']
+  (req, res) => {
+    res.json(req.query)
+  }
 )
 
 router.post("/binary", async (req, res) => {
