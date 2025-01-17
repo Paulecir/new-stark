@@ -847,8 +847,9 @@
             "schema": {
               "type": "string",
               "enum": [
-                "RIGHT",
-                "LEFT"
+                "right",
+                "left",
+                "total"
               ]
             }
           }
@@ -868,15 +869,25 @@
                       "type": "integer"
                     },
                     "data": {
-                      "allOf": [
-                        {
-                          "type": "object",
-                          "properties": {}
+                      "type": "object",
+                      "properties": {
+                        "nodes": {
+                          "type": "number",
+                          "description": "Quantidade de nós"
                         },
-                        {
-                          "type": "object",
-                          "properties": {}
+                        "points": {
+                          "type": "number",
+                          "description": "Pontos disponíveis"
+                        },
+                        "totalPoints": {
+                          "type": "string",
+                          "description": "Total de pontos"
                         }
+                      },
+                      "required": [
+                        "nodes",
+                        "points",
+                        "totalPoints"
                       ]
                     }
                   },
