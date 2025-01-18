@@ -37,7 +37,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
     await addBalance({
         name: "Binary add point"
         , wallet: "BINARY_CEILING_USER"
-        , user_id: order.id
+        , user_id: currentUser.id
         , amount: point
         , ref_type: 'strategyBinary'
         , ref_id: binary.id
