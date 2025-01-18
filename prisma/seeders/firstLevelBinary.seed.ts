@@ -6,8 +6,12 @@ import { run } from '../../src/services/seed/run';
 const Prisma = new PrismaClient()
 
 async function firstLevelBinary() {
-
-    for (let i = 0; i < 10; i++) {
+    console.log("?????", process.argv)
+    let max = process.argv[2] ? parseInt(process.argv[2]) : 10
+    for (let i = 0; i < max; i++) {
+        const rnd = i < 4 ? 1 : parseInt(((Math.random() * (i + 1))).toString())
+        console.log("i", rnd)
+        const sponsor: any = await Prisma.$queryRaw`SELECT * FROM users ORDER BY rand() LIMIT 1`
         const user = await Prisma.user.create({
             data: {
                 "name": faker.person.fullName(),
@@ -17,7 +21,7 @@ async function firstLevelBinary() {
                 "password": await bcrypt.hash("123456789", 12),
                 "country_name": "Brasil",
                 "country_code": "BR",
-                "sponsor_id": 1,
+                "sponsor_id": sponsor[0].id,
                 "is_active": true
             }
         })
@@ -26,7 +30,7 @@ async function firstLevelBinary() {
             name: "Initial Balance"
             , wallet: "MAIN"
             , user_id: user.id
-            , amount: 10000
+            , amount: 10
             , ref_type: 'user'
             , ref_id: user.id
             , extra_info: {

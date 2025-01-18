@@ -4,8 +4,8 @@ import startSeed from './seeders/start.seed'
 
 (async () => {
 
-    await startSeed()
-    // await firstLevelBinary()
+    // await startSeed()
+    await firstLevelBinary()
     // await secondLevelBinary()
 
 

@@ -3,11 +3,7 @@ import { addBalance } from "@/services/balance/addBalance"
 import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
 
-export const approvePayBinary = async () => {
-
-    const date = moment().format('YYYY-MM-DD')
-
-    console.log("D", date)
+export const approvePayBinary = async (date = moment().format('YYYY-MM-DD')) => {
 
     const total = await PrismaLocal.strategyBinaryPay.aggregate({
         where: {

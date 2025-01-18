@@ -3,9 +3,7 @@ import { addBalance } from "@/services/balance/addBalance"
 import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
 
-export const payBinary = async () => {
-
-    const date = moment().format('YYYY-MM-DD')
+export const payBinary = async (date: string = moment().format('YYYY-MM-DD')) => {
 
     let info = null
     do {
@@ -50,6 +48,8 @@ export const payBinary = async () => {
                     }
                 })
 
+              
+
                 const categoryBinaryQualify = await Prisma.categoryItem.findFirst({
                     where: {
                         category: {
@@ -64,8 +64,8 @@ export const payBinary = async () => {
                     }
                 })
 
-                const amount: any = (balanceLeft?.amount || 0) < (balanceRight?.amount || 0) ? (balanceLeft?.amount || 0) : (balanceRight?.amount || 0)
-                const direction = amount === 0 ? 'NONE' : (balanceLeft?.amount || 0) < (balanceRight?.amount || 0) ? "LEFT" : "RIGHT"
+                const amount: any = (balanceLeft?.amount.toNumber() || 0) < (balanceRight?.amount.toNumber() || 0) ? (balanceLeft?.amount.toNumber() || 0) : (balanceRight?.amount.toNumber() || 0)
+                const direction = amount === 0 ? 'NONE' : (balanceLeft?.amount.toNumber() || 0) < (balanceRight?.amount.toNumber() || 0) ? "LEFT" : "RIGHT"
                 const amountCalc: any = parseFloat(amount) * 0.1
                 const amountCeilingUser = categoryBinaryQualify?.level_values[0] || 0
 
@@ -83,35 +83,39 @@ export const payBinary = async () => {
                     }
                 })
 
-                await decBalance({
-                    name: "Binary payment"
-                    , wallet: "BINARY_RIGHT_POINT"
-                    , user_id: strategy.id
-                    , amount: parseFloat(amount)
-                    , ref_type: 'strategyBinaryPay'
-                    , ref_id: binaryPay.id
-                    , extra_info: {
-                        to: strategy?.id,
-                        toName: current?.name,
-                        toLogin: current?.login,
-                        binaryId: strategy.id,
-                    }
-                }, Prisma)
+                if (amount > 0) {
 
-                await decBalance({
-                    name: "Binary payment"
-                    , wallet: "BINARY_LEFT_POINT"
-                    , user_id: strategy.id
-                    , amount: parseFloat(amount)
-                    , ref_type: 'strategyBinaryPay'
-                    , ref_id: binaryPay.id
-                    , extra_info: {
-                        to: strategy?.id,
-                        toName: current?.name,
-                        toLogin: current?.login,
-                        binaryId: strategy.id,
-                    }
-                }, Prisma)
+                    await decBalance({
+                        name: "Binary payment"
+                        , wallet: "BINARY_RIGHT_POINT"
+                        , user_id: strategy.id
+                        , amount: parseFloat(amount)
+                        , ref_type: 'strategyBinaryPay'
+                        , ref_id: binaryPay.id
+                        , extra_info: {
+                            to: strategy?.id,
+                            toName: current?.name,
+                            toLogin: current?.login,
+                            binaryId: strategy.id,
+                        }
+                    }, Prisma)
+
+                    await decBalance({
+                        name: "Binary payment"
+                        , wallet: "BINARY_LEFT_POINT"
+                        , user_id: strategy.id
+                        , amount: parseFloat(amount)
+                        , ref_type: 'strategyBinaryPay'
+                        , ref_id: binaryPay.id
+                        , extra_info: {
+                            to: strategy?.id,
+                            toName: current?.name,
+                            toLogin: current?.login,
+                            binaryId: strategy.id,
+                        }
+                    }, Prisma)
+
+                }
 
                 await Prisma.strategyBinary.update({
                     where: {
@@ -149,6 +153,8 @@ export const payBinary = async () => {
                 console.log("E", err)
             }
 
+
+            // throw new Error("ACERT")
             return strategy;
         }, {
             timeout: 100000,

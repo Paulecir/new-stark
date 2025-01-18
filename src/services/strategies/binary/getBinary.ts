@@ -1,6 +1,6 @@
 import PrismaLocal from "@/infra/db/prisma";
 
-export const getBinaryById = async ({ id, level = 3 }: any, Prisma = PrismaLocal) => {
+export const getBinaryById = async ({ id, level = 10 }: any, Prisma = PrismaLocal) => {
 
     const root = await Prisma.strategyBinary.findFirst({
         where: {
