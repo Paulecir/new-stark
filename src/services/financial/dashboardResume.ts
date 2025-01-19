@@ -23,7 +23,7 @@ export const dashboardResume = async (
     const binaryPay = await Prisma.strategyBinaryPay.aggregate({
         where: {
             user_id: user.id,
-            status: "PAYED",
+            status: { in: ["PAYED", "PENDING", "NOTQUALIFY"] },
             direction: direction === 'left' ? "LEFT" : direction === "right" ? "RIGHT" : { not: "NONE" }
 
 

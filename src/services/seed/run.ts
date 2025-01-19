@@ -8,7 +8,7 @@ export const run = async (user) => {
         name: "Initial Balance"
         , wallet: "MAIN"
         , user_id: user.id
-        , amount: 10000
+        , amount: 10
         , ref_type: 'user'
         , ref_id: user.id
         , extra_info: {

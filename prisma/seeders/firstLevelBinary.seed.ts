@@ -6,11 +6,8 @@ import { run } from '../../src/services/seed/run';
 const Prisma = new PrismaClient()
 
 async function firstLevelBinary() {
-    console.log("?????", process.argv)
     let max = process.argv[2] ? parseInt(process.argv[2]) : 10
     for (let i = 0; i < max; i++) {
-        const rnd = i < 4 ? 1 : parseInt(((Math.random() * (i + 1))).toString())
-        console.log("i", rnd)
         const sponsor: any = await Prisma.$queryRaw`SELECT * FROM users ORDER BY rand() LIMIT 1`
         const user = await Prisma.user.create({
             data: {
