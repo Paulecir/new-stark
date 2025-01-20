@@ -18,7 +18,7 @@ const Prisma = new PrismaClient().$extends({
   query: {
     user: {
       async update({ args, query, operation }: any) {
-        if (!args.select?.password) {
+        if (!args.select) {
           args.omit = { password: true }
         }
 
@@ -142,7 +142,7 @@ const Prisma = new PrismaClient().$extends({
       },
 
       async findMany({ args, query, operation }: any) {
-        if (!args.select?.password) {
+        if (!args.select) {
           args.omit = { password: true }
         }
 

@@ -38,6 +38,8 @@ model User {
   position         users_position?
   is_active        Boolean         @default(false)
 
+  ancestry String? @db.Text
+
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
 

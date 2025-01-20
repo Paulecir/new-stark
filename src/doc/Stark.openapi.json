@@ -20,6 +20,12 @@
     },
     {
       "name": "Produto"
+    },
+    {
+      "name": "Dashboard"
+    },
+    {
+      "name": "User"
     }
   ],
   "paths": {
@@ -475,6 +481,110 @@
         ]
       }
     },
+    "/v1/webhook/binary": {
+      "post": {
+        "summary": "Rodar o binário",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        {
+                          "type": "object",
+                          "properties": {}
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/webhook/approveBinary": {
+      "post": {
+        "summary": "Aprovar pagamento do binário",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        {
+                          "type": "object",
+                          "properties": {}
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/v1/products/create": {
       "post": {
         "summary": "Cadastro de produto",
@@ -837,7 +947,10 @@
         "summary": "Card binário",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": [
+          "Binário",
+          "Dashboard"
+        ],
         "parameters": [
           {
             "name": "direction",
@@ -888,6 +1001,153 @@
                         "nodes",
                         "points",
                         "totalPoints"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/users/stats": {
+      "get": {
+        "summary": "Recupera status do usuário",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Dashboard",
+          "User"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "noPositions": {
+                          "type": "integer"
+                        },
+                        "noQualify": {
+                          "type": "integer"
+                        },
+                        "noOrders": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "noPositions",
+                        "noOrders",
+                        "noQualify"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/dashboard/users/stats/list": {
+      "get": {
+        "summary": "Recupera lista do usuário por status",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Dashboard",
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "noPositions",
+                "noQualify",
+                "noOrders"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "login": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "phone": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "login",
+                        "name",
+                        "phone",
+                        "email"
                       ]
                     }
                   },

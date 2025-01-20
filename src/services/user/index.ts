@@ -1,3 +1,5 @@
+import { dashboardStats } from "./dashboardStats";
+import { dashboardStatsList } from "./dashboardStatsList";
 import { filterUser } from "./filterUser";
 import { getUserById } from "./getUserById";
 import { registerUser } from "./registerUser";
@@ -7,5 +9,7 @@ export const UserService = {
     getUserById,
     registerUser,
     updateUser,
-    filterUser
+    filterUser,
+    dashboardStats,
+    dashboardStatsList
 }
