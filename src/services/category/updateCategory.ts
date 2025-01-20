@@ -15,8 +15,8 @@ export const updateCategory = async (id: number, data: any, Prisma = PrismaLocal
             id
         },
         data
-    });
-
+    })
+    
     for (const unilevel of unilevel_bonus_items) {
         if (unilevel.id) {
             await Prisma.categoryItem.update({

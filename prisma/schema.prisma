@@ -57,6 +57,7 @@ model User {
   Balance               Balance[]               @relation("user")
   BalanceHistory        BalanceHistory[]        @relation("user")
   StrategyBinaryPay     StrategyBinaryPay[]     @relation("user")
+  Commission            Commission[]            @relation("user")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
@@ -91,10 +92,11 @@ model BalanceHistory {
 
   extra_info Json?
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime?    @default(now())
+  updated_at DateTime?    @updatedAt
 
   @@map("balance_history")
+  Commission Commission[] @relation("commission")
 }
 
 model PasswordResetToken {
@@ -182,12 +184,19 @@ model Category {
   binary_bonus_levels        Int?
   binary_bonus_qualify       Boolean  @default(false)
 
+  commission              Boolean?            @default(false)
+  commission_pay_type     products_yield_type @default(diary)
+  commission_pay_config   Json?
+  commission_yield_type   products_yield_type @default(diary)
+  commission_yield_config Json?
+
   CategoryItem CategoryItem[]
 
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
 
-  Product Product[]
+  Product             Product[]
+  CommissionScheduler CommissionScheduler[] @relation("category")
 
   @@map("categories")
 }
@@ -262,7 +271,7 @@ model StrategyBinary {
   // right_point   BigInt          @default(0)
   right_qualify Boolean         @default(false)
 
-  qualify Boolean @default(false)
+  qualify  Boolean                 @default(false)
   strategy StrategyBinaryDirection @default(AUTO)
 
   date_check String?
@@ -403,9 +412,72 @@ model OrderItemDistribution {
   @@map("order_item_distribution")
 }
 
+model Commission {
+  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+
+  scheduler    CommissionScheduler @relation("scheduler", fields: [scheduler_id], references: [id])
+  scheduler_id BigInt              @db.UnsignedBigInt
+
+  user    User   @relation("user", fields: [user_id], references: [id])
+  user_id BigInt @db.UnsignedBigInt
+
+  status CommisionStatus @default(PENDING)
+
+  amount  Decimal @db.Decimal(20, 8)
+  total   Decimal @db.Decimal(20, 8)
+  percent Decimal @db.Decimal(20, 8)
+
+  date DateTime
+
+  balanceHistory     BalanceHistory? @relation("commission", fields: [balance_history_id], references: [id])
+  balance_history_id Int?
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@unique([scheduler_id, user_id])
+  @@map("commission")
+}
+
+model CommissionScheduler {
+  id          BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  type        SchedulerCommisionType
+  category    Category               @relation("category", fields: [category_id], references: [id])
+  category_id BigInt                 @db.UnsignedBigInt
+
+  status SchedulerCommisionStatus @default(SCHEDULER)
+
+  amount Decimal @db.Decimal(20, 8)
+
+  date DateTime
+
+  created_at DateTime?    @default(now())
+  updated_at DateTime?    @updatedAt
+  Commission Commission[] @relation("scheduler")
+
+  @@unique([type, category_id, date])
+  @@map("commission_scheduler")
+}
+
 model Webhook {
   id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   request Json?
+}
+
+enum SchedulerCommisionType {
+  COMMISION
+  RESIDUAL
+}
+
+enum SchedulerCommisionStatus {
+  SCHEDULER
+  DONE
+  CANCEL
+}
+
+enum CommisionStatus {
+  PENDING
+  PAYED
 }
 
 enum products_yield_type {
@@ -435,7 +507,6 @@ enum user_session {
 enum Status {
   init
   pending
-  payed
   done
   canceled
 }

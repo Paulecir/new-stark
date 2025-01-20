@@ -7,6 +7,7 @@ import { approveOrderController } from "@/presentations/controllers/orders/appro
 import { myOrdersController } from "@/presentations/controllers/orders/my-orders.controller"
 import { getOrderController } from "@/presentations/controllers/orders/get.controller"
 import { payOrderController } from "@/presentations/controllers/orders/pay.controller"
+import { myOrderItemsController } from "@/presentations/controllers/orders/my-order-items.controller"
 
 const router = Router()
 
@@ -25,6 +26,12 @@ router.post("/my-orders",
   // #swagger.tags = ['Order']
   authMiddleware,
   expressRouteAdapter(myOrdersController)
+)
+
+router.post("/my-order-items",
+  // #swagger.tags = ['Order']
+  authMiddleware,
+  expressRouteAdapter(myOrderItemsController)
 )
 
 router.post("/buy",

@@ -1,11 +1,11 @@
 import { Router } from "express"
 
-import { authMiddleware } from "@/middlewares/authMiddleware"
-import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
-import { plisioWebhookController } from "@/presentations/controllers/webhooks/plisioWebhook.controller"
-import { payBinary } from "@/services/strategies/binary/payBinary"
-import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
 import Prisma from "@/infra/db/prisma"
+import { makeCommission } from "@/services/commission/makeCommission"
+import { createScheduler } from "@/services/scheduler/createScheduler"
+import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
+import { payBinary } from "@/services/strategies/binary/payBinary"
+import { payCommission } from "@/services/commission/payCommission"
 
 const router = Router()
 
@@ -62,5 +62,23 @@ router.post("/approveBinary", async (req, res) => {
   res.json({ end: true })
 })
 
+router.get("/teste", async (req, res) => {
+  const a = await createScheduler()
+  
+  res.json({ a })
+})
+
+
+router.get("/make", async (req, res) => {
+  const a = await makeCommission()
+  
+  res.json({ a })
+})
+
+router.get("/pay", async (req, res) => {
+  const a = await payCommission()
+  
+  res.json({ a })
+})
 
 export default router;
