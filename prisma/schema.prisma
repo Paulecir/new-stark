@@ -263,6 +263,7 @@ model StrategyBinary {
   right_qualify Boolean         @default(false)
 
   qualify Boolean @default(false)
+  strategy StrategyBinaryDirection @default(AUTO)
 
   date_check String?
 
@@ -486,4 +487,10 @@ enum StrategyBinaryPayDirection {
   NONE
   LEFT
   RIGHT
+}
+
+enum StrategyBinaryDirection {
+  AUTO
+  RIGHT
+  LEFT
 }

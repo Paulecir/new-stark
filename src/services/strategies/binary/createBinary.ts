@@ -1,12 +1,14 @@
 import PrismaLocal from "@/infra/db/prisma"
 
-export const addBinaryStrategy = async ({ userId, strategy = 'AUTO', priority = 'L' }, Prisma = PrismaLocal) => {
+export const addBinaryStrategy = async ({ userId, priority = 'L' }, Prisma = PrismaLocal) => {
 
     const check = await Prisma.strategyBinary.findFirst({
         where: {
             user_id: userId
         }
     })
+
+    const strategy = check.strategy;
 
     if (check) throw new Error('Binary has position')
 

@@ -6,7 +6,7 @@ import { getBinaryController } from "@/presentations/controllers/binary/get.cont
 
 const router = Router()
 
-router.get("/:id",
+router.get("/",
   // #swagger.tags = ['Webhook']
   authMiddleware,
   expressRouteAdapter(getBinaryController)

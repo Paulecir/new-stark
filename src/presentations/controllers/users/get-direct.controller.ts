@@ -1,6 +1,7 @@
 import { HttpResponse } from "@/presentations/helpers/httpResponse";
 import { IRequest } from "@/presentations/interface/IRequest";
 import { BinaryService } from "@/services/strategies/binary";
+import { DirectService } from "@/services/strategies/direct";
 import { UserService } from "@/services/user";
 
 /**
@@ -19,10 +20,10 @@ import { UserService } from "@/services/user";
  * // Em caso de sucesso: { status: 200, message: '', data: { ...dadosDoUsuario } }
  * // Em caso de erro: { status: 500, message: 'Mensagem de erro' }
  */
-export const getBinaryController = async (requestData: IRequest) => {
+export const getDirectController = async (requestData: IRequest) => {
     try {
         // Recupera o usuário pelo ID usando o UserService
-        const user = await BinaryService.getBinaryById({ user: requestData.user });
+        const user = await DirectService.getDirectById({ id: requestData.query.parentId || requestData.user.id, user: requestData.user, level: requestData.query.level });
 
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
         return HttpResponse.successResponse({

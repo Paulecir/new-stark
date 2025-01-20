@@ -4,13 +4,18 @@ export const addBalance = async ({ name = "", wallet, user_id, amount, ref_type,
 
     const extra: any = {}
 
+    await db.$queryRawUnsafe(
+        `SELECT * FROM balance WHERE user_id = ? AND wallet = ? FOR UPDATE`,
+        user_id, wallet
+    );
+
     const last = await db.balanceHistory.create({
         data: {
             name, direction: "CREDIT", wallet, user_id, amount, ref_type, ref_id, extra_info
         }
     })
 
-    const balance = await db.balance.upsert({
+    await db.balance.upsert({
         where: {
             balanceId: {
                 user_id: user_id,
