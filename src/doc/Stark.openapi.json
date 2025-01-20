@@ -427,6 +427,60 @@
         ]
       }
     },
+    "/v1/orders/my-orders": {
+      "post": {
+        "summary": "Lista as minhas compras",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "Compras"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "status_code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "properties": {}
+                        },
+                        {
+                          "type": "object",
+                          "properties": {}
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "status_code",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/v1/binary/1": {
       "get": {
         "summary": "Get binary by id",
