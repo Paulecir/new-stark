@@ -526,6 +526,7 @@ enum SchedulerCommisionStatus {
 
 enum CommisionStatus {
   PENDING
+  ASSOCIATED
   PAYED
   CANCEL
 }

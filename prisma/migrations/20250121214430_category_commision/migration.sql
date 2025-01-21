@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `commission` MODIFY `status` ENUM('PENDING', 'ASSOCIATED', 'PAYED', 'CANCEL') NOT NULL DEFAULT 'PENDING';
+
+-- AlterTable
+ALTER TABLE `commission_order` MODIFY `status` ENUM('PENDING', 'ASSOCIATED', 'PAYED', 'CANCEL') NOT NULL DEFAULT 'PENDING';

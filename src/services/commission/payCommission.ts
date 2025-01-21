@@ -11,35 +11,34 @@ export const payCommission = async () => {
             sum(c.amount) as amount
         FROM 
             commission as c
+        WHERE
+            c.status = "PENDING"
         GROUP BY user_id, scheduler_id
     `;
 
         for (const commission of commissions) {
-            const balance = await addBalance({
-                name: "Commision"
-                , wallet: "MAIN"
-                , user_id: commission.user_id
-                , amount: parseFloat(commission.amount.toString())
-                , ref_type: 'commissions'
-                , ref_id: null
-                , extra_info: {
+            const order = await Prisma.commissionOrder.create({
+                data: {
+                    obs: "",
+                    total: commission.amount,
                     user_id: commission.user_id,
-                    scheduler_id: commission.scheduler_id,
                 }
-            }, Prisma)
+            })
 
             await Prisma.commission.updateMany({
                 where: {
-                    user_id: commission.user_id
+                    user_id: commission.user_id,
+                    scheduler_id: commission.scheduler_id,
+                    status: "PENDING"
                 },
                 data: {
-                    status: "PAYED",
-                    balance_history_id: balance.id
+                    commission_order_id: order.id,
+                    status: "ASSOCIATED"
                 }
             })
 
         }
-       
+
     }, {
         maxWait: 100000,
         timeout: 100000

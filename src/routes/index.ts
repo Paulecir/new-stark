@@ -11,6 +11,7 @@ import binaryApiV1 from './v1.binary.routes'
 import rdstationApiV1 from './v1.rdstation.routes'
 import financialApiV1 from './v1.financial.routes'
 import dashboardApiV1 from './v1.dashboard.routes'
+import walletsApiV1 from './v1.wallets.routes'
 import commissionsApiV1 from './v1.commissions.routes'
 
 const router = Router();
@@ -26,5 +27,6 @@ router.use('/v1/rdstation', rdstationApiV1)
 router.use('/v1/financial', financialApiV1)
 router.use('/v1/dashboard', dashboardApiV1)
 router.use('/v1/commissions', commissionsApiV1)
+router.use('/v1/wallets', walletsApiV1)
 
 export default router;
