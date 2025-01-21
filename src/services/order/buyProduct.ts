@@ -26,6 +26,7 @@ export const buyProduct = async (data: any, user: any, Prisma = PrismaLocal) => 
                 product_id: product.id,
                 amount: product.price,
                 quantity: item.quantity,
+                wallet_id: item.wallet_id ? Number(item.wallet_id) : null
             }
         })
     }
