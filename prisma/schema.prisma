@@ -58,6 +58,8 @@ model User {
   BalanceHistory        BalanceHistory[]        @relation("user")
   StrategyBinaryPay     StrategyBinaryPay[]     @relation("user")
   Commission            Commission[]            @relation("user")
+  Wallet                Wallet[]
+  CommissionOrder       CommissionOrder[]       @relation("user")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
@@ -94,9 +96,9 @@ model BalanceHistory {
 
   created_at DateTime?    @default(now())
   updated_at DateTime?    @updatedAt
+  Commission Commission[] @relation("commission")
 
   @@map("balance_history")
-  Commission Commission[] @relation("commission")
 }
 
 model PasswordResetToken {
@@ -161,6 +163,22 @@ model Product {
   @@map("products")
 }
 
+model Wallet {
+  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  name    String
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id BigInt @db.UnsignedBigInt
+
+  hash String @db.VarChar(100)
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  OrderItem OrderItem[] @relation("wallet")
+
+  Commission Commission[] @relation("wallet")
+}
+
 model Category {
   id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   name String @db.VarChar(100)
@@ -184,11 +202,12 @@ model Category {
   binary_bonus_levels        Int?
   binary_bonus_qualify       Boolean  @default(false)
 
-  commission              Boolean?            @default(false)
-  commission_pay_type     products_yield_type @default(diary)
-  commission_pay_config   Json?
-  commission_yield_type   products_yield_type @default(diary)
-  commission_yield_config Json?
+  commission                       Boolean?            @default(false)
+  commission_pay_type              products_yield_type @default(diary)
+  commission_pay_config            Json?
+  commission_yield_type            products_yield_type @default(diary)
+  commission_yield_type_commission String?
+  commission_yield_config          Json?
 
   CategoryItem CategoryItem[]
 
@@ -382,9 +401,13 @@ model OrderItem {
   quantity Int     @default(1)
   amount   Decimal @db.Decimal(20, 8)
 
+  wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id])
+  wallet_id BigInt? @db.UnsignedBigInt
+
   created_at            DateTime                @default(now())
   updated_at            DateTime?               @updatedAt
   OrderItemDistribution OrderItemDistribution[] @relation("orderItem")
+  Commission            Commission[]            @relation("orderItem")
 
   @@map("order_item")
 }
@@ -412,8 +435,26 @@ model OrderItemDistribution {
   @@map("order_item_distribution")
 }
 
+model CommissionOrder {
+  id      BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
+  obs     String          @db.MediumText
+  user    User            @relation("user", fields: [user_id], references: [id])
+  user_id BigInt          @db.UnsignedBigInt
+  total   Decimal         @db.Decimal(20, 8)
+  status  CommisionStatus @default(PENDING)
+
+  created_at DateTime?    @default(now())
+  updated_at DateTime?    @updatedAt
+  Commission Commission[] @relation("commissionOrder")
+
+  @@map("commission_order")
+}
+
 model Commission {
   id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+
+  commissionOrder     CommissionOrder? @relation("commissionOrder", fields: [commission_order_id], references: [id])
+  commission_order_id BigInt?          @db.UnsignedBigInt
 
   scheduler    CommissionScheduler @relation("scheduler", fields: [scheduler_id], references: [id])
   scheduler_id BigInt              @db.UnsignedBigInt
@@ -421,11 +462,19 @@ model Commission {
   user    User   @relation("user", fields: [user_id], references: [id])
   user_id BigInt @db.UnsignedBigInt
 
+  orderItem     OrderItem @relation("orderItem", fields: [order_item_id], references: [id])
+  order_item_id BigInt    @db.UnsignedBigInt
+
+  wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id])
+  wallet_id BigInt? @db.UnsignedBigInt
+
   status CommisionStatus @default(PENDING)
 
   amount  Decimal @db.Decimal(20, 8)
   total   Decimal @db.Decimal(20, 8)
   percent Decimal @db.Decimal(20, 8)
+
+  diffDays Int @default(1)
 
   date DateTime
 
@@ -435,7 +484,7 @@ model Commission {
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
 
-  @@unique([scheduler_id, user_id])
+  @@unique([scheduler_id, user_id, order_item_id])
   @@map("commission")
 }
 
@@ -478,6 +527,7 @@ enum SchedulerCommisionStatus {
 enum CommisionStatus {
   PENDING
   PAYED
+  CANCEL
 }
 
 enum products_yield_type {

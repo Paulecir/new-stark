@@ -9,7 +9,7 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
     switch (schedulerType) {
         case 'diary': {
             const { hour, minute } = scheduleData;
-            nextOccurrence = ref.clone().hour(hour).minute(minute).second(0);
+            nextOccurrence = ref.clone().startOf("day");
             if (nextOccurrence.isBefore(ref)) {
                 nextOccurrence.add(1, 'day');
             }
@@ -18,7 +18,7 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
 
         case 'weekly': {
             const { dayIfWeek, hour, minute } = scheduleData; // Domingo: 0, Sábado: 6
-            nextOccurrence = ref.clone().hour(hour).minute(minute).second(0).day(dayIfWeek);
+            nextOccurrence = ref.clone().startOf("day");
             if (nextOccurrence.isBefore(ref)) {
                 nextOccurrence.add(1, 'week');
             }
@@ -27,7 +27,7 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
 
         case 'monthly': {
             const { day, hour, minute } = scheduleData;
-            nextOccurrence = ref.clone().date(day).hour(hour).minute(minute).second(0);
+            nextOccurrence = ref.clone().date(0).startOf("day");
             if (nextOccurrence.isBefore(ref)) {
                 nextOccurrence.add(1, 'month');
             }
@@ -68,7 +68,7 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
 
     return nextOccurrence.format('YYYY-MM-DD HH:mm:ss');
 }
-export const createScheduler = async ({ category_id, type }: any,Prisma = PrismaLocal) => {
+export const createScheduler = async ({ category_id, type }: any, Prisma = PrismaLocal) => {
 
     const category = await Prisma.category.findFirst({
         where: {
@@ -85,15 +85,28 @@ export const createScheduler = async ({ category_id, type }: any,Prisma = Prisma
         }
     })
 
-    const currentDate = moment(scheduler?.date).add(1, "seconds").toDate()
+    const currentDate = moment().add(1, "seconds")
 
     const info = getNextOccurrence(currentDate, category.commission_yield_type, category.commission_yield_config)
 
-    const schedulerJob = createJob({
+    const data = {
         category_id: category.id,
         type,
         date: moment(info).toDate(),
-        amount: scheduler.amount || 0
+        amount:  0
+    }
+
+    const commissionScheduler = await Prisma.commissionScheduler.upsert({
+        where: {
+            type_category_id_date: {
+                type,
+                category_id: category.id,
+                date: moment(info).toDate()
+            }
+        },
+        create: data,
+        update: data
     })
-    return schedulerJob;
+
+    return commissionScheduler;
 }
