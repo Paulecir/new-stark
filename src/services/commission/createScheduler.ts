@@ -1,4 +1,4 @@
-import Prisma from "@/infra/db/prisma";
+import PrismaLocal from "@/infra/db/prisma";
 import moment from "moment";
 import { createJob } from "./jobScheduler";
 
@@ -68,33 +68,32 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
 
     return nextOccurrence.format('YYYY-MM-DD HH:mm:ss');
 }
-export const createScheduler = async () => {
+export const createScheduler = async ({ category_id, type }: any,Prisma = PrismaLocal) => {
 
     const category = await Prisma.category.findFirst({
         where: {
-            id: 1
+            id: Number(category_id)
         }
     })
     const scheduler = await Prisma.commissionScheduler.findFirst({
         where: {
             category_id: category.id,
-            type: "COMMISSION"
+            type
         },
         orderBy: {
             date: "desc"
         }
     })
 
-    const currentDate = moment(scheduler?.date)
+    const currentDate = moment(scheduler?.date).add(1, "seconds").toDate()
 
     const info = getNextOccurrence(currentDate, category.commission_yield_type, category.commission_yield_config)
 
     const schedulerJob = createJob({
         category_id: category.id,
-        type: "COMMISION",
+        type,
         date: moment(info).toDate(),
-        amount: scheduler.amount || 0,
+        amount: scheduler.amount || 0
     })
-
     return schedulerJob;
 }
