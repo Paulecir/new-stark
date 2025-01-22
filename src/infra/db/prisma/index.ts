@@ -14,14 +14,11 @@ const sanitize = (password: string) => {
   return password ? '********' : null;
 };
 // Criação do cliente Prisma com singleton
-const Prisma = new PrismaClient().$extends({
+const Prisma = new PrismaClient()
+.$extends({
   query: {
     user: {
       async update({ args, query, operation }: any) {
-        if (!args.select) {
-          args.omit = { password: true }
-        }
-
         if (args.select?.sponsor) {
           if (args.select?.sponsor === true) {
             args.select.sponsor = { omit: { password: true } }
@@ -67,9 +64,6 @@ const Prisma = new PrismaClient().$extends({
         return result // return the first result found in the array
       },
       async updateMany({ args, query, operation }: any) {
-        if (!args.select?.password) {
-          args.omit = { password: true }
-        }
 
         if (args.select?.sponsor) {
           if (args.select?.sponsor === true) {

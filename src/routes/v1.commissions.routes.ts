@@ -6,6 +6,7 @@ import { createCommissionSchedulerController } from "@/presentations/controllers
 import { filterCommissionsSchedulerController } from "@/presentations/controllers/commissions/filter-scheduler.controller"
 import { getCommissionsSchedulerController } from "@/presentations/controllers/commissions/get-scheduler.controller"
 import { updateCommissionSchedulerController } from "@/presentations/controllers/commissions/update-scheduler.controller"
+import { filterCommissionOrdersPendingController } from "@/presentations/controllers/commissions/filter-order.controller"
 
 const router = Router()
 
@@ -30,6 +31,11 @@ router.get("/scheduler",
 router.post("/scheduler",
   authMiddleware,
   expressRouteAdapter(createCommissionSchedulerController)
+)
+
+router.post("/orders/pending",
+  authMiddleware,
+  expressRouteAdapter(filterCommissionOrdersPendingController)
 )
 
 export default router;
