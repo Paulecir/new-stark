@@ -1,4 +1,5 @@
 import Prisma from "@/infra/db/prisma";
+import bcrypt from "bcrypt"
 
 export const changePasswordUser = async (data: any) => {
     try {
@@ -8,7 +9,7 @@ export const changePasswordUser = async (data: any) => {
             },
             data: {
                 remember_token: null,
-                password: data.password
+                password: await bcrypt.hash(data.password, 12),
             },
         })
         const user = await Prisma.user.findFirst({

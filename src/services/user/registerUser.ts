@@ -22,7 +22,7 @@ export const registerUser = async (data: any) => {
                 country_name: data.country_name,
                 country_code: data.country_code,
                 sponsor_id: sponsor.id,
-                password: await bcrypt.hash(data.password, 10), // Idealmente, você deve hash a senha antes de salvar,
+                password: await bcrypt.hash(data.password, 12), // Idealmente, você deve hash a senha antes de salvar,
     
                 bep20_address: wallet.address?.toString(),
                 bep20_public_key: wallet.publicKey?.toString(),
