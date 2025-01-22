@@ -60,6 +60,7 @@ model User {
   Commission            Commission[]            @relation("user")
   Wallet                Wallet[]
   CommissionOrder       CommissionOrder[]       @relation("user")
+  Withdraw              Withdraw[]              @relation("user")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
@@ -97,6 +98,7 @@ model BalanceHistory {
   created_at DateTime?    @default(now())
   updated_at DateTime?    @updatedAt
   Commission Commission[] @relation("commission")
+  Withdraw   Withdraw[]   @relation("commission")
 
   @@map("balance_history")
 }
@@ -177,6 +179,8 @@ model Wallet {
   OrderItem OrderItem[] @relation("wallet")
 
   Commission Commission[] @relation("wallet")
+
+  Withdraw Withdraw[] @relation("wallet")
 }
 
 model Category {
@@ -446,8 +450,34 @@ model CommissionOrder {
   created_at DateTime?    @default(now())
   updated_at DateTime?    @updatedAt
   Commission Commission[] @relation("commissionOrder")
+  Withdraw   Withdraw[]   @relation("commissionOrder")
 
   @@map("commission_order")
+}
+
+model Withdraw {
+  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+
+  user    User   @relation("user", fields: [user_id], references: [id])
+  user_id BigInt @db.UnsignedBigInt
+
+  wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id])
+  wallet_id BigInt? @db.UnsignedBigInt
+
+  amount Decimal @db.Decimal(20, 8)
+
+  status StatusWithdraw @default(PENDING)
+
+  balanceHistory     BalanceHistory? @relation("commission", fields: [balance_history_id], references: [id])
+  balance_history_id Int?
+
+  commissionOrder     CommissionOrder? @relation("commissionOrder", fields: [commission_order_id], references: [id])
+  commission_order_id BigInt?          @db.UnsignedBigInt
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@map("withdraw")
 }
 
 model Commission {
@@ -596,6 +626,12 @@ enum StatusBinaryPay {
   PAYED
   ERROR
   NOTQUALIFY
+}
+
+enum StatusWithdraw {
+  PENDING
+  PAYED
+  CANCELED
 }
 
 enum OrderPaymentmMethod {

@@ -1,3 +1,4 @@
+import { approveCommission } from "./approveCommission";
 import { createScheduler } from "./createScheduler";
 import { filterCommissionOrdersPending } from "./filterCommissionOrdersPending";
 import { filterScheduler } from "./filterScheduler";
@@ -13,5 +14,6 @@ export const CommissionService = {
    createScheduler,
    getSchedulerById,
    updateScheduler,
-   filterCommissionOrdersPending
+   filterCommissionOrdersPending,
+   approveCommission
 }
