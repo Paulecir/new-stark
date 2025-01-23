@@ -16,7 +16,7 @@
     "declaration": true,
     "removeComments": true,
     "incremental": true,
-    "types": ["reflect-metadata", "swagger-express-ts"],
+    "types": ["reflect-metadata", "swagger-express-ts"]
   },
   "include": [
     "src/**/*"
