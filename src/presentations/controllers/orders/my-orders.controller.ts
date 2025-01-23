@@ -13,6 +13,7 @@ export const myOrdersController = async (requestData: IRequest) => {
         // Criar o usuário no banco de dados
         const data = await OrderService.myOrdersFilter({
             filter: validatedData,
+            pagination: { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 },
             user: requestData.user
         })
 

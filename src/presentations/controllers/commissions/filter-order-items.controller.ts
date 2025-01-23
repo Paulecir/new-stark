@@ -1,6 +1,8 @@
 import { HttpResponse } from "@/presentations/helpers/httpResponse";
 import { IRequest } from "@/presentations/interface/IRequest";
-import { WithdrawService } from "@/services/withdraw";
+import { CategoryService } from "@/services/category";
+import { CommissionService } from "@/services/commission";
+import { UserService } from "@/services/user";
 
 /**
  * Lida com a recuperação de um usuário pelo seu ID.
@@ -18,25 +20,15 @@ import { WithdrawService } from "@/services/withdraw";
  * // Em caso de sucesso: { status: 200, message: '', data: { ...dadosDoUsuario } }
  * // Em caso de erro: { status: 500, message: 'Mensagem de erro' }
  */
-export const filterWithdrawController = async (requestData: IRequest) => {
+export const filterCommissionOrderItemsController = async (requestData: IRequest) => {
     try {
-
-        if (requestData.params.previleges === "admin" && requestData.user.profile !== "admin") {
-            throw new Error("Sem permissão")
-        }
         // Recupera o usuário pelo ID usando o UserService
-        let userFilter = null
-
-        if (requestData.params.previleges === "admin")
-            userFilter = await WithdrawService.filterAdminWithdraw([], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
-        if (requestData.params.previleges === "user")
-            userFilter = await WithdrawService.filterWithdraw([{ user_id: requestData.user.id }], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 }, undefined);
+        const data = await CommissionService.filterCommissionOrderItems([{ commission_order_id: Number(requestData.params.id) }], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
 
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
         return HttpResponse.successResponse({
             message: '',
-            data: userFilter.data,
-            metadata: userFilter.metadata,
+            ...data,
             status: 200
         });
     } catch (err) {

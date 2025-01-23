@@ -2,12 +2,13 @@ import { Router } from "express"
 
 import { authMiddleware } from "@/middlewares/authMiddleware"
 import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
+import { approveCommissionController } from "@/presentations/controllers/commissions/approve.controller"
 import { createCommissionSchedulerController } from "@/presentations/controllers/commissions/create-scheduler.controller"
+import { filterCommissionOrderItemsController } from "@/presentations/controllers/commissions/filter-order-items.controller"
+import { filterCommissionOrdersPendingController } from "@/presentations/controllers/commissions/filter-order.controller"
 import { filterCommissionsSchedulerController } from "@/presentations/controllers/commissions/filter-scheduler.controller"
 import { getCommissionsSchedulerController } from "@/presentations/controllers/commissions/get-scheduler.controller"
 import { updateCommissionSchedulerController } from "@/presentations/controllers/commissions/update-scheduler.controller"
-import { filterCommissionOrdersPendingController } from "@/presentations/controllers/commissions/filter-order.controller"
-import { approveCommissionController } from "@/presentations/controllers/commissions/approve.controller"
 
 const router = Router()
 
@@ -37,6 +38,10 @@ router.post("/scheduler",
 router.post("/orders/pending",
   authMiddleware,
   expressRouteAdapter(filterCommissionOrdersPendingController)
+)
+router.post("/orders/items/:id",
+  authMiddleware,
+  expressRouteAdapter(filterCommissionOrderItemsController)
 )
 
 router.post("/approve",

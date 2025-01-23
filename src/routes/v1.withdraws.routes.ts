@@ -9,7 +9,7 @@ import { getWithdrawController } from "@/presentations/controllers/withdraws/get
 
 const router = Router()
 
-router.get("/",
+router.get("/:previleges",
   // #swagger.tags = ['Withdraw']
   authMiddleware,
   expressRouteAdapter(filterWithdrawController)
