@@ -13,8 +13,17 @@ export const loginController = async (httpRequest: IRequest) => {
         const user = await Prisma.user.findFirst({
             where: {
                 OR: [
-                    { email: httpRequest.body.email || httpRequest.body.username },
-                    { login: httpRequest.body.username }
+                    { 
+                        email: {
+                            endsWith: httpRequest.body.email || httpRequest.body.username,
+                           
+                        },
+                     },
+                    {   
+                        login: {
+                            endsWith: httpRequest.body.email || httpRequest.body.username,
+                        }
+                    }
                 ]
             },
             select: {
