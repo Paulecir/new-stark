@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts src/server.ts",
-    "mock": "ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/mock.ts"
+    "mock": "ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/mock.ts",
+    "migrate": "ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/migrate.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
@@ -43,6 +44,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.5",
+    "@types/node-schedule": "^2.1.7",
     "@types/nodemailer": "^6.4.17",
     "@types/swagger-ui-express": "^4.1.7",
     "@types/typescript": "^2.0.0",

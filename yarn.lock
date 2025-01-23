@@ -485,6 +485,13 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-5.1.2.tgz#07508b45797cb81ec3f273011b054cd0755eddca"
   integrity sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==
 
+"@types/node-schedule@^2.1.7":
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/@types/node-schedule/-/node-schedule-2.1.7.tgz#79a1e61adc7bbf8d8eaabcef307e07d76cb40d82"
+  integrity sha512-G7Z3R9H7r3TowoH6D2pkzUHPhcJrDF4Jz1JOQ80AX0K2DWTHoN9VC94XzFAPNMdbW9TBzMZ3LjpFi7RYdbxtXA==
+  dependencies:
+    "@types/node" "*"
+
 "@types/node@*":
   version "22.10.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.2.tgz#a485426e6d1fdafc7b0d4c7b24e2c78182ddabb9"

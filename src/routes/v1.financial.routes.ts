@@ -5,6 +5,7 @@ import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapt
 import { financialExtractController } from "@/presentations/controllers/financial/extract.controller"
 import { resumeController } from "@/presentations/controllers/financial/resume.controller"
 import { resumeOneController } from "@/presentations/controllers/financial/resumeOne.controller"
+import { retiroApproveExtractController } from "@/presentations/controllers/financial/retiro-approve.controller"
 
 const router = Router()
 
@@ -25,6 +26,12 @@ router.post("/resume",
   // #swagger.tags = ['Webhook']
   authMiddleware,
   expressRouteAdapter(resumeController)
+)
+
+router.post("/retiro/approve",
+  // #swagger.tags = ['Webhook']
+  authMiddleware,
+  expressRouteAdapter(retiroApproveExtractController)
 )
 
 

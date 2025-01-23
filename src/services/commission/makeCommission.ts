@@ -4,7 +4,8 @@ import moment from "moment"
 export const makeCommission = async () => {
     const commissions = await PrismaLocal.commissionScheduler.findMany({
         where: {
-            status: "SCHEDULER"
+            status: "SCHEDULER",
+            date: { lte: new Date() }
         }
     })
 

@@ -10,9 +10,10 @@ datasource db {
 model User {
   id                        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
   name                      String    @db.VarChar(255)
+  avatar                    String?    @db.MediumText
   login                     String    @unique(map: "users_login_unique") @db.VarChar(255)
   email                     String    @unique(map: "users_email_unique") @db.VarChar(255)
-  phone                     String    @unique(map: "users_phone_unique") @db.VarChar(255)
+  phone                     String?    @unique(map: "users_phone_unique") @db.VarChar(255)
   birthday                  String?   @db.VarChar(255)
   email_verified_at         DateTime? @db.Timestamp(0)
   password                  String    @db.Text
@@ -30,6 +31,10 @@ model User {
   last_login_ip             String?   @db.VarChar(45)
   country_code              String?   @db.VarChar(255)
   country_name              String?   @db.VarChar(255)
+
+  document_type DocumentType? @default(CPF)
+  document      String?
+  gender        String?
 
   sponsor    User?   @relation("sponsor", fields: [sponsor_id], references: [id])
   sponsor_id BigInt? @db.UnsignedBigInt
@@ -466,6 +471,8 @@ model Withdraw {
 
   amount Decimal @db.Decimal(20, 8)
 
+  obs String? @db.MediumText
+
   status StatusWithdraw @default(PENDING)
 
   balanceHistory     BalanceHistory? @relation("commission", fields: [balance_history_id], references: [id])
@@ -632,6 +639,7 @@ enum StatusWithdraw {
   PENDING
   PAYED
   CANCELED
+  REJECT
 }
 
 enum OrderPaymentmMethod {
@@ -651,4 +659,9 @@ enum StrategyBinaryDirection {
   AUTO
   RIGHT
   LEFT
+}
+
+enum DocumentType {
+  CPF
+  CNPJ
 }

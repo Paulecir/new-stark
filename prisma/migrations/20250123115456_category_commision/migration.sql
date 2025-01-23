@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `withdraw` MODIFY `status` ENUM('PENDING', 'PAYED', 'CANCELED', 'REJECT') NOT NULL DEFAULT 'PENDING';
