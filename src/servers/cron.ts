@@ -17,7 +17,7 @@ export const initCronjob = () => {
         }
     })
 
-    nodeSchedule.scheduleJob("*/10 * * * * *", async (job) => {
+    nodeSchedule.scheduleJob("*/10 * * * *", async (job) => {
         await makeCommission()
         await payCommission()
     })
