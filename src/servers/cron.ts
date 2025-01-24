@@ -6,7 +6,7 @@ import { OrderService } from "@/services/order"
 import nodeSchedule from "node-schedule"
 
 export const initCronjob = () => {
-
+    console.log("START CRON")
     nodeSchedule.scheduleJob("* 10 22 * * *", async (job) => {
         const categories = await Prisma.category.findMany()
 
@@ -23,6 +23,7 @@ export const initCronjob = () => {
     })
 
     nodeSchedule.scheduleJob("*/1 * * * * *", async (job) => {
+        console.log("CRON checkAllPaymentPlisio")
         await OrderService.checkAllPaymentPlisio()
     })
 }
