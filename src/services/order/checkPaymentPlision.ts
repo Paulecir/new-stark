@@ -24,7 +24,7 @@ export const checkPaymentPlisio = async (id: any) => {
             .catch(err => {
                 return err.data
             })
-            console.log("A 3", info)
+        console.log("A 3", info)
         if (info && ["mismatch", "completed"].includes(info.status)) {
             await OrderService.approveOrder({ orderId: order.order_id }, Prisma)
             await Prisma.order.update({
@@ -37,18 +37,22 @@ export const checkPaymentPlisio = async (id: any) => {
             })
         }
 
-        if (info && ["expired", "error", "canceled"].includes(info.status)) {
+        if (!info || ["expired", "error", "cancelled"].includes(info.status)) {
             await Prisma.order.update({
                 where: {
                     id
                 },
                 data: {
                     status: "canceled",
-                    payment_result: info
+                    payment_result: info || {}
                 }
             })
         }
-    })
+    },
+        {
+            timeout: 100000,
+            maxWait: 100000
+        })
 
 
 }
@@ -64,7 +68,6 @@ export const checkAllPaymentPlisio = async () => {
 
     for (const order of orders) {
         try {
-            console.log("A 1")
             await checkPaymentPlisio(order.id)
         } catch {
         }

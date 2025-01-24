@@ -28,6 +28,8 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
         }
     })
 
+    if (!binary) return [];
+
     const currentUser = await Prisma.user.findFirst({
         where: {
             id: order.user_id

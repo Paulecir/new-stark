@@ -21,6 +21,8 @@ export const qualifyBinary = async ({ order, item }: any, Prisma = PrismaLocal) 
         }
     })
 
+    if (!binary) return 
+
 
     const direction = binary.ref;
 
