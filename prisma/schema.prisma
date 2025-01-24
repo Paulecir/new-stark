@@ -25,8 +25,8 @@ model User {
   profile_photo_path        String?   @db.VarChar(2048)
   profile                   String    @default("user")
   bep20_address             String?   @db.VarChar(255)
-  bep20_public_key          String?   @db.VarChar(255)
-  bep20_private_key         String?   @db.VarChar(255)
+  bep20_public_key          String?   @db.MediumText
+  bep20_private_key         String?   @db.MediumText
   last_login                DateTime? @db.DateTime(0)
   last_login_ip             String?   @db.VarChar(45)
   country_code              String?   @db.VarChar(255)

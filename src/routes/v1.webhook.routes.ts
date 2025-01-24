@@ -13,6 +13,8 @@ router.post("/plisio/callback",
   // #swagger.tags = ['Webhook']
   async (req, res) => {
 
+    console.log("A", req)
+    console.log("R", req.body)
     await Prisma.webhook.create({
       data: {
         request: req.body
