@@ -2,6 +2,7 @@ import Prisma from "@/infra/db/prisma"
 import { CommissionService } from "@/services/commission"
 import { makeCommission } from "@/services/commission/makeCommission"
 import { payCommission } from "@/services/commission/payCommission"
+import { OrderService } from "@/services/order"
 import nodeSchedule from "node-schedule"
 
 export const initCronjob = () => {
@@ -19,5 +20,9 @@ export const initCronjob = () => {
     nodeSchedule.scheduleJob("*/10 * * * * *", async (job) => {
         await makeCommission()
         await payCommission()
+    })
+
+    nodeSchedule.scheduleJob("*/1 * * * * *", async (job) => {
+        await OrderService.checkAllPaymentPlisio()
     })
 }

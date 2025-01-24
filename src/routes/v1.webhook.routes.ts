@@ -6,6 +6,7 @@ import { createScheduler } from "@/services/scheduler/createScheduler"
 import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
 import { payBinary } from "@/services/strategies/binary/payBinary"
 import { payCommission } from "@/services/commission/payCommission"
+import { checkAllPaymentPlisio } from "@/services/order/checkPaymentPlision"
 
 const router = Router()
 
@@ -65,9 +66,10 @@ router.post("/approveBinary", async (req, res) => {
 })
 
 router.get("/teste", async (req, res) => {
-  const a = await createScheduler()
+  // const a = await createScheduler()
+  await checkAllPaymentPlisio()
   
-  res.json({ a })
+  res.json({ })
 })
 
 

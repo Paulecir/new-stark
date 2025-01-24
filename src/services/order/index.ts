@@ -1,5 +1,6 @@
 import { approveOrder } from "./approveOrder";
 import { buyProduct } from "./buyProduct";
+import { checkAllPaymentPlisio, checkPaymentPlisio } from "./checkPaymentPlision";
 import { getOrder } from "./getOrder";
 import { myOrderItemsFilter } from "./myOrderItemsFilter";
 import { myOrdersFilter } from "./myOrdersFilter";
@@ -11,5 +12,7 @@ export const OrderService = {
     myOrdersFilter,
     myOrderItemsFilter,
     getOrder,
-    payOrder
+    payOrder,
+    checkPaymentPlisio,
+    checkAllPaymentPlisio
 }
