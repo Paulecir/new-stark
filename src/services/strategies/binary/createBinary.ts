@@ -10,8 +10,6 @@ export const addBinaryStrategy = async ({ userId, priority = 'L' }, Prisma = Pri
 
     if (check) throw new Error('Binary has position')
 
-    const strategy = check.strategy;
-
     const user = await Prisma.user.findUnique({
         where: {
             id: userId
@@ -78,6 +76,8 @@ export const addBinaryStrategy = async ({ userId, priority = 'L' }, Prisma = Pri
             }
         })
     }
+
+    const strategy = rootNode?.strategy || 'AUTO';
 
     if (strategy === "AUTO") {
         priority = parentNode.autoDirection || 'L'
