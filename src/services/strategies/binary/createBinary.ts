@@ -8,9 +8,9 @@ export const addBinaryStrategy = async ({ userId, priority = 'L' }, Prisma = Pri
         }
     })
 
-    const strategy = check.strategy;
-
     if (check) throw new Error('Binary has position')
+
+    const strategy = check.strategy;
 
     const user = await Prisma.user.findUnique({
         where: {
@@ -58,7 +58,7 @@ export const addBinaryStrategy = async ({ userId, priority = 'L' }, Prisma = Pri
         })
 
         if (!sponsor) throw new Error("Sponsor not found")
-    
+
         rootNode = await Prisma.strategyBinary.findFirst({
             where: {
                 user_id: sponsor.id
@@ -67,8 +67,8 @@ export const addBinaryStrategy = async ({ userId, priority = 'L' }, Prisma = Pri
                 level: 'desc'
             }
         })
-    
-    
+
+
         parentNode = await Prisma.strategyBinary.findFirst({
             where: {
                 user_id: sponsor.id
