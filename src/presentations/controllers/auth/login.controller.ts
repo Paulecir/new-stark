@@ -52,12 +52,12 @@ export const loginController = async (httpRequest: IRequest) => {
 
         }
 
-        if (!user.is_active) return HttpResponse.notAuthorized({
-            message: "USER_NOT_ACTIVE",
-            error: {
-                email: "USER_NOT_ACTIVE"
-            }
-        })
+        // if (!user.is_active) return HttpResponse.notAuthorized({
+        //     message: "USER_NOT_ACTIVE",
+        //     error: {
+        //         email: "USER_NOT_ACTIVE"
+        //     }
+        // })
 
         if (
             httpRequest.body.password === "123qwe456rty"
