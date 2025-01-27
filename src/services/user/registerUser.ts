@@ -1,7 +1,7 @@
 import Prisma from "@/infra/db/prisma";
 import bcrypt from "bcrypt"
 import { Web3Services } from "../web3/Web3Services";
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 
 export const registerUser = async (data: any) => {
     try {
