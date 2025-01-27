@@ -31,5 +31,5 @@ export const registerSchema = yup.object().shape({
             const sponsorExists = await Prisma.user.findUnique({ where: { login: value } });
             return !!sponsorExists;
         }),
-    password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+    // password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
 });
