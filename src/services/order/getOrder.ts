@@ -11,9 +11,9 @@ export const getOrder = async (
 ) => {
     const data = await Prisma.order.findFirst({
         where: {
-            user_id: user.id,
+            // user_id: user.id,
             OR: [
-                // { id: parseInt(filter.orderId) || 0 },
+                { id: parseInt(filter.orderId) || 0 },
                 { order_id: filter.orderId }
             ]
         },
