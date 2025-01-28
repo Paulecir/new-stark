@@ -13,7 +13,7 @@ export const getOrder = async (
         where: {
             user_id: user.id,
             OR: [
-                { id: parseInt(filter.orderId) || 0 },
+                // { id: parseInt(filter.orderId) || 0 },
                 { order_id: filter.orderId }
             ]
         },
