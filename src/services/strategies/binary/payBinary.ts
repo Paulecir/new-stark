@@ -3,8 +3,8 @@ import { addBalance } from "@/services/balance/addBalance"
 import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
 
-export const payBinary = async (date: string = moment().format('YYYY-MM-DD')) => {
-
+export const payBinary = async (date: string = moment().subtract(1, "days").format('YYYY-MM-DD')) => {
+    
     let info = null
     do {
         info = await PrismaLocal.$transaction(async (Prisma) => {
@@ -88,12 +88,12 @@ export const payBinary = async (date: string = moment().format('YYYY-MM-DD')) =>
                     await decBalance({
                         name: "Binary payment"
                         , wallet: "BINARY_RIGHT_POINT"
-                        , user_id: strategy.id
+                        , user_id: strategy.user_id
                         , amount: parseFloat(amount)
                         , ref_type: 'strategyBinaryPay'
                         , ref_id: binaryPay.id
                         , extra_info: {
-                            to: strategy?.id,
+                            to: strategy?.user_id,
                             toName: current?.name,
                             toLogin: current?.login,
                             binaryId: strategy.id,
@@ -103,12 +103,12 @@ export const payBinary = async (date: string = moment().format('YYYY-MM-DD')) =>
                     await decBalance({
                         name: "Binary payment"
                         , wallet: "BINARY_LEFT_POINT"
-                        , user_id: strategy.id
+                        , user_id: strategy.user_id
                         , amount: parseFloat(amount)
                         , ref_type: 'strategyBinaryPay'
                         , ref_id: binaryPay.id
                         , extra_info: {
-                            to: strategy?.id,
+                            to: strategy?.user_id,
                             toName: current?.name,
                             toLogin: current?.login,
                             binaryId: strategy.id,

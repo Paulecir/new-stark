@@ -3,7 +3,7 @@ import { addBalance } from "@/services/balance/addBalance"
 import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
 
-export const approvePayBinary = async (date = moment().format('YYYY-MM-DD')) => {
+export const approvePayBinary = async (date = moment().subtract(1, 'days').format('YYYY-MM-DD')) => {
 
     const total = await PrismaLocal.strategyBinaryPay.aggregate({
         where: {
@@ -35,8 +35,8 @@ export const approvePayBinary = async (date = moment().format('YYYY-MM-DD')) => 
 
     let totalSellAmount = totalSell._sum.amount.toNumber() * 0.25
 
-    if (totalSellAmount < total._sum.amountCeilingUser.toNumber()) {
-        percent = (total._sum.amountCeilingUser.toNumber() * 100) / totalSellAmount
+    if (totalSellAmount < total._sum.amountCeilingUser?.toNumber() || 0) {
+        percent = ((total._sum.amountCeilingUser?.toNumber() || 0) * 100) / totalSellAmount
     }
 
     let strategyPay = null
@@ -118,9 +118,6 @@ export const approvePayBinary = async (date = moment().format('YYYY-MM-DD')) => 
 
 
     } while (strategyPay)
-
-
-    console.log("T", total._sum.amountCeilingUser, total._sum.amountCeilingUser.toNumber() * (percent / 100))
 
 
 }
