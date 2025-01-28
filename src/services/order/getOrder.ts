@@ -18,6 +18,13 @@ export const getOrder = async (
             ]
         },
         include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true
+                }
+            },
             OrderItem: {
                 include: {
                     product: {
