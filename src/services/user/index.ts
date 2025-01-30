@@ -1,4 +1,5 @@
 import { changePasswordUser } from "./changePasswordUser";
+import { dashboardAdminStats } from "./dashboardAdminStats";
 import { dashboardStats } from "./dashboardStats";
 import { dashboardStatsList } from "./dashboardStatsList";
 import { filterUser } from "./filterUser";
@@ -15,5 +16,6 @@ export const UserService = {
     dashboardStats,
     dashboardStatsList,
     resetPasswordUser,
-    changePasswordUser
+    changePasswordUser,
+    dashboardAdminStats
 }
