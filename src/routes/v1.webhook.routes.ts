@@ -2,11 +2,10 @@ import { Router } from "express"
 
 import Prisma from "@/infra/db/prisma"
 import { makeCommission } from "@/services/commission/makeCommission"
-import { createScheduler } from "@/services/scheduler/createScheduler"
 import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
 import { payBinary } from "@/services/strategies/binary/payBinary"
 import { payCommission } from "@/services/commission/payCommission"
-import { checkAllPaymentPlisio } from "@/services/order/checkPaymentPlision"
+import { CommissionService } from "@/services/commission"
 
 const router = Router()
 
@@ -66,22 +65,28 @@ router.post("/approveBinary", async (req, res) => {
 })
 
 router.get("/teste", async (req, res) => {
-  // const a = await createScheduler()
-  await checkAllPaymentPlisio()
-  
-  res.json({ })
+  const categories = await Prisma.category.findMany()
+
+  for (const category of categories) {
+    await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
+      category_id: category.id, type: "COMMISSION"
+    }, tx), { timeout: 10000, maxWait: 10000 })
+  }
+  // await checkAllPaymentPlisio()
+
+  res.json({})
 })
 
 
 router.get("/make", async (req, res) => {
   const a = await makeCommission()
-  
+
   res.json({ a })
 })
 
 router.get("/pay", async (req, res) => {
   const a = await payCommission()
-  
+
   res.json({ a })
 })
 

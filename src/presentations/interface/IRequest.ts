@@ -6,6 +6,8 @@ export interface IRequest {
     headers?: any;
     cookies?: any;
     args?: any;
+    ip?: any
+    userAgent?: any;
     pagination?: {
       page: number;
       limit: number;

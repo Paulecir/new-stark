@@ -8,7 +8,7 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
 
     switch (schedulerType) {
         case 'diary': {
-            const { hour, minute } = scheduleData;
+            // const { hour, minute } = scheduleData;
             nextOccurrence = ref.clone().startOf("day");
             if (nextOccurrence.isBefore(ref)) {
                 nextOccurrence.add(1, 'day');
@@ -17,7 +17,7 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
         }
 
         case 'weekly': {
-            const { dayIfWeek, hour, minute } = scheduleData; // Domingo: 0, Sábado: 6
+            // const { dayIfWeek, hour, minute } = scheduleData; // Domingo: 0, Sábado: 6
             nextOccurrence = ref.clone().startOf("day");
             if (nextOccurrence.isBefore(ref)) {
                 nextOccurrence.add(1, 'week');
@@ -26,7 +26,7 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
         }
 
         case 'monthly': {
-            const { day, hour, minute } = scheduleData;
+            // const { day, hour, minute } = scheduleData;
             nextOccurrence = ref.clone().date(0).startOf("day");
             if (nextOccurrence.isBefore(ref)) {
                 nextOccurrence.add(1, 'month');

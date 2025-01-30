@@ -27,7 +27,7 @@ export const makeAuthMiddleware = async (httpRequest: IRequest): Promise<IRespon
             where: { login: dec.login || dec.username || dec.email }
         })
 
-        session = await Sessions.set(accessToken, user)
+        session = await Sessions.set(accessToken, { ...user, userAgent: httpRequest.userAgent, ip: httpRequest.ip })
     }
 
     return HttpResponse.successRawResponse({

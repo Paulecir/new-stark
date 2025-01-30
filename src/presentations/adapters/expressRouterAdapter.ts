@@ -7,6 +7,8 @@ export const expressRouteAdapter = (controler: any) => {
     const offset = req.query.offset || req.body?.pagination?.offset
     const limit = req.query.pageSize || req.query.limit || req.body?.pagination?.limit
     const __ref = req.query.__ref || req.body?.pagination?.__ref
+    const ip = req.ip || req.connection.remoteAddress
+    const userAgent = req.userAgent;
 
     delete req.query.page
     delete req.query.offset
@@ -52,6 +54,8 @@ export const expressRouteAdapter = (controler: any) => {
       args: Object.assign({}, req.body?.args || {}, req.query || {}),
       pagination,
       user,
+      ip,
+      userAgent
     }
     try {
       const appResponse = await controler(appRequest)

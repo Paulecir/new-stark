@@ -41,7 +41,7 @@ export const registerController = async (requestData: IRequest) => {
         const validatedData = await registerSchema.validate(requestData.body, { abortEarly: false });
 
         // Registra o novo usuário no banco de dados usando o serviço `UserService`
-        const user = await UserService.registerUser(validatedData);
+        const user = await UserService.registerUser({ ...validatedData, ip: requestData.ip });
 
         // Retorna uma resposta de sucesso com status 201 (Criado) e os dados do usuário registrado
         return HttpResponse.successResponse({
