@@ -1,10 +1,50 @@
 import PrismaLocal from "@/infra/db/prisma";
+import { CommissionScheduler, SchedulerCommisionStatus, SchedulerCommisionType } from "@prisma/client";
 import moment from "moment";
-import { createJob } from "./jobScheduler";
 
-function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
+
+export const createScheduler = async ({ category_id, type }: { category_id: number, type: SchedulerCommisionType }, Prisma = PrismaLocal) => {
+
+    const category = await Prisma.category.findFirst({
+        where: {
+            id: Number(category_id)
+        }
+    })
+
+    const currentDate = moment().add(1, "seconds")
+
+    const info = getNextOccurrence(currentDate, category.commission_yield_type, category.commission_yield_config, type)
+
+    const data = {
+        category_id: category.id,
+        type,
+        date: moment(info).toDate(),
+        amount: 0
+    }
+
+    const commissionScheduler = await Prisma.commissionScheduler.upsert({
+        where: {
+            type_category_id_date: {
+                type,
+                category_id: category.id,
+                date: moment(info).toDate()
+            }
+        },
+        create: data,
+        update: data
+    })
+
+    return commissionScheduler;
+}
+
+function getNextOccurrence(referenceDate, schedulerType, scheduleData, type: SchedulerCommisionType) {
     const ref = moment(referenceDate); // Converte para momento para cálculos
     let nextOccurrence;
+
+    if (type === "RESIDUAL") {
+        schedulerType = "diary"
+        ref.add(1, "hours")
+    }
 
     switch (schedulerType) {
         case 'diary': {
@@ -67,46 +107,4 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData) {
     }
 
     return nextOccurrence.format('YYYY-MM-DD HH:mm:ss');
-}
-export const createScheduler = async ({ category_id, type }: any, Prisma = PrismaLocal) => {
-
-    const category = await Prisma.category.findFirst({
-        where: {
-            id: Number(category_id)
-        }
-    })
-    const scheduler = await Prisma.commissionScheduler.findFirst({
-        where: {
-            category_id: category.id,
-            type
-        },
-        orderBy: {
-            date: "desc"
-        }
-    })
-
-    const currentDate = moment().add(1, "seconds")
-
-    const info = getNextOccurrence(currentDate, category.commission_yield_type, category.commission_yield_config)
-
-    const data = {
-        category_id: category.id,
-        type,
-        date: moment(info).toDate(),
-        amount:  0
-    }
-
-    const commissionScheduler = await Prisma.commissionScheduler.upsert({
-        where: {
-            type_category_id_date: {
-                type,
-                category_id: category.id,
-                date: moment(info).toDate()
-            }
-        },
-        create: data,
-        update: data
-    })
-
-    return commissionScheduler;
 }

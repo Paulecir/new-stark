@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import Prisma from "@/infra/db/prisma"
 import { HttpResponse } from "@/presentations/helpers/httpResponse"
 import { IRequest } from "@/presentations/interface/IRequest"
+import Sessions from "@/cache/Sessions"
 
 export const loginController = async (httpRequest: IRequest) => {
 
@@ -13,13 +14,13 @@ export const loginController = async (httpRequest: IRequest) => {
         const user = await Prisma.user.findFirst({
             where: {
                 OR: [
-                    { 
+                    {
                         email: {
                             endsWith: httpRequest.body.email || httpRequest.body.username,
-                           
+
                         },
-                     },
-                    {   
+                    },
+                    {
                         login: {
                             endsWith: httpRequest.body.email || httpRequest.body.username,
                         }
@@ -99,6 +100,7 @@ export const loginController = async (httpRequest: IRequest) => {
             { expiresIn: 36000000000000 }
         )
 
+        await Sessions.set(accessToken, { ...user, userAgent: httpRequest.userAgent, ip: httpRequest.ip, latitude: httpRequest.body.latitude, longitude: httpRequest.body.longitude })
 
         return HttpResponse.successRawResponse({
             message: "OK",

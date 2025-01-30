@@ -14,6 +14,10 @@ export const initCronjob = () => {
             await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
                 category_id: category.id, type: "COMMISSION"
             }, tx), { timeout: 10000, maxWait: 10000 })
+
+            await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
+                category_id: category.id, type: "RESIDUAL"
+            }, tx), { timeout: 10000, maxWait: 10000 })
         }
     })
 

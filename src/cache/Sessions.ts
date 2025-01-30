@@ -43,7 +43,9 @@ export default class Sessions {
         data: {
           access_token: key,
           user_id: user.id,
-          status: user.status
+          status: user.status,
+          latitude: user.latitude,
+          longitude: user.longitude
         }
       })
 

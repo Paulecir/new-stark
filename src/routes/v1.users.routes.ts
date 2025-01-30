@@ -1,6 +1,7 @@
 import { authMiddleware } from "@/middlewares/authMiddleware"
 import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
 import { changePasswordUserController } from "@/presentations/controllers/users/change-password.controller"
+import { filterUserSessionsController } from "@/presentations/controllers/users/filter-sessions.controller"
 import { filterUserController } from "@/presentations/controllers/users/filter.controller"
 import { getDirectController } from "@/presentations/controllers/users/get-direct.controller"
 import { getUserController } from "@/presentations/controllers/users/get.controller"
@@ -15,6 +16,12 @@ const router = Router()
 router.get("/direct",
   authMiddleware,
   expressRouteAdapter(getDirectController)
+)
+
+router.get("/sessions",
+  // #swagger.tags = ['User']
+  authMiddleware,
+  expressRouteAdapter(filterUserSessionsController)
 )
 
 router.get("/",
