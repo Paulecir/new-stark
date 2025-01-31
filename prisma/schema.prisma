@@ -13,7 +13,7 @@ model User {
   avatar                    String?   @db.MediumText
   login                     String    @unique(map: "users_login_unique") @db.VarChar(255)
   email                     String    @unique(map: "users_email_unique") @db.VarChar(255)
-  phone                     String?   @unique(map: "users_phone_unique") @db.VarChar(255)
+  phone                     String?   @db.VarChar(255)
   birthday                  String?   @db.VarChar(255)
   email_verified_at         DateTime? @db.Timestamp(0)
   password                  String    @db.Text
@@ -41,6 +41,8 @@ model User {
 
   sponsor    User?   @relation("sponsor", fields: [sponsor_id], references: [id])
   sponsor_id BigInt? @db.UnsignedBigInt
+
+  sponsor_migration String?
 
   binary_parent_id BigInt?         @db.UnsignedBigInt
   position         users_position?
