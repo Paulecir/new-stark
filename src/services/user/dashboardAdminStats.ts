@@ -18,22 +18,27 @@ export const dashboardAdminStats = async ({ user }: any) => {
     });
 
 
-    const ordersTotal = await Prisma.order.count({
-        where: {
-            status: 'done'
+    const ordersTotal = await Prisma.order.aggregate({
+        _sum: {
+            total: true
         },
-    });
-
-
-    const ordersTodayTotal = await Prisma.order.count({
         where: {
-            status: 'done',
-            created_at: {
+             status: 'done'
+        },
+    })
+
+    const ordersTodayTotal = await Prisma.order.aggregate({
+        _sum: {
+            total: true
+        },
+        where: {
+             status: 'done',
+             created_at: {
                 gt: moment().startOf("day").toDate(),
                 lt: moment().endOf("day").toDate(),
             }
         },
-    });
+    })
 
 
     const ordersExtract: any = await Prisma.$queryRaw` SELECT
@@ -71,6 +76,6 @@ export const dashboardAdminStats = async ({ user }: any) => {
 
 
 
-    return { userTotal, userInactive, useActive: userTotal - userInactive, ordersTotal, ordersTodayTotal, orders }
+    return { userTotal, userInactive, useActive: userTotal - userInactive, ordersTotal: ordersTotal._sum.total, ordersTodayTotal: ordersTodayTotal._sum.total, orders }
 
 }
