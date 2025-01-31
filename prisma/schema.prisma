@@ -421,6 +421,8 @@ model OrderItem {
   wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id])
   wallet_id BigInt? @db.UnsignedBigInt
 
+  info Json?
+
   created_at            DateTime                @default(now())
   updated_at            DateTime?               @updatedAt
   OrderItemDistribution OrderItemDistribution[] @relation("orderItem")
