@@ -13,7 +13,7 @@ router.get("/",
   expressRouteAdapter(getBinaryController)
 )
 
-router.put("/:id",
+router.put("/",
   // #swagger.tags = ['Webhook']
   authMiddleware,
   expressRouteAdapter(updateBinaryController)

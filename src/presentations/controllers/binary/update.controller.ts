@@ -7,7 +7,7 @@ export const updateBinaryController = async (requestData: IRequest) => {
     try {
         const validatedData = await updateSchema.validate(requestData.body, { abortEarly: false });
 
-        const user = await BinaryService.updateBinary(parseInt(requestData.params.id), validatedData);
+        const user = await BinaryService.updateBinary(parseInt(requestData.user.id), validatedData);
 
         return HttpResponse.successResponse({
             message: 'Binary updated successfully',
