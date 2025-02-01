@@ -1,7 +1,7 @@
 import initMiddlewares from "@/middlewares";
 import express from "express";
 import http from "http";
-import routes from 'routes';
+import routes from './routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './doc/Stark.openapi.json';
 import { initCronjob } from "./servers/cron";

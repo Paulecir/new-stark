@@ -162,6 +162,7 @@ model Product {
   yield_type  products_yield_type @default(diary)
   yield       Decimal             @db.Decimal(20, 8)
 
+  hidden      Boolean?  @default(false)
   category    Category? @relation(fields: [category_id], references: [id])
   category_id BigInt?   @db.UnsignedBigInt
 
@@ -191,6 +192,8 @@ model Wallet {
   Commission Commission[] @relation("wallet")
 
   Withdraw Withdraw[] @relation("wallet")
+
+  @@map("wallet")
 }
 
 model Category {
@@ -558,11 +561,15 @@ model CommissionScheduler {
 model ImportOrders {
   id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   info Json?
+
+  @@map("import_orders")
 }
 
 model Webhook {
   id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   request Json?
+
+  @@map("webhook")
 }
 
 enum SchedulerCommisionType {

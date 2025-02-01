@@ -12,8 +12,8 @@ const doc = {
   schemes: ['http'],
 };
 
-const outputFile = './src/swagger-output.json';
-const endpointsFiles = ['./src/routes/index.ts'];
+const outputFile = './dist/swagger-output.json';
+const endpointsFiles = ['./dist/routes/index.ts'];
 
 moment.tz.setDefault("America/Sao_Paulo")
 

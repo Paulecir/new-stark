@@ -1,6 +1,6 @@
 {
-  "name": "bybit-automatica",
-  "version": "1.0.0",
+  "name": "stark",
+  "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -8,7 +8,10 @@
     "mock": "ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/mock.ts",
     "migrate": "ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/migrate.ts",
     "build": "rm -f ./tsconfig-build.tsbuildinfo && rimraf dist && tsc -p tsconfig-build.json && tscpaths -p tsconfig-build.json -s ./src -o ./dist",
-    "start": "set NODE_ENV=production && node ./dist/server.js"
+    "start": "set NODE_ENV=production && node ./dist/server.js",
+    "docker:deploy": "yarn build && docker build -f Dockerfile -t ghcr.io/paulecir/stk-invest-api .",
+    "docker:push": "docker push ghcr.io/paulecir/stk-invest-api:latest"
+    
   },
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
@@ -38,6 +41,7 @@
     "swagger-ui-dist": "^5.18.2",
     "swagger-ui-express": "^5.0.1",
     "technicalindicators": "^3.1.0",
+    "tsc": "^2.0.4",
     "web3": "^4.16.0",
     "yamljs": "^0.3.0",
     "yup": "^1.6.1"
