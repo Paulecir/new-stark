@@ -6,6 +6,7 @@ import { dashboardAdminStatsController } from "@/presentations/controllers/dashb
 import { dashboardBinaryResumeController } from "@/presentations/controllers/dashboard/binary-resume.controller"
 import { dashboardUserStatsListController } from "@/presentations/controllers/dashboard/user-stats-list.controller"
 import { dashboardUserStatsController } from "@/presentations/controllers/dashboard/user-stats.controller"
+import { dashboardProductStatsController } from "@/presentations/controllers/dashboard/product-stats.controller"
 
 const router = Router()
 
@@ -25,7 +26,12 @@ router.get("/users/stats/list",
   expressRouteAdapter(dashboardUserStatsListController)
 )
 
-router.get("/admin/stats", 
+router.get("/products/stats",
+  authMiddleware,
+  expressRouteAdapter(dashboardProductStatsController)
+)
+
+router.get("/admin/stats",
   authMiddleware,
   expressRouteAdapter(dashboardAdminStatsController)
 )
