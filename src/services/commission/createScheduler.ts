@@ -3,7 +3,7 @@ import { CommissionScheduler, SchedulerCommisionStatus, SchedulerCommisionType }
 import moment from "moment";
 
 
-export const createScheduler = async ({ category_id, type }: { category_id: number, type: SchedulerCommisionType }, Prisma = PrismaLocal) => {
+export const createScheduler = async ({ category_id, type }: { category_id: bigint, type: SchedulerCommisionType }, Prisma = PrismaLocal) => {
 
     const category = await Prisma.category.findFirst({
         where: {

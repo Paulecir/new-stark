@@ -1,6 +1,15 @@
+import { WalletType } from "@prisma/client";
 import Prisma from "../../infra/db/prisma"
 
-export const addBalance = async ({ name = "", wallet, user_id, amount, ref_type, ref_id, extra_info = {} }: any, db = Prisma) => {
+export const addBalance = async ({ name = "", wallet, user_id, amount, ref_type, ref_id, extra_info = {} }: {
+    name: string,
+    wallet: WalletType,
+    user_id: any,
+    amount: number,
+    ref_type: string,
+    ref_id: number,
+    extra_info?: any
+}, db = Prisma) => {
 
     const extra: any = {}
 

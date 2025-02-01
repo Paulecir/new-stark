@@ -69,7 +69,7 @@ export const approvePayBinary = async (date = moment().subtract(1, 'days').forma
 
                 if (amountTotalCeiling > 0) {
                     await addBalance({
-                        name: "Binary payment"
+                        name: "Bonus Binary"
                         , wallet: "MAIN"
                         , user_id: strategyPay.user_id
                         , amount: parseFloat(amountTotalCeiling.toString())
@@ -81,6 +81,36 @@ export const approvePayBinary = async (date = moment().subtract(1, 'days').forma
                             toLogin: current?.login,
                         }
                     }, Prisma)
+                    await addBalance({
+                        name: "Bonus Binary"
+                        , wallet: "BINARY_BONUS"
+                        , user_id: strategyPay.user_id
+                        , amount: parseFloat(amountTotalCeiling.toString())
+                        , ref_type: 'strategyBinaryPay'
+                        , ref_id: strategyPay.id
+                        , extra_info: {
+                            to: strategyPay?.id,
+                            toName: current?.name,
+                            toLogin: current?.login,
+                        }
+                    }, Prisma)
+
+                    if (strategyPay.direction !== "NONE") {
+                        await addBalance({
+                            name: "Bonus Binary"
+                            , wallet: strategyPay.direction === "LEFT" ? "BINARY_LEFT_POINT_PAY" : "BINARY_RIGHT_POINT_PAY"
+                            , user_id: strategyPay.user_id
+                            , amount: parseFloat(amountTotalCeiling.toString())
+                            , ref_type: 'strategyBinaryPay'
+                            , ref_id: strategyPay.id
+                            , extra_info: {
+                                to: strategyPay?.id,
+                                toName: current?.name,
+                                toLogin: current?.login,
+                            }
+                        }, Prisma)
+                    }
+
                 }
 
                 await Prisma.strategyBinaryPay.updateMany({
@@ -94,7 +124,7 @@ export const approvePayBinary = async (date = moment().subtract(1, 'days').forma
                         status: strategyPay.qualify ? 'PAYED' : "NOTQUALIFY"
                     }
                 })
-                
+
             } catch (err) {
                 await Prisma.strategyBinaryPay.updateMany({
                     where: {

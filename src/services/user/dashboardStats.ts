@@ -42,6 +42,10 @@ export const dashboardStats = async ({ user }: any) => {
     });
 
 
-    return { noPositions, noQualify, noOrders }
+    return { 
+        noPositions, 
+        noQualify, 
+        noOrders
+     }
 
 }

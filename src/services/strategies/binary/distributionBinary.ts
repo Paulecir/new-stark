@@ -87,7 +87,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
             //         }
             //     })
         }
-
+        if (!binary.parent) break;
         if (binary.ref === "L") {
             await addBalance({
                 name: "Binary add point"
@@ -122,7 +122,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
             //     })
         }
 
-        if (!binary.parent) break;
+
 
         binary = await Prisma.strategyBinary.findFirst({
             where: {

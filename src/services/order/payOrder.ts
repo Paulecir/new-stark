@@ -48,7 +48,7 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
             }
 
             const history = await decBalance({
-                name: "Binary payment"
+                name: `Pagamento do pedido #${order.order_id} com saldo da conta [${order.user.name}]`
                 , wallet: "MAIN"
                 , user_id: order.user_id
                 , amount: order.total.toNumber()

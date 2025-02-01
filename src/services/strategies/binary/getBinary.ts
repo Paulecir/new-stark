@@ -16,7 +16,7 @@ export const getBinaryById = async ({ user, level = 1000 }: any, Prisma = Prisma
                 gte: first.level,
                 lte: maxLevel,
             },
-            hier: { startsWith: first.hier }
+            hier: { startsWith: first.hier },
         },
         include: {
             user: {
@@ -32,7 +32,7 @@ export const getBinaryById = async ({ user, level = 1000 }: any, Prisma = Prisma
             ref: 'asc'
         }]
     });
-
+    console.log(treeData.filter(f => !f.user))
     // Mapeando os dados para o formato necessário
     const formattedData = treeData.map((node) => ({
         id: node.id,

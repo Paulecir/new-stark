@@ -41,12 +41,22 @@ export const dashboardResume = async (
         }
     })
 
+
+    const balanceTotal = await Prisma.balance.findMany({
+        where: {
+            user_id: user.id,
+            wallet: direction === "left" ? "BINARY_LEFT_POINT_PAY" : direction === "right" ? "BINARY_RIGHT_POINT_PAY" : { in: ["BINARY_RIGHT_POINT_PAY", "BINARY_LEFT_POINT_PAY"] }
+        }
+    })
+
     let points = balance.reduce((acc: any, curr) => acc + curr.amount.toNumber(), 0)
+
+    let totalPoints = balanceTotal.reduce((acc: any, curr) => acc + curr.amount.toNumber(), 0)
 
     let stats = {
         nodes: direction === "left" ? binary.left_count : direction === "right" ? binary.right_count : binary.left_count + binary.right_count,
         points,
-        totalPoints: binaryPay._sum.points || 0,
+        totalPoints,
         strategy: binary.strategy
     }
 

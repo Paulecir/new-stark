@@ -1,7 +1,9 @@
+import Prisma from "@/infra/db/prisma";
 import { HttpResponse } from "@/presentations/helpers/httpResponse";
 import { IRequest } from "@/presentations/interface/IRequest";
 import { FinancialService } from "@/services/financial";
 import { UserService } from "@/services/user";
+import moment from "moment";
 
 export const dashboardProductStatsController = async (requestData: IRequest) => {
 
@@ -12,6 +14,92 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
         //     user: requestData.user
         // })
 
+        const direct = await Prisma.balance.findFirst({
+            where: {
+                user_id: requestData.user.id,
+                wallet: "DIRECT_BONUS"
+            }
+        })
+
+        const binary = await Prisma.balance.findFirst({
+            where: {
+                user_id: requestData.user.id,
+                wallet: "BINARY_BONUS"
+            }
+        })
+
+        const winwin = await Prisma.balance.findFirst({
+            where: {
+                user_id: requestData.user.id,
+                wallet: "WINWIN_BONUS"
+            }
+        })
+
+        const categorywinwWin = await Prisma.category.findFirst({
+            where: {
+                id: 4
+            }
+        })
+
+        let percentwinwWin = 0
+
+        if (categorywinwWin.commission_yield_type_commission === "dynamic") {
+            let config = ((categorywinwWin.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
+            if (config) percentwinwWin = parseFloat(config.value)
+        }
+
+        const winwWinOrder = await Prisma.$queryRaw`SELECT 
+                SUM(order_item.amount * order_item.quantity) as amount
+            FROM 
+                order_item
+            INNER JOIN \`order\` ON \`order\`.id = order_item.id
+            INNER JOIN products ON products.id = order_item.product_id 
+            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4
+            GROUP BY null`;
+
+        const tokenWay = await Prisma.balance.findFirst({
+            where: {
+                user_id: requestData.user.id,
+                wallet: "TOKENWAY_BONUS"
+            }
+        })
+
+        const categoryTokenWay = await Prisma.category.findFirst({
+            where: {
+                id: 1
+            }
+        })
+
+        let percentTokenWay = 0
+
+        if (categoryTokenWay.commission_yield_type_commission === "dynamic") {
+            let config = ((categoryTokenWay.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
+            if (config) percentTokenWay = parseFloat(config.value)
+        }
+
+        const tokenWayOrder = await Prisma.$queryRaw`SELECT 
+                SUM(order_item.amount * order_item.quantity) as amount
+            FROM 
+                order_item
+            INNER JOIN \`order\` ON \`order\`.id = order_item.id
+            INNER JOIN products ON products.id = order_item.product_id 
+            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1
+            GROUP BY null`
+
+        const tokenOne = await Prisma.balance.findFirst({
+            where: {
+                user_id: requestData.user.id,
+                wallet: "TOKENONE_BONUS"
+            }
+        })
+
+        const tokenTeem = await Prisma.balance.findFirst({
+            where: {
+                user_id: requestData.user.id,
+                wallet: "TOKENTEEN_BONUS"
+            }
+        })
+
         return HttpResponse.successResponse({
             // ...data,
             data: {
@@ -21,50 +109,50 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                 },
                 bonus: {
                     direto: {
-                        amount: 0
+                        amount: direct?.amount || 0
                     },
                     binario: {
-                        amount: 307
+                        amount: binary?.amount || 0
                     }
                 },
                 winWin: {
                     rendimentoDiario: {
-                        amount: 11,
-                        tax: 0.55
+                        amount:(winwWinOrder?.[0]?.amount || 0) * (percentwinwWin / 100),
+                        tax: percentwinwWin
                     },
                     rendimentoTotal: {
                         amount: 0,
-                        total: 0,
+                        total: winwin?.amount || 0,
                         nextAmount: 0,
                         nextDate: '2025-02-01 00:00:00'
                     }
                 },
                 tokenWay: {
                     rendimentoDiario: {
-                        amount: 0.23,
-                        tax: 0.90
+                        amount: (tokenWayOrder?.[0]?.amount || 0) * (percentTokenWay / 100),
+                        tax: percentTokenWay
                     },
                     rendimentoTotal: {
                         amount: 0,
-                        total: 0,
+                        total: tokenWay?.amount || 0,
                         nextAmount: 0,
                         nextDate: '2025-02-01 00:00:00'
                     },
                     unilevel: {
-                        amount: 4.93,
+                        amount: tokenWay?.amount || 0,
                     }
                 },
                 tokenOne: {
                     rendimentoTotal: {
                         amount: 0,
-                        total: 0
+                        total: tokenOne?.amount || 0
                     }
 
                 },
                 tokenTeem: {
                     rendimentoTotal: {
                         amount: 0,
-                        total: 0
+                        total: tokenTeem?.amount || 0
                     }
                 }
             },

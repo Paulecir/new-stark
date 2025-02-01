@@ -12,7 +12,7 @@ export const payCommission = async () => {
         FROM 
             commission as c
         WHERE
-            c.status = "PENDING"
+            c.status = 'PENDING'
         GROUP BY user_id, scheduler_id
     `;
 
