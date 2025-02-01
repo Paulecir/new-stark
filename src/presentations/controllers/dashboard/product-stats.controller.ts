@@ -34,7 +34,9 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                     },
                     rendimentoTotal: {
                         amount: 0,
-                        total: 0
+                        total: 0,
+                        nextAmount: 0,
+                        nextDate: '2025-02-01 00:00:00'
                     }
                 },
                 tokenWay: {
@@ -44,7 +46,9 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                     },
                     rendimentoTotal: {
                         amount: 0,
-                        total: 0
+                        total: 0,
+                        nextAmount: 0,
+                        nextDate: '2025-02-01 00:00:00'
                     },
                     unilevel: {
                         amount: 4.93,
