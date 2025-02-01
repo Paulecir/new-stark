@@ -47,6 +47,7 @@ export const dashboardResume = async (
         nodes: direction === "left" ? binary.left_count : direction === "right" ? binary.right_count : binary.left_count + binary.right_count,
         points,
         totalPoints: binaryPay._sum.points || 0,
+        strategy: binary.strategy
     }
 
     return stats
