@@ -11,21 +11,11 @@ export const loginController = async (httpRequest: IRequest) => {
 
         if (httpRequest.body.email) httpRequest.body.email = httpRequest.body.email.toLowerCase()
 
-        const user = await Prisma.user.findFirst({
+        let user = await Prisma.user.findFirst({
             where: {
-                OR: [
-                    {
-                        email: {
-                            endsWith: httpRequest.body.email || httpRequest.body.username,
-
-                        },
-                    },
-                    {
-                        login: {
-                            endsWith: httpRequest.body.email || httpRequest.body.username,
-                        }
-                    }
-                ]
+                email: {
+                    equals: httpRequest.body.email || httpRequest.body.username,
+                }
             },
             select: {
                 id: true,
@@ -41,6 +31,32 @@ export const loginController = async (httpRequest: IRequest) => {
                 is_active: true
             }
         })
+
+        if (!user) {
+
+            user = await Prisma.user.findFirst({
+                where: {
+                    login: {
+                        equals: httpRequest.body.email || httpRequest.body.username,
+                    }
+                },
+                select: {
+                    id: true,
+                    login: true,
+                    password: true,
+                    sponsor: true,
+                    name: true,
+                    email: true,
+                    country_code: true,
+                    country_name: true,
+                    phone: true,
+                    profile: true,
+                    is_active: true
+                }
+            })
+
+
+        }
 
         if (!user) {
 

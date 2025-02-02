@@ -3,7 +3,7 @@ import { NotFoundError } from "@/presentations/errors/notFoundException"
 
 export const filterProduct = async (filter: any[] = [], pagination: any, orderBy: any = { created_at: "desc" }) => {
     const { page = 1, pageSize = 10 } = pagination
-
+    filter.push({ hidden: false })
     const data = await Prisma.product.findMany({
         take: pageSize,
         skip: pageSize * (page - 1),
