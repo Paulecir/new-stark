@@ -29,14 +29,17 @@ export const registerUser = async (data: any) => {
 
 
         if (info?.token) {
-            const wallet = await axios.get(`https://${process.env.WALLET_URI}/api/v1/wallet/create`, {
+            const wallet = await axios.get(`${process.env.WALLET_URI}/api/v1/wallet/create`, {
                 headers: {
                     Authorization: `Bearer ${info.token}`
                 }
             }).then(res => {
                 return res?.data?.data?.data || null
             })
-                .catch(res => null)
+                .catch(res => {
+                    console.log("R", res)
+                    return null
+                })
 
             if (wallet) {
                 bep20_address = wallet.address;
