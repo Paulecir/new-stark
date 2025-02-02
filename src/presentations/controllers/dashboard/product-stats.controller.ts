@@ -46,15 +46,17 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
         if (categorywinwWin.commission_yield_type_commission === "dynamic") {
             let config = ((categorywinwWin.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
             if (config) percentwinwWin = parseFloat(config.value)
+        } else if (categorywinwWin.commission_yield_type_commission === "fixed") { 
+            percentwinwWin = parseFloat((categorywinwWin.commission_yield_config as any)?.yield_fixed)
         }
 
         const winwWinOrder = await Prisma.$queryRaw`SELECT 
                 SUM(order_item.amount * order_item.quantity) as amount
             FROM 
                 order_item
-            INNER JOIN \`order\` ON \`order\`.id = order_item.id
+            INNER JOIN \`order\` ON \`order\`.id = order_item.order_id
             INNER JOIN products ON products.id = order_item.product_id 
-            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4
+            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = "done"
             GROUP BY null`;
 
         const tokenWay = await Prisma.balance.findFirst({
@@ -78,13 +80,13 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
         }
 
         const tokenWayOrder = await Prisma.$queryRaw`SELECT 
-                SUM(order_item.amount * order_item.quantity) as amount
+                SUM(order_item.amount * order_item.quantity) as amount,
+                SUM(order_item.quantity) as quantity
             FROM 
                 order_item
-            INNER JOIN \`order\` ON \`order\`.id = order_item.id
+            INNER JOIN \`order\` ON \`order\`.id = order_item.order_id
             INNER JOIN products ON products.id = order_item.product_id 
-            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1
-            GROUP BY null`
+            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1 AND \`order\`.status = "done"`
 
         const tokenOne = await Prisma.balance.findFirst({
             where: {
@@ -121,8 +123,9 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                         tax: percentwinwWin
                     },
                     rendimentoTotal: {
-                        amount: 0,
-                        total: winwin?.amount || 0,
+                        amount: winwin?.amount || 0,
+                        total: (winwWinOrder?.[0]?.amount || 0) * (207 / 100),
+                        qtd: parseInt(winwWinOrder?.[0]?.amount),
                         nextAmount: 0,
                         nextDate: '2025-02-01 00:00:00'
                     }
@@ -133,8 +136,9 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                         tax: percentTokenWay
                     },
                     rendimentoTotal: {
-                        amount: 0,
-                        total: tokenWay?.amount || 0,
+                        amount: tokenWay?.amount || 0,
+                        total: (tokenWayOrder?.[0]?.amount || 0) * (300 / 100),
+                        qtd: tokenWayOrder?.[0]?.quantity,
                         nextAmount: 0,
                         nextDate: '2025-02-01 00:00:00'
                     },
@@ -144,14 +148,16 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                 },
                 tokenOne: {
                     rendimentoTotal: {
-                        amount: 0,
+                        amount: tokenOne?.amount || 0,
+                        qtd: 0,
                         total: tokenOne?.amount || 0
                     }
 
                 },
                 tokenTeem: {
                     rendimentoTotal: {
-                        amount: 0,
+                        amount: tokenTeem?.amount || 0,
+                        qtd: 0,
                         total: tokenTeem?.amount || 0
                     }
                 }

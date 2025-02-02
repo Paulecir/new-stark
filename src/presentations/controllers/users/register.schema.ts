@@ -7,20 +7,20 @@ export const registerSchema = yup.object().shape({
         .required('Login is required')
         .matches(/^[a-zA-Z0-9]+$/, 'Login must contain only alphanumeric characters')
         .test('unique', 'Login must be unique', async (value) => {
-            const userExists = await Prisma.user.findUnique({ where: { login: value } });
+            const userExists = await Prisma.user.findFirst({ where: { login: value } });
             return !userExists;
         }),
     email: yup.string()
         .required('Email is required')
         .email('Invalid email format')
         .test('unique', 'Email must be unique', async (value) => {
-            const emailExists = await Prisma.user.findUnique({ where: { email: value } });
+            const emailExists = await Prisma.user.findFirst({ where: { email: value } });
             return !emailExists;
         }),
     phone: yup.string()
         .required('Phone is required')
         .test('unique', 'Phone must be unique', async (value) => {
-            const phoneExists = await Prisma.user.findUnique({ where: { phone: value } });
+            const phoneExists = await Prisma.user.findFirst({ where: { phone: value } });
             return !phoneExists;
         }),
     country_name: yup.string().required('Country name is required'),
