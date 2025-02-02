@@ -191,8 +191,6 @@ model Wallet {
 
   Commission Commission[] @relation("wallet")
 
-  Withdraw Withdraw[] @relation("wallet")
-
   @@map("wallet")
 }
 
@@ -479,8 +477,6 @@ model Withdraw {
   user    User   @relation("user", fields: [user_id], references: [id])
   user_id BigInt @db.UnsignedBigInt
 
-  wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id])
-  wallet_id BigInt? @db.UnsignedBigInt
 
   amount Decimal @db.Decimal(20, 8)
 

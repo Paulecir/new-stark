@@ -56,7 +56,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                 order_item
             INNER JOIN \`order\` ON \`order\`.id = order_item.order_id
             INNER JOIN products ON products.id = order_item.product_id 
-            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = "done"
+            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = 'done'
             GROUP BY null`;
 
         const tokenWay = await Prisma.balance.findFirst({
@@ -86,7 +86,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                 order_item
             INNER JOIN \`order\` ON \`order\`.id = order_item.order_id
             INNER JOIN products ON products.id = order_item.product_id 
-            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1 AND \`order\`.status = "done"`
+            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1 AND \`order\`.status = 'done'`
 
         const tokenOne = await Prisma.balance.findFirst({
             where: {

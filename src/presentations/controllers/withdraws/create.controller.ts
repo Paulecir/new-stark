@@ -6,8 +6,9 @@ import { WithdrawService } from "@/services/withdraw";
 export const createWithdrawController = async (requestData: IRequest) => {
 
     try {
+        
         // Validar os dados da requisição
-        const validatedData = await schemaCreateWithdraw.validate({...requestData.body, user_id: requestData.user.id }, { abortEarly: false });
+        const validatedData = await schemaCreateWithdraw.validate({...requestData.body, wallet: requestData.user.bep20_address, user_id: requestData.user.id }, { abortEarly: false });
 
         // Criar o usuário no banco de dados
         const data = await WithdrawService.createWithdraw(validatedData)
