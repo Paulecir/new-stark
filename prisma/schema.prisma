@@ -477,6 +477,7 @@ model Withdraw {
   user    User   @relation("user", fields: [user_id], references: [id])
   user_id BigInt @db.UnsignedBigInt
 
+  wallet String? @db.MediumText
 
   amount Decimal @db.Decimal(20, 8)
 

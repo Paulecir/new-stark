@@ -9,15 +9,8 @@ export const filterAdminWithdraw = async (filter: any[] = [], pagination: any, o
         skip: pageSize * (page - 1),
         where: {
             AND: filter
-        },
-        include: {
-            wallet: {
-                select: {
-                    id: true,
-                    hash: true
-                }
-            }
         }
+      
     })
 
     if (!data) throw new NotFoundError("Withdraw not found")

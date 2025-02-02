@@ -44,7 +44,7 @@ export const retiroApprove = async (
 
 
                 // Send withdraw
-
+                throw new Error("Falta meio de pagamento")
                 await Prisma.withdraw.update({
                     where: {
                         id: approve.id
@@ -54,7 +54,7 @@ export const retiroApprove = async (
                         balance_history_id: history.id
                     }
                 })
-    
+
             }, {
                 timeout: 100000
                 , maxWait: 100000
@@ -70,7 +70,7 @@ export const retiroApprove = async (
                 }
             })
         }
-       
+
     }
 
 

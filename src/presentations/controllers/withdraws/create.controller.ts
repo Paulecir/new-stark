@@ -2,13 +2,19 @@ import { HttpResponse } from "@/presentations/helpers/httpResponse"
 import { IRequest } from "@/presentations/interface/IRequest"
 import { schemaCreateWithdraw } from "./create.schema"
 import { WithdrawService } from "@/services/withdraw";
+import Prisma from "@/infra/db/prisma";
 
 export const createWithdrawController = async (requestData: IRequest) => {
 
     try {
         
+        const user = await Prisma.user.findFirst({
+            where: {
+                id: requestData.user.id
+            }
+        })
         // Validar os dados da requisição
-        const validatedData = await schemaCreateWithdraw.validate({...requestData.body, wallet: requestData.user.bep20_address, user_id: requestData.user.id }, { abortEarly: false });
+        const validatedData = await schemaCreateWithdraw.validate({...requestData.body, wallet: user.bep20_address, user_id: requestData.user.id }, { abortEarly: false });
 
         // Criar o usuário no banco de dados
         const data = await WithdrawService.createWithdraw(validatedData)
