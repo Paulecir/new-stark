@@ -18,9 +18,9 @@ export const registerUser = async (data: any) => {
         let bep20_public_key = null;
         let bep20_private_key = null;
 
-        const info = await axios.post(`https://mtt.mep.dev.br/api/v1/auth/signin`, {
-            "email": "prestes@mep.dev.br",
-            "password": "123456"
+        const info = await axios.post(`${process.env.WALLET_URI}/api/v1/auth/signin`, {
+            "email": process.env.WALLET_LOGIN,
+            "password": process.env.WALLET_PASSWORD,
         }).then(res => {
 
             return res.data
@@ -29,7 +29,7 @@ export const registerUser = async (data: any) => {
 
 
         if (info?.token) {
-            const wallet = await axios.get(`https://mtt.mep.dev.br/api/v1/wallet/create`, {
+            const wallet = await axios.get(`https://${process.env.WALLET_URI}/api/v1/wallet/create`, {
                 headers: {
                     Authorization: `Bearer ${info.token}`
                 }
