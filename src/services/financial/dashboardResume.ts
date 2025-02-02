@@ -53,8 +53,16 @@ export const dashboardResume = async (
 
     let totalPoints = balanceTotal.reduce((acc: any, curr) => acc + curr.amount.toNumber(), 0)
 
+    const nodes = await Prisma.strategyBinary.count({
+        where: {
+            hier: {
+                startsWith: `${binary.hier}${direction === "left" ? 'L' : 'R'}`
+            }
+        }
+    })
+
     let stats = {
-        nodes: direction === "left" ? binary.left_count : direction === "right" ? binary.right_count : binary.left_count + binary.right_count,
+        nodes,
         points,
         totalPoints,
         strategy: binary.strategy

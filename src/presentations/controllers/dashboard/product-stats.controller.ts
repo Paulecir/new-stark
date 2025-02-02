@@ -102,12 +102,26 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
             }
         })
 
+        const total = await Prisma.user.count({
+            where: {
+                ancestry: { contains: `#${requestData.user.id}#` },
+            },
+        });
+
+        const ativos = await Prisma.user.count({
+            where: {
+                ancestry: { contains: `#${requestData.user.id}#` },
+                Order: { some: {} }
+            },
+        });
+
+
         return HttpResponse.successResponse({
             // ...data,
             data: {
                 equipe: {
-                    ativos: 596,
-                    total: 845
+                    ativos,
+                    total
                 },
                 bonus: {
                     direto: {
