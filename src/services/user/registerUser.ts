@@ -48,7 +48,7 @@ export const registerUser = async (data: any) => {
             }
         }
 
-        const password = data.password ? await bcrypt.hash(data.password, 12) : faker.internet.password();
+        const password = data.password ? await bcrypt.hash(data.password, 12) :  await bcrypt.hash(faker.internet.password(), 12);
         const user = await Prisma.user.create({
             data: {
                 name: data.name,
