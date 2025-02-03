@@ -9,7 +9,8 @@ export const filterWithdraw = async (filter: any[] = [], pagination: any, orderB
         skip: pageSize * (page - 1),
         where: {
             AND: filter
-        }
+        },
+        orderBy
     })
 
     if (!data) throw new NotFoundError("Withdraw not found")

@@ -9,8 +9,17 @@ export const filterAdminWithdraw = async (filter: any[] = [], pagination: any, o
         skip: pageSize * (page - 1),
         where: {
             AND: filter
-        }
-      
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                }
+            }
+        },
+        orderBy
     })
 
     if (!data) throw new NotFoundError("Withdraw not found")
