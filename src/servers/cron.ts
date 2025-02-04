@@ -28,19 +28,19 @@ export const initCronjob = async () => {
         }
     })
 
-    nodeSchedule.scheduleJob("*/10 * * * *", async (job) => {
-        await makeCommission()
-        await payCommission()
-    })
+    // nodeSchedule.scheduleJob("*/10 * * * *", async (job) => {
+    //     await makeCommission()
+    //     await payCommission()
+    // })
 
     nodeSchedule.scheduleJob("*/1 * * * *", async (job) => {
         console.log("CRON checkAllPaymentPlisio")
         await OrderService.checkAllPaymentPlisio()
     })
 
-    nodeSchedule.scheduleJob("0 1 * * *", async (job) => {
-        await payBinary()
-        await approvePayBinary()
-    })
+    // nodeSchedule.scheduleJob("0 1 * * *", async (job) => {
+    //     await payBinary()
+    //     await approvePayBinary()
+    // })
 
 }

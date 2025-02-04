@@ -112,8 +112,7 @@ export const loginController = async (httpRequest: IRequest) => {
                 "sponsor_login": user.sponsor?.login || null,
                 "sponsor_name": user.sponsor?.name || null,
 
-            },
-            { expiresIn: 36000000000000 }
+            }, { expiresIn: '1h' }
         )
 
         await Sessions.set(accessToken, { ...user, userAgent: httpRequest.userAgent, ip: httpRequest.ip, latitude: httpRequest.body.latitude, longitude: httpRequest.body.longitude })

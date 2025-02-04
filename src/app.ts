@@ -15,7 +15,7 @@ const server = async () => {
   const server = http.createServer(app)
 
   // Configuração do Swagger UI
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  if (process.env.NODE_ENV === "develop") app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   initMiddlewares(app)
 
