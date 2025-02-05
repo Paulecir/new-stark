@@ -21,7 +21,7 @@ import { UserService } from "@/services/user";
 export const filterUserController = async (requestData: IRequest) => {
     try {
         // Recupera o usuário pelo ID usando o UserService
-        const userFilter = await UserService.filterUser([], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
+        const userFilter = await UserService.filterUser(requestData.query, { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
 
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
         return HttpResponse.successResponse({
