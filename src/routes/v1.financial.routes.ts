@@ -6,6 +6,8 @@ import { financialExtractController } from "@/presentations/controllers/financia
 import { resumeController } from "@/presentations/controllers/financial/resume.controller"
 import { resumeOneController } from "@/presentations/controllers/financial/resumeOne.controller"
 import { retiroApproveExtractController } from "@/presentations/controllers/financial/retiro-approve.controller"
+import { financialExtractPendingController } from "@/presentations/controllers/financial/extract-pending.controller"
+import { financialExtractBinaryController } from "@/presentations/controllers/financial/extract-binary.controller"
 
 const router = Router()
 
@@ -13,6 +15,18 @@ router.post("/extract",
   // #swagger.tags = ['Webhook']
   authMiddleware,
   expressRouteAdapter(financialExtractController)
+)
+
+router.post("/extract-pending",
+  // #swagger.tags = ['Webhook']
+  authMiddleware,
+  expressRouteAdapter(financialExtractPendingController)
+)
+
+router.post("/extract-binary",
+  // #swagger.tags = ['Webhook']
+  authMiddleware,
+  expressRouteAdapter(financialExtractBinaryController)
 )
 
 router.get("/resume",

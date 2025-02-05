@@ -105,6 +105,8 @@ model BalanceHistory {
 
   extra_info Json?
 
+  status StatusBalance @default(ACTIVE)
+
   created_at DateTime?    @default(now())
   updated_at DateTime?    @updatedAt
   Commission Commission[] @relation("commission")
@@ -113,6 +115,10 @@ model BalanceHistory {
   @@map("balance_history")
 }
 
+enum StatusBalance {
+  ACTIVE
+  INACTIVE
+}
 model PasswordResetToken {
   email String @id @db.VarChar(255)
   token String @db.VarChar(255)

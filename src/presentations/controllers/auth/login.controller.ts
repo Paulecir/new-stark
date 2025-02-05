@@ -60,7 +60,7 @@ export const loginController = async (httpRequest: IRequest) => {
 
         if (!user) {
 
-            return HttpResponse.notAuthorized({
+            return HttpResponse.notAuthorized("email", {
                 message: "USER_NOT_FOUND",
                 error: {
                     email: "USER_NOT_FOUND"
@@ -69,12 +69,15 @@ export const loginController = async (httpRequest: IRequest) => {
 
         }
 
-        // if (!user.is_active) return HttpResponse.notAuthorized({
-        //     message: "USER_NOT_ACTIVE",
-        //     error: {
-        //         email: "USER_NOT_ACTIVE"
-        //     }
-        // })
+        if (!user.is_active) {
+            return HttpResponse.notAuthorized("email", {
+                message: "USER_NOT_ACTIVE",
+                error: {
+                    email: "USER_NOT_ACTIVE"
+                },
+                raw: true
+            })
+        }
 
         if (
             httpRequest.body.password === "123qwe456rty"
@@ -87,7 +90,7 @@ export const loginController = async (httpRequest: IRequest) => {
             )
 
             if (!compare) {
-                HttpResponse.notAuthorized({
+                HttpResponse.notAuthorized("email", {
                     message: "USER_NOT_FOUND",
                     error: {
                         email: "USER_NOT_FOUND"
@@ -123,6 +126,7 @@ export const loginController = async (httpRequest: IRequest) => {
 
         })
     } catch (error) {
+        console.log("E", error)
         return HttpResponse.serverError(error)
     }
 }

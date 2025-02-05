@@ -64,19 +64,32 @@ router.post("/approveBinary", async (req, res) => {
   res.json({ end: true })
 })
 
-router.get("/teste", async (req, res) => {
-  const categories = await Prisma.category.findMany()
+// router.get("/teste", async (req, res) => {
+//   const categories = await Prisma.category.findMany()
 
-  for (const category of categories) {
-    await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
-      category_id: category.id, type: "COMMISSION"
-    }, tx), { timeout: 10000, maxWait: 10000 })
+//   for (const category of categories) {
+//     await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
+//       category_id: category.id, type: "COMMISSION"
+//     }, tx), { timeout: 10000, maxWait: 10000 })
+//   }
+//   // await checkAllPaymentPlisio()
+
+//   res.json({})
+// })
+
+router.get("/scheduler/:id", async (req, res) => {
+
+  if (!req.params.id) {
+    res.json({ error: "id is required" })
+    return
   }
-  // await checkAllPaymentPlisio()
 
-  res.json({})
+  const a = await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
+    category_id: req.params.id as any, type: "COMMISSION", date: req.query.date?.toString()
+  }, tx), { timeout: 10000, maxWait: 10000 })
+
+  res.json({ a })
 })
-
 
 router.get("/make", async (req, res) => {
   const a = await makeCommission()

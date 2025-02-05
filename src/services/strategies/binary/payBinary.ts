@@ -88,30 +88,30 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                     await decBalance({
                         name: "Binary payment"
                         , wallet: "BINARY_RIGHT_POINT"
-                        , user_id: strategy.user_id
+                        , user_id: binaryPay.user_id
                         , amount: parseFloat(amount)
                         , ref_type: 'strategyBinaryPay'
                         , ref_id: binaryPay.id
                         , extra_info: {
-                            to: strategy?.user_id,
+                            to: binaryPay?.user_id,
                             toName: current?.name,
                             toLogin: current?.login,
-                            binaryId: strategy.id,
+                            binaryId: binaryPay.binary_id,
                         }
                     }, Prisma)
 
                     await decBalance({
                         name: "Binary payment"
                         , wallet: "BINARY_LEFT_POINT"
-                        , user_id: strategy.user_id
+                        , user_id: binaryPay.user_id
                         , amount: parseFloat(amount)
                         , ref_type: 'strategyBinaryPay'
                         , ref_id: binaryPay.id
                         , extra_info: {
-                            to: strategy?.user_id,
+                            to: binaryPay?.user_id,
                             toName: current?.name,
                             toLogin: current?.login,
-                            binaryId: strategy.id,
+                            binaryId: binaryPay.binary_id,
                         }
                     }, Prisma)
 
@@ -160,6 +160,8 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
             timeout: 100000,
             maxWait: 100000
         })
+
+        console.log("I", info.id)
 
         if (!info) break
 

@@ -3,7 +3,7 @@ import { CommissionScheduler, SchedulerCommisionStatus, SchedulerCommisionType }
 import moment from "moment";
 
 
-export const createScheduler = async ({ category_id, type }: { category_id: bigint, type: SchedulerCommisionType }, Prisma = PrismaLocal) => {
+export const createScheduler = async ({ category_id, type, date = null }: { category_id: bigint, type: SchedulerCommisionType, date: string }, Prisma = PrismaLocal) => {
 
     const category = await Prisma.category.findFirst({
         where: {
@@ -11,7 +11,7 @@ export const createScheduler = async ({ category_id, type }: { category_id: bigi
         }
     })
 
-    const currentDate = moment().add(1, "seconds")
+    const currentDate = moment(date).add(1, "seconds")
 
     const info = getNextOccurrence(currentDate, category.commission_yield_type, category.commission_yield_config, type)
 

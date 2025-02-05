@@ -18,7 +18,8 @@ export const filterExtract = async (
         where: {
             AND: [
                 { wallet: { in: wallet } },
-                { user_id: user.id }
+                { user_id: user.id },
+                { status: "ACTIVE" }
             ]
         },
         orderBy
@@ -29,7 +30,8 @@ export const filterExtract = async (
         where: {
             AND: [
                 { wallet: { in: wallet } },
-                { user_id: user.id }
+                { user_id: user.id },
+                { status: "ACTIVE" }
             ]
         },
     })

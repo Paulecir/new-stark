@@ -54,7 +54,6 @@ export const approvePayBinary = async (date = moment().subtract(1, 'days').forma
             })
             try {
 
-
                 if (!strategyPay) return null
 
                 const current = await Prisma.user.findFirst({

@@ -6,14 +6,13 @@ export const dashboardAdminStats = async ({ user }: any) => {
 
     const userInactive = await Prisma.user.count({
         where: {
-            Order: { none: {} },
-            is_active: true
+            is_active: false
         },
     });
 
     const userTotal = await Prisma.user.count({
         where: {
-            is_active: true
+            // is_active: true
         },
     });
 

@@ -61,7 +61,8 @@ export const registerUser = async (data: any) => {
                 password, // Idealmente, você deve hash a senha antes de salvar,
                 bep20_address,
                 bep20_public_key,
-                bep20_private_key
+                bep20_private_key,
+                is_active: true
 
             },
         });
