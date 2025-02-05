@@ -6,10 +6,15 @@ export const filterUser = async (filter, pagination: any, orderBy: any = { creat
 
     let query: any[] = []
 
-    if (filter.name) query.push({ name: { contains: filter.name } })
-    if (filter.email) query.push({ email: { contains: filter.name } })
-    if (filter.login) query.push({ login: { contains: filter.name } })
+    let queryOr: any[] = []
+    if (filter.name) queryOr.push({ name: { contains: filter.name } })
+    if (filter.email) queryOr.push({ email: { contains: filter.email } })
+    if (filter.login) queryOr.push({ login: { contains: filter.login } })
 
+
+    if (queryOr.length > 0) {
+        query.push({ OR: queryOr })
+    }
     const data = await Prisma.user.findMany({
         take: pageSize,
         skip: pageSize * (page - 1),
