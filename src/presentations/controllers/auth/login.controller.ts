@@ -75,7 +75,6 @@ export const loginController = async (httpRequest: IRequest) => {
                 error: {
                     email: "USER_NOT_ACTIVE"
                 },
-                raw: true
             })
         }
 
@@ -90,13 +89,12 @@ export const loginController = async (httpRequest: IRequest) => {
             )
 
             if (!compare) {
-                HttpResponse.notAuthorized("email", {
-                    message: "USER_NOT_FOUND",
+                return HttpResponse.notAuthorized("email", {
+                    message: "USER_OR_PASSWORD_NOT_FOUND",
                     error: {
-                        email: "USER_NOT_FOUND"
+                        email: "USER_OR_PASSWORD_NOT_FOUND"
                     }
                 })
-                return
             }
         }
 

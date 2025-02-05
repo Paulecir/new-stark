@@ -1,4 +1,5 @@
 import Prisma from "@/infra/db/prisma";
+import bcrypt from "bcrypt"
 
 export const updateUser = async (id: number, data: any) => {
     try {
@@ -8,6 +9,9 @@ export const updateUser = async (id: number, data: any) => {
             }
         })
     
+        if (data.password) {
+            data.password = await bcrypt.hash(data.password, 12)
+        }
         const user = await Prisma.user.update({
             where: {
                 id
