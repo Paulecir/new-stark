@@ -3,6 +3,7 @@ import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapt
 import { changePasswordUserController } from "@/presentations/controllers/users/change-password.controller"
 import { filterUserSessionsController } from "@/presentations/controllers/users/filter-sessions.controller"
 import { filterUserController } from "@/presentations/controllers/users/filter.controller"
+import { filterUserSelectController } from "@/presentations/controllers/users/filterSelect.controlle"
 import { getDirectController } from "@/presentations/controllers/users/get-direct.controller"
 import { getUserController } from "@/presentations/controllers/users/get.controller"
 import { resetPasswordUserController } from "@/presentations/controllers/users/reset-password.controller"
@@ -24,11 +25,18 @@ router.get("/sessions",
   expressRouteAdapter(filterUserSessionsController)
 )
 
+router.get("/select",
+  // #swagger.tags = ['User']
+  authMiddleware,
+  expressRouteAdapter(filterUserSelectController)
+)
+
 router.get("/",
   // #swagger.tags = ['User']
   authMiddleware,
   expressRouteAdapter(filterUserController)
 )
+
 
 router.get("/:id",
   // #swagger.tags = ['User']
