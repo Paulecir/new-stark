@@ -48,6 +48,24 @@ export const registerUser = async (data: any) => {
             }
         }
 
+        let ancestry: any = []
+        let sponsor_id = sponsor.id
+        let checkSponsor: any = null
+        do {
+            if (!sponsor_id) break;
+            checkSponsor = await Prisma.user.findFirst({
+                where: {
+                    id: sponsor_id
+                }
+            })
+
+            if (!checkSponsor) break;
+
+            ancestry.push(`#${checkSponsor.id}#`)
+            sponsor_id = checkSponsor.sponsor_id
+
+        } while (checkSponsor)
+
         const password = data.password ? await bcrypt.hash(data.password, 12) :  await bcrypt.hash(faker.internet.password(), 12);
         const user = await Prisma.user.create({
             data: {
@@ -62,8 +80,8 @@ export const registerUser = async (data: any) => {
                 bep20_address,
                 bep20_public_key,
                 bep20_private_key,
-                is_active: true
-
+                is_active: true,
+                ancestry: ancestry.reverse().join('')
             },
         });
 
