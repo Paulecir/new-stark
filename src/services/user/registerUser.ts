@@ -162,7 +162,7 @@ export const registerUser = async (data: any) => {
                     <body>
                         <div class="email-container">
                             <div class="email-header">
-                                <img src="${data.host}/images/logo.svg" alt="Logo StarkTecnologia" class="logo" style="max-width: 120px; margin-bottom: 10px;">
+                                <img src="https://starktecnologia.com/images/logo.svg" alt="Logo StarkTecnologia" class="logo" style="max-width: 120px; margin-bottom: 10px;">
                                 <h2>Registro de usuario</h2>
                             </div>
 
@@ -175,7 +175,7 @@ export const registerUser = async (data: any) => {
                                     <b>Senha:</b> ${password}
                                 </p>
                                 <div class="divider"></div>
-                                <a href="${data.host}/auth/sign-in" class="button">
+                                <a href="https://starktecnologia.com/auth/sign-in" class="button">
                                    Ir al inicio de sesión
                                 </a>
         

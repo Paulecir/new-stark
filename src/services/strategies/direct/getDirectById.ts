@@ -1,15 +1,10 @@
 import PrismaLocal from "@/infra/db/prisma";
 
 export const getDirectById = async ({ id, level = 2, user }: any, Prisma = PrismaLocal) => {
-    const first: any = await Prisma.user.findFirst({
-        where: {
-            id: parseInt(id.toString())
-        }
-    })
 
     const users = await Prisma.user.findMany({
         where: {
-            sponsor_id: first.id
+            sponsor_id: parseInt(id.toString()),
         },
         include: {
             Order: {
@@ -20,19 +15,15 @@ export const getDirectById = async ({ id, level = 2, user }: any, Prisma = Prism
                     status: "done"
                 }
             },
-            User: {
-                select: {
-                    id: true
-                }
-            }
-        }
+            User: true
+        },
+        orderBy: {
+            name: 'asc'
+        },
 
     })
 
-    if (id === user.id) {
-        users.unshift({ ...first, level: 1 })
-    }
-
+    console.log("?", users)
     // Mapeando os dados para o formato necessário
     const formattedData = users.map((node: any) => ({
         id: node.id,
@@ -40,8 +31,8 @@ export const getDirectById = async ({ id, level = 2, user }: any, Prisma = Prism
         name: node.name, // Nome do usuário
         email: node.email,
         phone: node.phone,
-        buyVolume: node.Order.reduce((acc: any, curr) => acc + curr.total.toNumber(), 0),
-        directs: node.User.length,
+        buyVolume: (node.Order || []).reduce((acc: any, curr) => acc + curr.total.toNumber(), 0),
+        directs: (node.User || []).length,
         avatar: "", // Caso tenha avatar, pode ser adicionado
         points: 0, // Substitua por um cálculo real se necessário
         parentId: node.sponsor_id,
