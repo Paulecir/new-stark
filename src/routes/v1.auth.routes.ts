@@ -12,6 +12,12 @@ router.post("/signin",
     expressRouteAdapter(loginController)
 )
 
+router.post("/signin",
+    // #summary = 'Realiza o login do usuário'
+    // #description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
+    expressRouteAdapter(loginController)
+)
+
 router.post("/signup",
     // #summary = 'Realiza o cadastro do usuário'
     // #description = 'Endpoint para cadastrar o usuário.'

@@ -94,7 +94,7 @@ export const resetPasswordUser = async (data: any) => {
                     <body>
                         <div class="email-container">
                             <div class="email-header">
-                                <img src="${data.host}/images/logo.svg" alt="Logo StarkTecnologia" class="logo" style="max-width: 120px; margin-bottom: 10px;">
+                                <img src="https://starktecnologia.com/images/logo.svg" alt="Logo StarkTecnologia" class="logo" style="max-width: 120px; margin-bottom: 10px;">
                                 <h2>Restablecimiento de Contraseña</h2>
                             </div>
 
@@ -102,7 +102,7 @@ export const resetPasswordUser = async (data: any) => {
                                 <p>Hola,</p>
                                 <p>Hemos recibido una solicitud para restablecer su contraseña de acceso a <span class="highlight">StarkTecnología</span>.</p>
                                 <p>Para restablecer su contraseña, haga clic en el botón a continuación:</p>
-                                <a href="${data.host}/auth/reset-password/${token}" class="button">
+                                <a href="https://starktecnologia.com/auth/reset-password/${token}" class="button">
                                     Restablecer Contraseña
                                 </a>
 
