@@ -3,7 +3,10 @@ import { addBalance } from "@/services/balance/addBalance"
 import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
 
-export const approvePayBinary = async (date = moment().subtract(1, 'days').format('YYYY-MM-DD')) => {
+export const approvePayBinary = async ({ date = moment().format("YYYY-MM-DD") }) => {
+
+    const startDate = moment(date).startOf("day").subtract(1, "day").startOf("day").toDate()
+    const endDate = moment(date).startOf("day").subtract(1, "day").endOf("day").toDate()
 
     const total = await PrismaLocal.strategyBinaryPay.aggregate({
         where: {
@@ -15,15 +18,14 @@ export const approvePayBinary = async (date = moment().subtract(1, 'days').forma
         }
     })
 
-    const dateNow = moment(date).startOf("day").subtract(1, "day").toDate()
-
     const totalSell = await PrismaLocal.orderItem.aggregate({
         where: {
             order: {
                 status: "done"
             },
             created_at: {
-                gte: dateNow
+                gte: startDate,
+                lte: endDate
             }
         },
         _sum: {
@@ -40,6 +42,7 @@ export const approvePayBinary = async (date = moment().subtract(1, 'days').forma
     }
 
     let strategyPay = null
+
     do {
 
         strategyPay = await PrismaLocal.$transaction(async (Prisma) => {

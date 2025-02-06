@@ -59,7 +59,7 @@ router.post("/binary", async (req, res) => {
 })
 
 router.post("/approveBinary", async (req, res) => {
-  await approvePayBinary()
+  await approvePayBinary(req.body)
 
   res.json({ end: true })
 })
