@@ -11,7 +11,6 @@ export const filterUser = async (filter, pagination: any, orderBy: any = { creat
     if (filter.email) queryOr.push({ email: { contains: filter.email } })
     if (filter.login) queryOr.push({ login: { contains: filter.login } })
 
-
     if (queryOr.length > 0) {
         query.push({ OR: queryOr })
     }
@@ -21,6 +20,13 @@ export const filterUser = async (filter, pagination: any, orderBy: any = { creat
         where: {
             AND: query,
         },
+        include: {
+            Balance: {
+                select: {
+                    amount: true
+                }
+            }
+        }
     })
 
     if (!data) throw new NotFoundError("User not found")
