@@ -27,7 +27,7 @@ export const filterBalanceOrderController = async (requestData: IRequest) => {
         const orFilter = []
 
         if (requestData.query.amount) orFilter.push({ amount: parseFloat(requestData.query.amount) })
-        if (requestData.query.description) orFilter.push({ description: requestData.query.description })
+        if (requestData.query.description) orFilter.push({ description:{ contains: requestData.query.description } })
         if (requestData.query.user) orFilter.push({ user: { name: { contains: requestData.query.user } } })
         if (requestData.query.releasedBy) orFilter.push({ releasedBy: { name: { contains: requestData.query.releasedBy } } })
 
