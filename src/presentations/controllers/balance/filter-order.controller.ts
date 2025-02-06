@@ -23,6 +23,12 @@ import { UserService } from "@/services/user";
 export const filterBalanceOrderController = async (requestData: IRequest) => {
     try {
         // Recupera o usuário pelo ID usando o UserService
+        const filter = []
+        const orFilter = []
+
+        if (requestData.query.amount) orFilter.push({ amount: parseFloat(requestData.query.amount)})
+        if (requestData.query.description) orFilter.push({ description: requestData.query.description})
+
         const userFilter = await BalanceService.filterOrderBalance([], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
 
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
