@@ -11,7 +11,7 @@ export const getDirectById = async ({ id, level = 2, user }: any, Prisma = Prism
         where: {
             sponsor_id: first.id
         },
-        take: 100
+
     })
 
     if (id === user.id) {
