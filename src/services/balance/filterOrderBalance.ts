@@ -10,6 +10,20 @@ export const filterOrderBalance = async (filter: any[] = [], pagination: any, or
         where: {
             AND: filter
         },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            },
+            releasedBy: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
+        }
     })
 
     if (!data) throw new NotFoundError("Balance order not found")
