@@ -24,6 +24,9 @@ export const filterUser = async (filter, pagination: any, orderBy: any = { creat
             Balance: {
                 select: {
                     amount: true
+                },
+                where: {
+                    wallet: "MAIN"
                 }
             }
         }
