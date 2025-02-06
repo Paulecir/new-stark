@@ -22,6 +22,8 @@ export const filterUserSelect = async (filter, pagination: any, orderBy: any = {
         select: {
             id: true,
             name: true,
+            login: true,
+            email: true,
             Balance: {
                 select: {
                     amount: true
