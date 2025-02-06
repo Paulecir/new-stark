@@ -10,6 +10,7 @@ import { financialExtractPendingController } from "@/presentations/controllers/f
 import { financialExtractBinaryController } from "@/presentations/controllers/financial/extract-binary.controller"
 import { addBalanceController } from "@/presentations/controllers/balance/add-balance.controller"
 import { filterBalanceOrderController } from "@/presentations/controllers/balance/filter-order.controller"
+import { adminMiddleware } from "@/middlewares/adminMiddleware"
 
 const router = Router()
 
@@ -17,12 +18,14 @@ const router = Router()
 router.post("/order",
   // #swagger.tags = ['Webhook']
   authMiddleware,
+  // adminMiddleware,
   expressRouteAdapter(addBalanceController)
 )
 
 router.get("/order",
   // #swagger.tags = ['Category']
   authMiddleware,
+  // adminMiddleware,
   expressRouteAdapter(filterBalanceOrderController)
 )
 
