@@ -1,8 +1,8 @@
 import { HttpResponse } from "@/presentations/helpers/httpResponse"
 import { IRequest } from "@/presentations/interface/IRequest"
 import { ProductService } from "@/services/product"
-import { schema } from "./add-balance.schema"
 import { BalanceService } from "@/services/balance"
+import { schema } from "./add-balance.schema"
 
 export const addBalanceController = async (requestData: IRequest) => {
 
