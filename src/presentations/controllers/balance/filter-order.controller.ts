@@ -28,6 +28,8 @@ export const filterBalanceOrderController = async (requestData: IRequest) => {
 
         if (requestData.query.amount) orFilter.push({ amount: parseFloat(requestData.query.amount)})
         if (requestData.query.description) orFilter.push({ description: requestData.query.description})
+        if (requestData.query.user) orFilter.push({ user: { name: { contains: requestData.query.user } } })
+        if (requestData.query.releasedBy ) orFilter.push({ releasedBy : { name: { contains: requestData.query.releasedBy  } } })
 
         const userFilter = await BalanceService.filterOrderBalance([], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
 
