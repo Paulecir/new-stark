@@ -24,9 +24,7 @@ export const dashboardResume = async (
         where: {
             user_id: user.id,
             status: { in: ["PAYED", "PENDING", "NOTQUALIFY"] },
-            direction: direction === 'LEFT' ? "LEFT" : direction === "RIGHT" ? "RIGHT" : { not: "NONE" }
-
-
+            direction: direction.toUpperCase() === 'LEFT' ? "LEFT" : direction.toUpperCase() === "RIGHT" ? "RIGHT" : { not: "NONE" }
         },
         _sum: {
             points: true
@@ -37,7 +35,7 @@ export const dashboardResume = async (
     const balance = await Prisma.balance.findMany({
         where: {
             user_id: user.id,
-            wallet: direction === "LEFT" ? "BINARY_LEFT_POINT" : direction === "RIGHT" ? "BINARY_RIGHT_POINT" : { in: ["BINARY_RIGHT_POINT", "BINARY_LEFT_POINT"] }
+            wallet: direction.toUpperCase() === "LEFT" ? "BINARY_LEFT_POINT" : direction.toUpperCase() === "RIGHT" ? "BINARY_RIGHT_POINT" : { in: ["BINARY_RIGHT_POINT", "BINARY_LEFT_POINT"] }
         }
     })
 
@@ -45,7 +43,7 @@ export const dashboardResume = async (
     const balanceTotal = await Prisma.balance.findMany({
         where: {
             user_id: user.id,
-            wallet: direction === "LEFT" ? "BINARY_LEFT_POINT_PAY" : direction === "RIGHT" ? "BINARY_RIGHT_POINT_PAY" : { in: ["BINARY_RIGHT_POINT_PAY", "BINARY_LEFT_POINT_PAY"] }
+            wallet: direction.toUpperCase() === "LEFT" ? "BINARY_LEFT_POINT_PAY" : direction.toUpperCase() === "RIGHT" ? "BINARY_RIGHT_POINT_PAY" : { in: ["BINARY_RIGHT_POINT_PAY", "BINARY_LEFT_POINT_PAY"] }
         }
     })
 
@@ -56,7 +54,7 @@ export const dashboardResume = async (
     const nodes = await Prisma.strategyBinary.count({
         where: {
             hier: {
-                startsWith: `${binary.hier}${direction === "LEFT" ? 'L' : 'R'}`
+                startsWith: `${binary.hier}${direction.toUpperCase() === "LEFT" ? 'L' : 'R'}`
             }
         }
     })
