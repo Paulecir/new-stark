@@ -40,6 +40,12 @@ export const filterUser = async (filter, pagination: any, orderBy: any = { creat
         },
     })
 
-    return { data, metadata: { page, pageSize, total } }
+    return { data: data.map((m) => {
+
+        return {
+            ...m,
+            balance: m.Balance?.[0]?.amount || 0
+        }
+    }), metadata: { page, pageSize, total } }
 
 }
