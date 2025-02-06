@@ -7,6 +7,7 @@
     "dev": "ts-node-dev --respawn -r tsconfig-paths/register --inspect=127.0.0.1:9331 --transpile-only --ignore-watch node_modules --ignore-watch __scripts src/server.ts",
     "mock": "ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/mock.ts",
     "migrate": "ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/migrate.ts",
+    "arrumar": "yarn ts-node-dev -r tsconfig-paths/register --inspect=127.0.0.1:9330 --transpile-only --ignore-watch node_modules --ignore-watch __scripts prisma/seeders/arrumar.ts",
     "build": "rm -f ./tsconfig-build.tsbuildinfo && rimraf dist && tsc -p tsconfig-build.json && tscpaths -p tsconfig-build.json -s ./src -o ./dist",
     "start": "set NODE_ENV=production && node ./dist/server.js",
     "docker:deploy": "yarn build && docker build -f Dockerfile -t ghcr.io/paulecir/stk-invest-api .",

@@ -58,19 +58,21 @@ model User {
   users_users_sponsor_idTousers             User?  @relation("users_sponsor_idTousers", fields: [sponsor_id], references: [id], onUpdate: Restrict, map: "users_sponsor_id_foreign")
   other_users_users_sponsor_idTousers       User[] @relation("users_sponsor_idTousers")
 
-  User                  User[]                  @relation("sponsor")
-  StrategyBinary        StrategyBinary[]        @relation("user")
-  UserSession           UserSession[]           @relation("user")
-  Order                 Order[]                 @relation("user")
-  OrderItemDistribution OrderItemDistribution[] @relation("user")
-  StrategyProgress      StrategyProgress[]      @relation("user")
-  Balance               Balance[]               @relation("user")
-  BalanceHistory        BalanceHistory[]        @relation("user")
-  StrategyBinaryPay     StrategyBinaryPay[]     @relation("user")
-  Commission            Commission[]            @relation("user")
-  Wallet                Wallet[]
-  CommissionOrder       CommissionOrder[]       @relation("user")
-  Withdraw              Withdraw[]              @relation("user")
+  User                   User[]                  @relation("sponsor")
+  StrategyBinary         StrategyBinary[]        @relation("user")
+  UserSession            UserSession[]           @relation("user")
+  Order                  Order[]                 @relation("user")
+  OrderItemDistribution  OrderItemDistribution[] @relation("user")
+  StrategyProgress       StrategyProgress[]      @relation("user")
+  Balance                Balance[]               @relation("user")
+  BalanceHistory         BalanceHistory[]        @relation("user")
+  StrategyBinaryPay      StrategyBinaryPay[]     @relation("user")
+  Commission             Commission[]            @relation("user")
+  Wallet                 Wallet[]
+  CommissionOrder        CommissionOrder[]       @relation("user")
+  Withdraw               Withdraw[]              @relation("user")
+  BalanceOrder           BalanceOrder[]          @relation("user")
+  BalanceOrderReleasedBy BalanceOrder[]          @relation("releasedBY")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
@@ -115,10 +117,30 @@ model BalanceHistory {
   @@map("balance_history")
 }
 
+model BalanceOrder {
+  id Int @id @default(autoincrement())
+
+  description String
+
+  user    User   @relation("user", fields: [user_id], references: [id])
+  user_id BigInt @db.UnsignedBigInt
+
+  releasedBy     User   @relation("releasedBY", fields: [released_by_id], references: [id])
+  released_by_id BigInt @db.UnsignedBigInt
+
+  amount Decimal @db.Decimal(20, 8)
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  @@map("balance_order")
+}
+
 enum StatusBalance {
   ACTIVE
   INACTIVE
 }
+
 model PasswordResetToken {
   email String @id @db.VarChar(255)
   token String @db.VarChar(255)

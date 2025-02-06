@@ -14,6 +14,7 @@ import dashboardApiV1 from './v1.dashboard.routes'
 import walletsApiV1 from './v1.wallets.routes'
 import commissionsApiV1 from './v1.commissions.routes'
 import withdrawsApiV1 from './v1.withdraws.routes'
+import balanceApiV1 from './v1.balance.routes'
 
 const router = Router();
 
@@ -30,5 +31,6 @@ router.use('/v1/dashboard', dashboardApiV1)
 router.use('/v1/commissions', commissionsApiV1)
 router.use('/v1/withdraws', withdrawsApiV1)
 router.use('/v1/wallets', walletsApiV1)
+router.use('/v1/balance', balanceApiV1)
 
 export default router;
