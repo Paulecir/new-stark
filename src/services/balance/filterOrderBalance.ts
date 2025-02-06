@@ -14,13 +14,17 @@ export const filterOrderBalance = async (filter: any[] = [], pagination: any, or
             user: {
                 select: {
                     id: true,
-                    name: true
+                    name: true,
+                    login: true,
+                    email: true
                 }
             },
             releasedBy: {
                 select: {
                     id: true,
-                    name: true
+                    name: true,
+                    login: true,
+                    email: true
                 }
             }
         }
