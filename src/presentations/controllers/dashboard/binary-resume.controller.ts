@@ -8,7 +8,7 @@ export const dashboardBinaryResumeController = async (requestData: IRequest) => 
         // Validar os dados da requisição
         // Criar o usuário no banco de dados
         const data = await FinancialService.dashboardResume({
-            filter: { direction: requestData.query.direction },
+            filter: { direction: requestData.query.direction.toUpperCase() },
             user: requestData.user
         })
 
