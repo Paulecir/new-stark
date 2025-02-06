@@ -26,12 +26,17 @@ export const filterBalanceOrderController = async (requestData: IRequest) => {
         const filter = []
         const orFilter = []
 
-        if (requestData.query.amount) orFilter.push({ amount: parseFloat(requestData.query.amount)})
-        if (requestData.query.description) orFilter.push({ description: requestData.query.description})
+        if (requestData.query.amount) orFilter.push({ amount: parseFloat(requestData.query.amount) })
+        if (requestData.query.description) orFilter.push({ description: requestData.query.description })
         if (requestData.query.user) orFilter.push({ user: { name: { contains: requestData.query.user } } })
-        if (requestData.query.releasedBy ) orFilter.push({ releasedBy : { name: { contains: requestData.query.releasedBy  } } })
+        if (requestData.query.releasedBy) orFilter.push({ releasedBy: { name: { contains: requestData.query.releasedBy } } })
 
-        const userFilter = await BalanceService.filterOrderBalance([], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
+        if (orFilter.length > 0) {
+            filter.push({
+                OR: orFilter
+            })
+        }
+        const userFilter = await BalanceService.filterOrderBalance(filter, { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
 
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
         return HttpResponse.successResponse({
