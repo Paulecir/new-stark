@@ -69,7 +69,7 @@ export const approvePayBinary = async ({ date = moment().format("YYYY-MM-DD") })
 
                 const amountTotalCeiling = strategyPay.amountCeilingUser.toNumber() * (percent / 100)
 
-                if (amountTotalCeiling > 0) {
+                if (amountTotalCeiling > 0 && strategyPay.qualify) {
                     await addBalance({
                         name: "Bonus Binary"
                         , wallet: "MAIN"
