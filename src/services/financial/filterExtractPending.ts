@@ -1,5 +1,6 @@
 import PrismaLocal from "@/infra/db/prisma"
 import { NotFoundError } from "@/presentations/errors/notFoundException"
+import { notAuthorized } from "@/presentations/helpers/httpResponse"
 import { IFilter } from "@/presentations/interface/IFilter"
 import moment from "moment"
 
@@ -10,9 +11,20 @@ export const filterExtractPending = async (
         orderBy = { created_at: "desc" },
         user
     }: IFilter
+    , admin = false
     , Prisma = PrismaLocal
 ) => {
     const { page = 1, pageSize = 10 } = pagination
+
+    if (admin && user.profile !== "admin") throw notAuthorized({
+        error_code: "NOT_AUTHORIZED"
+    })
+
+    let extraQuery = {}
+
+    if (!admin) {
+        extraQuery = { user_id: user.id }
+    }
 
     const data = await Prisma.commission.findMany({
         take: pageSize,
@@ -50,7 +62,7 @@ export const filterExtractPending = async (
         },
         where: {
             AND: [
-                // { user_id: user.id },
+                ...extraQuery,
                 { status: "PENDING" }
             ]
         },
@@ -62,7 +74,7 @@ export const filterExtractPending = async (
     const total = await Prisma.commission.count({
         where: {
             AND: [
-                // { user_id: user.id },
+                ...extraQuery,
                 { status: "PENDING" },
             ]
         },

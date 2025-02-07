@@ -31,7 +31,7 @@ export const createWithdrawController = async (requestData: IRequest) => {
         }
 
         if (err.name === 'CUSTOM_ERROR') {
-            return err;
+            return err ;
         }
         return HttpResponse.errorResponse({ message: err.message });
     }
