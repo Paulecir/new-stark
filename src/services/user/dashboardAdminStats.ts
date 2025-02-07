@@ -39,6 +39,14 @@ export const dashboardAdminStats = async ({ user }: any) => {
         },
     })
 
+    const newRegister = await Prisma.user.count({
+        where: {
+            created_at: {
+                gt:  moment().startOf("day").toDate(),
+            }
+        }
+    })
+
 
     const ordersExtract: any = await Prisma.$queryRaw` SELECT
         EXTRACT(YEAR FROM created_at) AS ano,
@@ -75,6 +83,6 @@ export const dashboardAdminStats = async ({ user }: any) => {
 
 
 
-    return { userTotal, userInactive, useActive: userTotal - userInactive, ordersTotal: ordersTotal._sum.total, ordersTodayTotal: ordersTodayTotal._sum.total, orders }
+    return { userTotal, newRegister: newRegister, userInactive, useActive: userTotal - userInactive, ordersTotal: ordersTotal._sum.total, ordersTodayTotal: ordersTodayTotal._sum.total, orders }
 
 }
