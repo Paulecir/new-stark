@@ -33,7 +33,7 @@ export const filterWithdrawController = async (requestData: IRequest) => {
             if (requestData.query.name) orFilter.push({ name: { contains: requestData.query.name } })
             if (requestData.query.login) orFilter.push({ login: { contains: requestData.query.login } })
             if (requestData.query.email) orFilter.push({ email: { contains: requestData.query.email } })
-            if (requestData.query.status) orFilter.push({ status: requestData.query.status })
+            if (requestData.query.status) orFilter.push({ status: requestData.query.status.toUpperCase() })
             if (orFilter.length > 0) {
                 filter.push({
                     OR: orFilter
