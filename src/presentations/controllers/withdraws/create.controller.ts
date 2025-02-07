@@ -29,6 +29,10 @@ export const createWithdrawController = async (requestData: IRequest) => {
         if (err.name === 'ValidationError') {
             return HttpResponse.errorResponse({ message: err.message, errors: err.errors });
         }
+
+        if (err.name === 'CUSTOM_ERROR') {
+            return err;
+        }
         return HttpResponse.errorResponse({ message: err.message });
     }
 }

@@ -1,4 +1,4 @@
-import { NotAuthorizedError } from "../errors/notAuthorizedError"
+import { NotAuthError, NotAuthorizedError } from "../errors/notAuthorizedError"
 import { ServerError } from "../errors/serverError"
 import { IResponse } from "../interface/IResponse"
 
@@ -90,14 +90,22 @@ export const serverError = (error: Error): IResponse => ({
 //     body: new ForbidenError(paramName)
 // })
 
-export const notAuthorized = (paramName, data = null): IResponse => ({
+export const notAuthorized = (data = null): IResponse => ({
     status: "Not Authorized",
     status_code: 401,
     message: "",
-    data: new NotAuthorizedError(paramName, data)
+    data: new NotAuthError(data)
 })
 
-export const notCreate = (paramName, data = null): IResponse => ({
+export const notCreate = (data = null): IResponse => ({
+    status: "Not Create",
+    status_code: 400,
+    message: "",
+    name: "CUSTOM_ERROR",
+    data: new NotAuthError(data)
+})
+
+export const notCreateParams = (paramName, data = null): IResponse => ({
     status: "Not Create",
     status_code: 400,
     message: "",
