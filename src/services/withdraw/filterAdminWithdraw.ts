@@ -8,7 +8,7 @@ export const filterAdminWithdraw = async (filter: any[] = [], pagination: any, o
         take: pageSize,
         skip: pageSize * (page - 1),
         where: {
-            AND: filter
+            AND: filter,
         },
         include: {
             user: {

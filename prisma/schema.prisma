@@ -692,6 +692,7 @@ enum StatusBinaryPay {
 
 enum StatusWithdraw {
   PENDING
+  SCHEDULER
   PAYED
   CANCELED
   REJECT

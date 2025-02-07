@@ -8,6 +8,7 @@ import { resumeOneController } from "@/presentations/controllers/financial/resum
 import { retiroApproveExtractController } from "@/presentations/controllers/financial/retiro-approve.controller"
 import { financialExtractPendingController } from "@/presentations/controllers/financial/extract-pending.controller"
 import { financialExtractBinaryController } from "@/presentations/controllers/financial/extract-binary.controller"
+import { retiroRejectExtractController } from "@/presentations/controllers/financial/retiro-reject.controller"
 
 const router = Router()
 
@@ -48,7 +49,11 @@ router.post("/retiro/approve",
   expressRouteAdapter(retiroApproveExtractController)
 )
 
-
+router.post("/retiro/reject",
+  // #swagger.tags = ['Webhook']
+  authMiddleware,
+  expressRouteAdapter(retiroRejectExtractController)
+)
 
 
 export default router;

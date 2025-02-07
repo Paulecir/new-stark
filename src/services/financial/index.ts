@@ -4,6 +4,7 @@ import { filterExtractBinary } from "./filterExtractBinary";
 import { filterExtractPending } from "./filterExtractPending";
 import { resume } from "./resume";
 import { retiroApprove } from "./retiroApprove";
+import { retiroReject } from "./retiroReject";
 
 export const FinancialService = {
     filterExtract,
@@ -11,5 +12,6 @@ export const FinancialService = {
     filterExtractBinary,
     resume,
     dashboardResume,
-    retiroApprove
+    retiroApprove,
+    retiroReject
 }

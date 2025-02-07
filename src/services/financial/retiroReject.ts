@@ -1,9 +1,7 @@
 import PrismaLocal from "@/infra/db/prisma"
-import { NotFoundError } from "@/presentations/errors/notFoundException"
 import { IFilter } from "@/presentations/interface/IFilter"
-import { decBalance } from "../balance/decBalance"
 
-export const retiroApprove = async (
+export const retiroReject = async (
     {
         filter: { ids },
     }: IFilter
@@ -28,27 +26,14 @@ export const retiroApprove = async (
         try {
             await PrismaLocal.$transaction(async (Prisma) => {
 
-                const history = await decBalance({
-                    name: "Withdraw"
-                    , wallet: "MAIN"
-                    , user_id: approve.user_id
-                    , amount: approve.amount.toNumber()
-                    , ref_type: 'withdraw'
-                    , ref_id: approve.id
-                    , extra_info: {
-                        to: approve.user_id,
-                        toName: approve.user?.name,
-                        toLogin: approve.user?.login,
-                    }
-                }, Prisma)
-
                 await Prisma.withdraw.update({
                     where: {
                         id: approve.id
                     },
                     data: {
-                        status: "SCHEDULER",
-                        balance_history_id: history.id
+                        status: "REJECT",
+                        obs: 'Rejeitado pelo administrador'
+
                     }
                 })
 
@@ -63,7 +48,7 @@ export const retiroApprove = async (
                 },
                 data: {
                     status: "REJECT",
-                    obs: "Não possui saldo suficiante"
+                    obs: 'Rejeitado pelo administrador'
                 }
             })
         }
