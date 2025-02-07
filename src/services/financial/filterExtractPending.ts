@@ -20,10 +20,10 @@ export const filterExtractPending = async (
         error_code: "NOT_AUTHORIZED"
     })
 
-    let extraQuery = {}
+    let extraQuery = []
 
     if (!admin) {
-        extraQuery = { user_id: user.id }
+        extraQuery = [{ user_id: user.id }]
     }
 
     const data = await Prisma.commission.findMany({
