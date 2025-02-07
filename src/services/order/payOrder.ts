@@ -13,15 +13,16 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
         throw new Error("ORDER_ID_REQUIRED")
     }
     let order = await Prisma.order.findFirst({
-        where: {
-            // user_id: user.id,
-            OR: [
-                { id: parseInt(data.order_id) || 0 },
-                { order_id: data.order_id }
-            ]
-        },
+        where: { order_id: data.order_id },
         include: {
-            user: true
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    login: true
+                }
+            }
         }
     })
 
@@ -50,7 +51,7 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
             const history = await decBalance({
                 name: `Pagamento do pedido #${order.order_id} com saldo da conta [${order.user.name}]`
                 , wallet: "MAIN"
-                , user_id: order.user_id
+                , user_id: user.id
                 , amount: order.total.toNumber()
                 , ref_type: 'order'
                 , ref_id: order.id
@@ -113,5 +114,27 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
 
     }
 
+    order = await Prisma.order.findFirst({
+        where: { order_id: data.order_id },
+        include: {
+            OrderItem: {
+                include: {
+                    product: {
+                        include: {
+                            category: true
+                        }
+                    }
+                }
+            },
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    login: true
+                }
+            }
+        }
+    })
     return order
 }

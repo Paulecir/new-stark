@@ -7,12 +7,19 @@ import { qualifyBinary } from "../strategies/binary/qualifyBinary"
 
 export const approveOrder = async ({ orderId }: any, Prisma = PrismaLocal) => {
 
-
     let order = await Prisma.order.findFirst({
         where: {
             order_id: orderId
         },
         include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    login: true
+                }
+            },
             OrderItem: {
                 include: {
                     product: {
@@ -39,6 +46,14 @@ export const approveOrder = async ({ orderId }: any, Prisma = PrismaLocal) => {
             status: 'done'
         },
         include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    login: true
+                }
+            },
             OrderItem: {
                 include: {
                     product: {

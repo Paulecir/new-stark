@@ -694,8 +694,8 @@ enum StatusWithdraw {
   PENDING
   SCHEDULER
   PAYED
-  CANCELED
   REJECT
+  CANCELED
 }
 
 enum OrderPaymentmMethod {
