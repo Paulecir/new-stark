@@ -73,6 +73,7 @@ model User {
   Withdraw               Withdraw[]              @relation("user")
   BalanceOrder           BalanceOrder[]          @relation("user")
   BalanceOrderReleasedBy BalanceOrder[]          @relation("releasedBY")
+  OrderPaymentoBy        Order[]                 @relation("paymentBy")
 
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
@@ -426,6 +427,9 @@ model Order {
   payment_method OrderPaymentmMethod @default(UNKNOWN)
   payment        Json?
   payment_result Json?
+
+  paymentBy     User?   @relation("paymentBy", fields: [payment_by_id], references: [id])
+  payment_by_id BigInt? @db.UnsignedBigInt
 
   status                Status                  @default(init)
   created_at            DateTime                @default(now())
