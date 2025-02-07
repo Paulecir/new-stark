@@ -71,7 +71,7 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
                     payment_method: "BALANCE",
                     payment: {},
                     payment_result: history,
-                    payment_by: user.id
+                    payment_by_id: user.id
                 }
             })
 
