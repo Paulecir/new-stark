@@ -16,55 +16,58 @@ async function arrumar() {
                     }
                 }
             }
-        }
+        },
     })
 
-    console.log("-->", usersQualify.length)
 
-    // for (const qualify of usersQualify) {
-    //     const binary = await Prisma.strategyBinary.findFirst({
-    //         where: {
-    //             user_id: qualify.id
-    //         }
-    //     })
-    //     if (!binary) continue;
+    let i = usersQualify.length
 
-    //     const direction = binary.ref;
+    for (const qualify of usersQualify) {
+        console.log("restante: ", i)
+        i--
+        const binary = await Prisma.strategyBinary.findFirst({
+            where: {
+                user_id: qualify.id
+            }
+        })
+        if (!binary) continue;
 
-    //     if (direction === 'L') {
-    //         await Prisma.strategyBinary.updateMany({
-    //             where: {
-    //                 user_id: qualify.sponsor_id
-    //             },
-    //             data: {
-    //                 left_qualify: true
-    //             }
-    //         })
-    //     }
+        const direction = binary.ref;
 
-    //     if (direction === 'R') {
-    //         await Prisma.strategyBinary.updateMany({
-    //             where: {
-    //                 user_id: qualify.sponsor_id
-    //             },
-    //             data: {
-    //                 right_qualify: true
-    //             }
-    //         })
-    //     }
+        if (direction === 'L') {
+            await Prisma.strategyBinary.updateMany({
+                where: {
+                    user_id: qualify.sponsor_id
+                },
+                data: {
+                    left_qualify: true
+                }
+            })
+        }
 
-    //     await Prisma.strategyBinary.updateMany({
-    //         where: {
-    //             user_id: qualify.id
-    //         },
-    //         data: {
-    //             qualify: true
-    //         }
-    //     })
+        if (direction === 'R') {
+            await Prisma.strategyBinary.updateMany({
+                where: {
+                    user_id: qualify.sponsor_id
+                },
+                data: {
+                    right_qualify: true
+                }
+            })
+        }
+
+        await Prisma.strategyBinary.updateMany({
+            where: {
+                user_id: qualify.id
+            },
+            data: {
+                qualify: true
+            }
+        })
 
 
 
-    // }
+    }
 
 
 }

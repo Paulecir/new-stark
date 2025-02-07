@@ -62,6 +62,8 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
         }
     })
 
+
+
     for (let i = 0; i < categoryItem.category.unilevel_bonus_levels; i++) {
 
         if (!current.sponsor_id) break;
@@ -76,7 +78,7 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
 
         if (categoryItem.level_values[i] > 0) {
             await addBalance({ 
-                name: "Unilevel strategy"
+                name: `${categoryItem.category.name} Unilevel (#${order.id}) - Pontos: ${item.amount * (categoryItem.level_values[i] / 100)} - Consultor: ${currentUser.name} [${i + 1}º Nível]`
                 , wallet: "MAIN"
                 , user_id: current.id
                 , amount: item.amount * (categoryItem.level_values[i] / 100)
