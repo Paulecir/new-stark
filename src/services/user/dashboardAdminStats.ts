@@ -111,6 +111,6 @@ export const dashboardAdminStats = async ({ user }: any) => {
 
 
 
-    return { userTotal, newRegister: newRegister, userInactive, useActive: userTotal - userInactive, ordersTotal: ordersTotal._sum.total, ordersTodayTotal: ordersTodayTotal._sum.total, ordersTodayCriptoTotal: ordersTodayCriptoTotal._sum.total, ordersTodayBalanceTotal: ordersTodayBalanceTotal._sum.total, orders }
+    return { userTotal, newRegister: newRegister, userInactive, useActive: userTotal - userInactive, ordersTotal: ordersTotal._sum.total || 0, ordersTodayTotal: ordersTodayTotal._sum.total, ordersTodayCriptoTotal: ordersTodayCriptoTotal._sum.total|| 0, ordersTodayBalanceTotal: ordersTodayBalanceTotal._sum.total|| 0, orders }
 
 }
