@@ -22,7 +22,7 @@ export const dashboardAdminStats = async ({ user }: any) => {
             total: true
         },
         where: {
-             status: 'done'
+            status: 'done'
         },
     })
 
@@ -31,8 +31,36 @@ export const dashboardAdminStats = async ({ user }: any) => {
             total: true
         },
         where: {
-             status: 'done',
-             created_at: {
+            status: 'done',
+            created_at: {
+                gt: moment().startOf("day").toDate(),
+                lt: moment().endOf("day").toDate(),
+            }
+        },
+    })
+
+    const ordersTodayBalanceTotal = await Prisma.order.aggregate({
+        _sum: {
+            total: true
+        },
+        where: {
+            status: 'done',
+            payment_method: "BALANCE",
+            created_at: {
+                gt: moment().startOf("day").toDate(),
+                lt: moment().endOf("day").toDate(),
+            }
+        },
+    })
+
+    const ordersTodayCriptoTotal = await Prisma.order.aggregate({
+        _sum: {
+            total: true
+        },
+        where: {
+            status: 'done',
+            payment_method: "PLISIO",
+            created_at: {
                 gt: moment().startOf("day").toDate(),
                 lt: moment().endOf("day").toDate(),
             }
@@ -42,7 +70,7 @@ export const dashboardAdminStats = async ({ user }: any) => {
     const newRegister = await Prisma.user.count({
         where: {
             created_at: {
-                gt:  moment().startOf("day").toDate(),
+                gt: moment().startOf("day").toDate(),
             }
         }
     })
@@ -83,6 +111,6 @@ export const dashboardAdminStats = async ({ user }: any) => {
 
 
 
-    return { userTotal, newRegister: newRegister, userInactive, useActive: userTotal - userInactive, ordersTotal: ordersTotal._sum.total, ordersTodayTotal: ordersTodayTotal._sum.total, orders }
+    return { userTotal, newRegister: newRegister, userInactive, useActive: userTotal - userInactive, ordersTotal: ordersTotal._sum.total, ordersTodayTotal: ordersTodayTotal._sum.total, ordersTodayCriptoTotal: ordersTodayCriptoTotal._sum.total, ordersTodayBalanceTotal: ordersTodayBalanceTotal._sum.total, orders }
 
 }
