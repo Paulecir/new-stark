@@ -27,11 +27,22 @@ export const filterWithdrawController = async (requestData: IRequest) => {
         // Recupera o usuário pelo ID usando o UserService
         let userFilter = null
 
-        if (requestData.params.previleges === "admin")
-            userFilter = await WithdrawService.filterAdminWithdraw([], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
-        if (requestData.params.previleges === "user")
+        if (requestData.params.previleges === "admin") {
+            const filter = []
+            const orFilter = []
+            if (requestData.query.name) orFilter.push({ name: { contains: requestData.query.name } })
+            if (requestData.query.login) orFilter.push({ login: { contains: requestData.query.login } })
+            if (requestData.query.email) orFilter.push({ email: { contains: requestData.query.email } })
+            if (requestData.query.status) orFilter.push({ status: requestData.query.status })
+            if (orFilter.length > 0) {
+                filter.push({
+                    OR: orFilter
+                })
+            }
+            userFilter = await WithdrawService.filterAdminWithdraw(filter, { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
+        } else if (requestData.params.previleges === "user") {
             userFilter = await WithdrawService.filterWithdraw([{ user_id: requestData.user.id }], { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 }, undefined);
-
+        }
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
         return HttpResponse.successResponse({
             message: '',
