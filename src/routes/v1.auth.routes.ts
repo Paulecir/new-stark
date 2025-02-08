@@ -4,6 +4,7 @@ import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapt
 import { loginController } from "@/presentations/controllers/auth/login.controller"
 import { registerController } from "@/presentations/controllers/users/register.controller"
 import { loginAdminController } from "@/presentations/controllers/auth/login-admin.controller"
+import { authMiddleware } from "@/middlewares/authMiddleware"
 
 const router = Router()
 
@@ -22,6 +23,8 @@ router.post("/signin",
 router.post("/signin-admin",
     // #summary = 'Realiza o login do usuário'
     // #description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
+    authMiddleware,
+    
     expressRouteAdapter(loginAdminController)
 )
 
