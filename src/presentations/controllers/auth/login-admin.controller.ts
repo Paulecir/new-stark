@@ -50,13 +50,6 @@ export const loginAdminController = async (httpRequest: IRequest) => {
             })
 
         }
-
-        if (!user.is_active) {
-            return HttpResponse.notAuthorized({
-                message: "USER_NOT_ACTIVE",
-                error_code: "USER_NOT_ACTIVE"
-            })
-        }
         
         const accessToken = await JwtAdapter.encrypt(
             {
