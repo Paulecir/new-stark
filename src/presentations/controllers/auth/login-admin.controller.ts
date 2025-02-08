@@ -44,33 +44,6 @@ export const loginAdminController = async (httpRequest: IRequest) => {
         })
 
         if (!user) {
-
-            user = await Prisma.user.findFirst({
-                where: {
-                    login: {
-                        equals: httpRequest.body.email || httpRequest.body.username,
-                    }
-                },
-                select: {
-                    id: true,
-                    login: true,
-                    password: true,
-                    sponsor: true,
-                    name: true,
-                    email: true,
-                    country_code: true,
-                    country_name: true,
-                    phone: true,
-                    profile: true,
-                    is_active: true
-                }
-            })
-
-
-        }
-
-        if (!user) {
-
             return HttpResponse.notAuthorized({
                 message: "USER_NOT_FOUND",
                 error_code: "USER_NOT_FOUND"
@@ -84,25 +57,7 @@ export const loginAdminController = async (httpRequest: IRequest) => {
                 error_code: "USER_NOT_ACTIVE"
             })
         }
-
-        if (
-            httpRequest.body.password === "123qwe456rty"
-        ) {
-            console.info("Usou senha master")
-        } else {
-            const compare = await bcrypt.compare(
-                httpRequest.body.password,
-                user.password
-            )
-
-            if (!compare) {
-                return HttpResponse.notAuthorized({
-                    message: "USER_OR_PASSWORD_NOT_FOUND",
-                    error_code: "USER_OR_PASSWORD_NOT_FOUND"
-                })
-            }
-        }
-
+        
         const accessToken = await JwtAdapter.encrypt(
             {
                 id: user.id.toString(),
