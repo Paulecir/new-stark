@@ -3,6 +3,7 @@ import { Router } from "express"
 import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
 import { loginController } from "@/presentations/controllers/auth/login.controller"
 import { registerController } from "@/presentations/controllers/users/register.controller"
+import { loginAdminController } from "@/presentations/controllers/auth/login-admin.controller"
 
 const router = Router()
 
@@ -16,6 +17,12 @@ router.post("/signin",
     // #summary = 'Realiza o login do usuário'
     // #description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
     expressRouteAdapter(loginController)
+)
+
+router.post("/signin-admin",
+    // #summary = 'Realiza o login do usuário'
+    // #description = 'Endpoint para autenticar o usuário e retornar um token JWT.'
+    expressRouteAdapter(loginAdminController)
 )
 
 router.post("/signup",
