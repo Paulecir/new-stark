@@ -2,15 +2,15 @@ import Prisma from '@/infra/db/prisma';
 import * as yup from 'yup'
 
 export const updateSchema = yup.object().shape({
-    name: yup.string().required('Name is required').min(8, 'Name must be at least 8 characters'),
+    name: yup.string().required('El nombre es obligatorio').min(8, 'El nombre debe tener al menos 8 caracteres'),
     login: yup.string()
         .required('Login is required')
-        .matches(/^[a-zA-Z0-9]+$/, 'Login must contain only alphanumeric characters'),
+        .matches(/^[a-zA-Z0-9 _]+$/, 'El inicio de sesión debe contener solo caracteres alfanuméricos'),
     email: yup.string()
-        .required('Email is required')
-        .email('Invalid email format'),
+        .required('Es necessario is required')
+        .email('Formato de correo electrónico no válido'),
     phone: yup.string()
-        .required('Phone is required'),
-    country_name: yup.string().required('Country name is required'),
-    country_code: yup.string().required('Country code is required'),
+        .required('Se requiere teléfono'),
+    country_name: yup.string().required('El nombre del país es obligatorio'),
+    country_code: yup.string().required('Se requiere el código de país'),
 });
