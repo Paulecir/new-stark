@@ -19,7 +19,8 @@ async function arrumar() {
         },
     })
 
-
+    console.log("F", usersQualify.find(f=> f.login.toLowerCase() === "sixto"))
+    return;
     let i = usersQualify.length
 
     for (const qualify of usersQualify) {

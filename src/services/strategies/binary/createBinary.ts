@@ -81,6 +81,10 @@ export const addBinaryStrategy = async ({ userId, priority = 'L' }, Prisma = Pri
 
     if (strategy === "AUTO") {
         priority = parentNode.autoDirection || 'L'
+    } else if (strategy === "RIGHT") {
+        priority = "R"
+    } else {
+        priority = "L"
     }
 
     while (parentNode) {

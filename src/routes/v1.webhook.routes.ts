@@ -6,6 +6,7 @@ import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
 import { payBinary } from "@/services/strategies/binary/payBinary"
 import { payCommission } from "@/services/commission/payCommission"
 import { CommissionService } from "@/services/commission"
+import { addBinaryStrategy } from "@/services/strategies/binary/createBinary"
 
 const router = Router()
 
@@ -60,6 +61,11 @@ router.post("/binary", async (req, res) => {
 
 router.post("/approveBinary", async (req, res) => {
   await approvePayBinary(req.body)
+
+  res.json({ end: true })
+})
+router.post("/addBinary", async (req, res) => {
+  await addBinaryStrategy({ userId: req.body.user_id })
 
   res.json({ end: true })
 })

@@ -31,6 +31,14 @@ export const filterUserSelect = async (filter, pagination: any, orderBy: any = {
                 where: {
                     wallet: "MAIN"
                 }
+            },
+            sponsor: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    login: true
+                }
             }
         }
     })
