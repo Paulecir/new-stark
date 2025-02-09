@@ -66,7 +66,9 @@ export const registerUser = async (data: any) => {
 
         } while (checkSponsor)
 
-        const password = data.password ? await bcrypt.hash(data.password, 12) :  await bcrypt.hash(faker.internet.password(), 12);
+        const dataPassword = data.password || faker.internet.password()
+
+        const password = data.password ? await bcrypt.hash(data.password, 12) :  await bcrypt.hash(dataPassword, 12);
         const user = await Prisma.user.create({
             data: {
                 name: data.name,
@@ -172,7 +174,7 @@ export const registerUser = async (data: any) => {
                                 <p>Para ingresar a la plataforma, utilice las siguientes credenciales:</p>
                                 <p>
                                     <b>Username:</b> ${user.login}<br />
-                                    <b>Senha:</b> ${password}
+                                    <b>Senha:</b> ${dataPassword}
                                 </p>
                                 <div class="divider"></div>
                                 <a href="https://starktecnologia.com/auth/sign-in" class="button">
