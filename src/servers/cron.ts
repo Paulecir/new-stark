@@ -18,7 +18,11 @@ export const initCronjob = async () => {
     rule.minute = 10
 
     nodeSchedule.scheduleJob("1 22 * * *", async (job) => {
-        const categories = await Prisma.category.findMany()
+        const categories = await Prisma.category.findMany({
+            where: {
+                commission: true
+            }
+        })
 
         for (const category of categories) {
             await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({

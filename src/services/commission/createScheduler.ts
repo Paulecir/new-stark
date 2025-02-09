@@ -11,7 +11,7 @@ export const createScheduler = async ({ category_id, type, date = null }: { cate
         }
     })
 
-    const currentDate = moment(date).add(1, "seconds")
+    const currentDate = moment(date || undefined).add(1, "seconds")
 
     const info = getNextOccurrence(currentDate, category.commission_yield_type, category.commission_yield_config, type)
 

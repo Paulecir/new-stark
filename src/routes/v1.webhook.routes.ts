@@ -7,6 +7,7 @@ import { payBinary } from "@/services/strategies/binary/payBinary"
 import { payCommission } from "@/services/commission/payCommission"
 import { CommissionService } from "@/services/commission"
 import { addBinaryStrategy } from "@/services/strategies/binary/createBinary"
+import moment from "moment"
 
 const router = Router()
 
@@ -91,11 +92,12 @@ router.get("/scheduler/:id", async (req, res) => {
   }
 
   const a = await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
-    category_id: req.params.id as any, type: "COMMISSION", date: req.query.date?.toString()
+    category_id: req.params.id as any, type: "COMMISSION", date: req.query.date?.toString()  || undefined
   }, tx), { timeout: 10000, maxWait: 10000 })
 
   res.json({ a })
 })
+
 
 router.get("/make", async (req, res) => {
   const a = await makeCommission()
