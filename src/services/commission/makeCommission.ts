@@ -51,7 +51,11 @@ export const makeCommission = async () => {
 
             if (category.commission_yield_type_commission === "dynamic") {
                 let config = ((category.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
-                if (config) percent = parseFloat(config.value)
+                if (!config) {
+                    return;
+                }
+                percent = parseFloat(config.value)
+                
             }
 
             let maxDiff = 1

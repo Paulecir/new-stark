@@ -3,7 +3,7 @@ import { addBalance } from "@/services/balance/addBalance"
 import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
 
-export const approvePayBinary = async ({ date = moment().format("YYYY-MM-DD") }) => {
+export const approvePayBinary = async ({ date = moment().subtract(1, "days").format('YYYY-MM-DD') }) => {
 
     const startDate = moment(date).startOf("day").subtract(1, "day").startOf("day").toDate()
     const endDate = moment(date).startOf("day").subtract(1, "day").endOf("day").toDate()

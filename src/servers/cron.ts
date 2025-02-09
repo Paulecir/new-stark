@@ -2,6 +2,7 @@ import Prisma from "@/infra/db/prisma"
 import { CommissionService } from "@/services/commission"
 import { makeCommission } from "@/services/commission/makeCommission"
 import { OrderService } from "@/services/order"
+import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
 import { payBinary } from "@/services/strategies/binary/payBinary"
 import nodeSchedule from "node-schedule"
 
@@ -48,10 +49,9 @@ export const initCronjob = async () => {
         await OrderService.checkAllPaymentPlisio()
     })
 
-    nodeSchedule.scheduleJob("*/10 1 * * *", async (job) => {
+    nodeSchedule.scheduleJob("*/10 2 * * *", async (job) => {
         await payBinary()
-        console.log("PAY BINARY")
-        // await approvePayBinary()
+        await approvePayBinary({})
     })
 
 }
