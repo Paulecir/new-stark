@@ -32,14 +32,7 @@ export const filterUserSelect = async (filter, pagination: any, orderBy: any = {
                     wallet: "MAIN"
                 }
             },
-            sponsor: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    login: true
-                }
-            }
+           
         }
     })
 

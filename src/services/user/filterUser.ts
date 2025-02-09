@@ -20,7 +20,15 @@ export const filterUser = async (filter, pagination: any, orderBy: any = { creat
         where: {
             AND: query,
         },
-        include: {
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            country_code: true,
+            country_name: true,
+            profile: true,
+            is_active: true,
+            created_at: true,
             Balance: {
                 select: {
                     amount: true
