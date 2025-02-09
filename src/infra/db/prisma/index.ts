@@ -135,30 +135,30 @@ const Prisma = new PrismaClient()
         return result // return the first result found in the array
       },
 
-      async findMany({ args, query, operation }: any) {
-        if (!args.select) {
-          args.omit = { password: true }
-        }
+      // async findMany({ args, query, operation }: any) {
+      //   if (!args.select) {
+      //     args.omit = { password: true }
+      //   }
 
-        if (args.select?.sponsor) {
-          if (args.select?.sponsor === true) {
-            args.select.sponsor = { omit: { password: true } }
-          } else if (!args.select?.sponsor?.select?.password) {
-            args.select.sponsor.omit = { password: true }
-          }
-        }
+      //   if (args.select?.sponsor) {
+      //     if (args.select?.sponsor === true) {
+      //       args.select.sponsor = { omit: { password: true } }
+      //     } else if (!args.select?.sponsor?.select?.password) {
+      //       args.select.sponsor.omit = { password: true }
+      //     }
+      //   }
 
-        if (args.include?.sponsor) {
-          if (args.include?.sponsor === true) {
-            args.include.sponsor = { omit: { password: true } }
-          } else if (!args.include?.sponsor?.select?.password) {
-            args.include.sponsor.omit = { password: true }
-          }
-        }
+      //   if (args.include?.sponsor) {
+      //     if (args.include?.sponsor === true) {
+      //       args.include.sponsor = { omit: { password: true } }
+      //     } else if (!args.include?.sponsor?.select?.password) {
+      //       args.include.sponsor.omit = { password: true }
+      //     }
+      //   }
 
-        const [result] = await Prisma.$transaction([query(args)]) // wrap the query in a batch transaction, and destructure the result to return an array
-        return result // return the first result found in the array
-      },
+      //   const [result] = await Prisma.$transaction([query(args)]) // wrap the query in a batch transaction, and destructure the result to return an array
+      //   return result // return the first result found in the array
+      // },
     }
   },
 
