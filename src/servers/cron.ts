@@ -3,11 +3,13 @@ import { CommissionService } from "@/services/commission"
 import { makeCommission } from "@/services/commission/makeCommission"
 import { OrderService } from "@/services/order"
 import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
+import { addBinaryStrategy } from "@/services/strategies/binary/createBinary"
 import { payBinary } from "@/services/strategies/binary/payBinary"
 import nodeSchedule from "node-schedule"
 
 export const initCronjob = async () => {
     console.log("INIT")
+
    
 
     if (process.env.CRONJOB !== "true") return;
@@ -53,5 +55,23 @@ export const initCronjob = async () => {
         await payBinary()
         await approvePayBinary({})
     })
+
+    nodeSchedule.scheduleJob("*/30 * * * *", async (job) => {
+        const check = await Prisma.$queryRaw`SELECT y.* FROM ( 
+            SELECT u.* FROM users u
+            INNER JOIN \`order\` o ON o.user_id = u.id AND o.status = "done"
+            INNER JOIN \`order_item\` oi ON oi.order_id = o.id
+            INNER JOIN \`products\` p ON p.id = oi.product_id
+            WHERE p.category_id > 1
+            GROUP BY u.id
+            ) as y
+            LEFT JOIN strategy_binary sb ON sb.user_id = y.id
+            WHERE sb.id IS NULL`;
+
+        for (const b of check || []) {
+            await addBinaryStrategy({ userId: b.id })
+        }
+    })
+
 
 }

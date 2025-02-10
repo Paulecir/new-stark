@@ -5,7 +5,7 @@ import { OrderService } from "@/services/order";
 
 export const approveOrderController = async (requestData: IRequest) => {
     try {
-        const approve = await Prisma.$transaction(async (tx) => await OrderService.approveOrder(requestData.body, tx), { timeout: 10000, maxWait: 10000 })
+        const approve = await Prisma.$transaction(async (tx) => await OrderService.approveOrder(requestData.body, tx), { timeout: 100000, maxWait: 100000 })
 
         // Retorna uma resposta de sucesso com os dados do usuário recuperado
         return HttpResponse.successResponse({

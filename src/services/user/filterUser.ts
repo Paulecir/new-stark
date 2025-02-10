@@ -24,6 +24,7 @@ export const filterUser = async (filter, pagination: any, orderBy: any = { creat
             id: true,
             name: true,
             email: true,
+            login: true,
             country_code: true,
             country_name: true,
             profile: true,

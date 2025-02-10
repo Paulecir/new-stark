@@ -51,6 +51,7 @@ export const approvePayBinary = async ({ date = moment().subtract(1, "days").for
                     status: "PENDING",
                     date
                 },
+    
                 orderBy: {
                     id: "asc"
                 }
@@ -71,7 +72,7 @@ export const approvePayBinary = async ({ date = moment().subtract(1, "days").for
 
                 if (amountTotalCeiling > 0 && strategyPay.qualify) {
                     await addBalance({
-                        name: "Bonus Binary"
+                        name: `Bonus Binary [${strategyPay.date}]`
                         , wallet: "MAIN"
                         , user_id: strategyPay.user_id
                         , amount: parseFloat(amountTotalCeiling.toString())
@@ -84,7 +85,7 @@ export const approvePayBinary = async ({ date = moment().subtract(1, "days").for
                         }
                     }, Prisma)
                     await addBalance({
-                        name: "Bonus Binary"
+                        name: `Bonus Binary [${strategyPay.date}]`
                         , wallet: "BINARY_BONUS"
                         , user_id: strategyPay.user_id
                         , amount: parseFloat(amountTotalCeiling.toString())
@@ -99,7 +100,7 @@ export const approvePayBinary = async ({ date = moment().subtract(1, "days").for
 
                     if (strategyPay.direction !== "NONE") {
                         await addBalance({
-                            name: "Bonus Binary"
+                            name: `Bonus Binary [${strategyPay.date}]`
                             , wallet: strategyPay.direction === "LEFT" ? "BINARY_LEFT_POINT_PAY" : "BINARY_RIGHT_POINT_PAY"
                             , user_id: strategyPay.user_id
                             , amount: parseFloat(amountTotalCeiling.toString())

@@ -42,7 +42,7 @@ router.post("/buy",
 
 router.post("/approve",
   // #swagger.tags = ['Order']
-  authMiddleware,
+  // authMiddleware,
   expressRouteAdapter(approveOrderController)
 )
 

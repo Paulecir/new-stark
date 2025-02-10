@@ -35,6 +35,7 @@ export const filterExtractPending = async (
             total: true,
             percent: true,
             created_at: true,
+            date: true,
             user: {
                 select: {
                     name: true
@@ -81,7 +82,7 @@ export const filterExtractPending = async (
     })
 
     return { data: data.map(m => {
-        return {...m, name: `Bonus ${m.orderItem.product.category.name} [ Plan: ${m.orderItem.product.name} ] [ ${m.percent}% ] [ ${moment(m.scheduler.date).format("YYYY-MM-DD")}]`}
+        return {...m, created_at: m.date, name: `Bonus ${m.orderItem.product.category.name} [ Plan: ${m.orderItem.product.name} ] [ ${m.percent}% ] [ ${moment(m.scheduler.date).format("YYYY-MM-DD")}]`}
     }), metadata: { page, pageSize, total } }
 
 }

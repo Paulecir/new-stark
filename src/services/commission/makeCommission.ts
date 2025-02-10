@@ -5,7 +5,7 @@ export const makeCommission = async () => {
     const commission = await PrismaLocal.commissionScheduler.findFirst({
         where: {
             status: "SCHEDULER",
-            date: { lte: moment().toDate() }
+            date: { lte: moment().toDate() },
         },
         orderBy: {
             date: 'asc'
@@ -28,14 +28,14 @@ export const makeCommission = async () => {
             const orderItems = await Prisma.orderItem.findMany({
                 where: {
                     order: {
-                        status: "done"
+                        status: "done",
                     },
                     product: {
                         category_id: category.id
                     },
                     created_at: {
                         lte: commission.date
-                    }
+                    },
                     //TODO: Colocar data
                 },
                 include: {
@@ -52,6 +52,15 @@ export const makeCommission = async () => {
             if (category.commission_yield_type_commission === "dynamic") {
                 let config = ((category.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
                 if (!config) {
+
+                    await Prisma.commissionScheduler.update({
+                        where: {
+                            id: commission.id
+                        },
+                        data: {
+                            status: "DONE",
+                        }
+                    })
                     return;
                 }
                 percent = parseFloat(config.value)
@@ -68,7 +77,7 @@ export const makeCommission = async () => {
 
             let insert = []
             for (const result of orderItems) {
-                let diff = moment(commission.date).diff(moment(result.created_at), "days")
+                let diff = moment(commission.date).startOf("day").diff(moment(result.created_at).startOf("day"), "days")
 
                 if (diff > maxDiff) {
                     diff = maxDiff
@@ -109,7 +118,8 @@ export const makeCommission = async () => {
                 console.log(insert.length)
                 await Prisma.commission.createMany(
                     {
-                        data: insertable
+                        data: insertable,
+                        skipDuplicates: true,
                     }
                 )
 

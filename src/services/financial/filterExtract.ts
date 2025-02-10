@@ -24,7 +24,7 @@ export const filterExtract = async (
         },
         orderBy
     })
-    if (!data) throw new NotFoundError("Hitory not found")
+    if (!data) throw new NotFoundError("History not found")
 
     const total = await Prisma.balanceHistory.count({
         where: {
