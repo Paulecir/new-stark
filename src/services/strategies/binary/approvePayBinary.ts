@@ -41,6 +41,8 @@ export const approvePayBinary = async ({ date = moment().subtract(1, "days").for
         percent = ((total._sum.amountCeilingUser?.toNumber() || 0) * 100) / totalSellAmount
     }
 
+    if (percent > 100) percent = 100
+
     let strategyPay = null
 
     do {

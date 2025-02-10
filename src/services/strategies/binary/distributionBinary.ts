@@ -11,14 +11,12 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
 
     const point = item.amount.toNumber() * (category.binary_bonus_point_percent.toNumber() / 100)
 
-
-
-
     let binary = await Prisma.strategyBinary.findFirst({
         where: {
             user_id: order.user_id
         },
         include: {
+
             user: true,
             parent: {
                 include: {

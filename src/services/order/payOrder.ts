@@ -85,6 +85,7 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
                     return res.data?.data
                 })
                 .catch(err => {
+                    console.log("EPLISIO", err.data)
                     return err.data
                 })
 

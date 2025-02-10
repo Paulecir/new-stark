@@ -3,6 +3,16 @@ import { approveOrder } from "../order/approveOrder";
 
 export const plisioWebhook = async (data: any) => {
 
+    try {
+        await Prisma.webhook.create({
+            data: {
+                request: data
+            }
+        })
+    } catch {
+
+    }
+
     const orderId = data.data.order_number
 
     await Prisma.order.updateMany({
