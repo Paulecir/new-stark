@@ -23,7 +23,7 @@ router.post("/payment/:id",
   expressRouteAdapter(payOrderController)
 )
 
-router.post("/orders",
+router.get("/orders",
   // #swagger.tags = ['Order']
   authMiddleware,
   expressRouteAdapter(ordersController)

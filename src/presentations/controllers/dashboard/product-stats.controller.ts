@@ -14,17 +14,43 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
         //     user: requestData.user
         // })
 
-        const direct = await Prisma.balance.findFirst({
+        // const direct = await Prisma.balance.findFirst({
+        //     where: {
+        //         user_id: requestData.user.id,
+        //         wallet: "DIRECT_BONUS"
+        //     }
+        // })
+
+        // const binary = await Prisma.balance.findFirst({
+        //     where: {
+        //         user_id: requestData.user.id,
+        //         wallet: "BINARY_BONUS"
+        //     }
+        // })
+
+        const direct = await Prisma.balanceHistory.aggregate({
             where: {
                 user_id: requestData.user.id,
-                wallet: "DIRECT_BONUS"
+                wallet: "MAIN",
+                name: {
+                    contains: " Direct "
+                }
+            },
+            _sum: {
+                amount: true
             }
         })
 
-        const binary = await Prisma.balance.findFirst({
+        const binary = await Prisma.balanceHistory.aggregate({
             where: {
                 user_id: requestData.user.id,
-                wallet: "BINARY_BONUS"
+                wallet: "MAIN",
+                name: {
+                    startsWith: "Bonus Binary"
+                }
+            },
+            _sum: {
+                amount: true
             }
         })
 
@@ -151,10 +177,10 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                 },
                 bonus: {
                     direto: {
-                        amount: direct?.amount || 0
+                        amount: direct?._sum.amount || 0
                     },
                     binario: {
-                        amount: binary?.amount || 0
+                        amount: binary?._sum.amount || 0
                     }
                 },
                 winWin: {
