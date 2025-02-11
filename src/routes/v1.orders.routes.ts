@@ -12,11 +12,7 @@ import { myOrdersController } from "@/presentations/controllers/orders/orders.co
 
 const router = Router()
 
-router.get("/:orderId",
-  // #swagger.tags = ['Order']
-  authMiddleware,
-  expressRouteAdapter(getOrderController)
-)
+
 
 router.post("/payment/:id",
   authMiddleware,
@@ -51,6 +47,12 @@ router.post("/approve",
   // #swagger.tags = ['Order']
   // authMiddleware,
   expressRouteAdapter(approveOrderController)
+)
+
+router.get("/:orderId",
+  // #swagger.tags = ['Order']
+  authMiddleware,
+  expressRouteAdapter(getOrderController)
 )
 
 export default router;
