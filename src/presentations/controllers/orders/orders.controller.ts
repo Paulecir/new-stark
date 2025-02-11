@@ -15,7 +15,7 @@ export const ordersController = async (requestData: IRequest) => {
         if (requestData.query.login) orFilter.push({ user: { login: { contains: requestData.query.login } } })
         if (requestData.query.email) orFilter.push({ user: { email: { contains: requestData.query.email } } })
         if (requestData.query.name) orFilter.push({ user: { name: { contains: requestData.query.name } } })
-        if (requestData.query.status) orFilter.push({ status: requestData.query.status })
+        if (requestData.query.status) orFilter.push({ status: requestData.query.status.toLowerCase() })
 
         if (orFilter.length > 0) {
             filter.push({
