@@ -4,10 +4,11 @@ import { authMiddleware } from "@/middlewares/authMiddleware"
 import { expressRouteAdapter } from "@/presentations/adapters/expressRouterAdapter"
 import { buyOrderController } from "@/presentations/controllers/orders/buy.controller"
 import { approveOrderController } from "@/presentations/controllers/orders/approve.controller"
-import { myOrdersController } from "@/presentations/controllers/orders/my-orders.controller"
+import { ordersController } from "@/presentations/controllers/orders/my-orders.controller"
 import { getOrderController } from "@/presentations/controllers/orders/get.controller"
 import { payOrderController } from "@/presentations/controllers/orders/pay.controller"
 import { myOrderItemsController } from "@/presentations/controllers/orders/my-order-items.controller"
+import { myOrdersController } from "@/presentations/controllers/orders/orders.controller"
 
 const router = Router()
 
@@ -20,6 +21,12 @@ router.get("/:orderId",
 router.post("/payment/:id",
   authMiddleware,
   expressRouteAdapter(payOrderController)
+)
+
+router.post("/orders",
+  // #swagger.tags = ['Order']
+  authMiddleware,
+  expressRouteAdapter(ordersController)
 )
 
 router.post("/my-orders",

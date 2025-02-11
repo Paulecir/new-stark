@@ -4,15 +4,12 @@ import { FinancialService } from "@/services/financial";
 import { schema } from "./my-orders.schema";
 import { OrderService } from "@/services/order";
 
-export const ordersController = async (requestData: IRequest) => {
+export const myOrdersController = async (requestData: IRequest) => {
 
     try {
-        // Validar os dados da requisição
-        const validatedData = await schema.validate(requestData.body, { abortEarly: false });
-
         // Criar o usuário no banco de dados
-        const data = await OrderService.myOrdersFilter({
-            filter: validatedData,
+        const data = await OrderService.ordersFilter({
+            filter: requestData.body,
             pagination: { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 },
             user: requestData.user
         })

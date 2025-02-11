@@ -4,7 +4,7 @@ import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
 
 export const payBinary = async (date: string = moment().subtract(1, "days").format('YYYY-MM-DD')) => {
-    
+
     let info = null
     do {
         info = await PrismaLocal.$transaction(async (Prisma) => {
@@ -41,14 +41,17 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                     }
                 })
 
-                const balanceBinaryCeilingUser = await Prisma.balance.findFirst({
-                    where: {
-                        user_id: strategy.user_id,
-                        wallet: "BINARY_CEILING_USER"
-                    }
-                })
-
-              
+                const balanceBinaryCeilingUser = await Prisma.$executeRaw`SELECT 
+                    O.user_id,
+                    sum(OI.amount * (C.binary_bonus_point_percent / 100)) as amount
+                FROM 
+                    order_item OI
+                INNER JOIN \`order\` O ON O.id = OI.order_id
+                INNER JOIN products P ON P.id = OI.product_id
+                INNER JOIN categories C ON C.id = P.category_id
+                WHERE P.category_id IN (2, 3, 4) AND O.user_id = ${strategy.user_id}
+                GROUP BY O.user_id
+                `
 
                 const categoryBinaryQualify = await Prisma.categoryItem.findFirst({
                     where: {
@@ -56,7 +59,7 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                             binary_bonus_qualify: true
                         },
                         max_value: {
-                            gte: balanceBinaryCeilingUser?.amount || 0
+                            gte: balanceBinaryCeilingUser?.[0]?.amount || 0
                         }
                     },
                     orderBy: {

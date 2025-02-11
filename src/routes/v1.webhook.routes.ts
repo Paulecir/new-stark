@@ -8,15 +8,32 @@ import { payCommission } from "@/services/commission/payCommission"
 import { CommissionService } from "@/services/commission"
 import { addBinaryStrategy } from "@/services/strategies/binary/createBinary"
 import moment from "moment"
-
+import { checkAllPaymentPlisio } from "@/services/order/checkPaymentPlision"
+import multer from 'multer'
+import { OrderService } from "@/services/order"
+const upload = multer()
 const router = Router()
 
 router.post("/plisio/callback",
+  upload.none(),
   // #swagger.tags = ['Webhook']
   async (req, res) => {
 
     console.log("A", req)
     console.log("R", req.body)
+    const info = req.body
+    if (info && ["mismatch", "completed"].includes(info.status)) {
+      await OrderService.approveOrder({ orderId: info.order_number }, Prisma)
+      await Prisma.order.updateMany({
+        where: {
+          order_id: info.order_number
+        },
+        data: {
+          payment_result: req.body
+        }
+      })
+    }
+
     await Prisma.webhook.create({
       data: {
         request: req.body
@@ -43,7 +60,8 @@ router.get("/plisio/callback",
 router.post("/plisio/orders",
   // #swagger.tags = ['Webhook']
   async (req, res) => {
-
+    console.log("B", req)
+    console.log("C", req.body)
     await Prisma.webhook.create({
       data: {
         request: req.body
@@ -71,18 +89,12 @@ router.post("/addBinary", async (req, res) => {
   res.json({ end: true })
 })
 
-// router.get("/teste", async (req, res) => {
-//   const categories = await Prisma.category.findMany()
+router.get("/plisio", async (req, res) => {
 
-//   for (const category of categories) {
-//     await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
-//       category_id: category.id, type: "COMMISSION"
-//     }, tx), { timeout: 10000, maxWait: 10000 })
-//   }
-//   // await checkAllPaymentPlisio()
+  await checkAllPaymentPlisio()
 
-//   res.json({})
-// })
+  res.json({})
+})
 
 router.get("/scheduler/:id", async (req, res) => {
 
@@ -92,7 +104,7 @@ router.get("/scheduler/:id", async (req, res) => {
   }
 
   const a = await Prisma.$transaction(async (tx) => await CommissionService.createScheduler({
-    category_id: req.params.id as any, type: "COMMISSION", date: req.query.date?.toString()  || undefined
+    category_id: req.params.id as any, type: "COMMISSION", date: req.query.date?.toString() || undefined
   }, tx), { timeout: 10000, maxWait: 10000 })
 
   res.json({ a })

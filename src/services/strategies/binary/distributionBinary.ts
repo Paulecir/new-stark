@@ -34,23 +34,6 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
         }
     })
 
-    await addBalance({
-        name: "Binary add point"
-        , wallet: "BINARY_CEILING_USER"
-        , user_id: currentUser.id
-        , amount: point
-        , ref_type: 'strategyBinary'
-        , ref_id: binary.id
-        , extra_info: {
-            from: currentUser.id,
-            fromName: currentUser.name,
-            fromLogin: currentUser.login,
-            productId: item.product.id,
-            productName: item.product.name,
-            productPrice: item.product.price,
-        }
-    }, Prisma)
-
     do {
 
         if (binary.ref === "R") {

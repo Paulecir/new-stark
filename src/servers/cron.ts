@@ -46,7 +46,7 @@ export const initCronjob = async () => {
     //     // await payCommission()
     // })
 
-    nodeSchedule.scheduleJob("*/1 * * * *", async (job) => {
+    nodeSchedule.scheduleJob("*/10 * * * *", async (job) => {
         console.log("CRON checkAllPaymentPlisio")
         await OrderService.checkAllPaymentPlisio()
     })
