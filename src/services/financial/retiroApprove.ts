@@ -27,28 +27,12 @@ export const retiroApprove = async (
     for (const approve of approves) {
         try {
             await PrismaLocal.$transaction(async (Prisma) => {
-
-                const history = await decBalance({
-                    name: "Withdraw"
-                    , wallet: "MAIN"
-                    , user_id: approve.user_id
-                    , amount: approve.amount.toNumber()
-                    , ref_type: 'withdraw'
-                    , ref_id: approve.id
-                    , extra_info: {
-                        to: approve.user_id,
-                        toName: approve.user?.name,
-                        toLogin: approve.user?.login,
-                    }
-                }, Prisma)
-
                 await Prisma.withdraw.update({
                     where: {
                         id: approve.id
                     },
                     data: {
                         status: "SCHEDULER",
-                        balance_history_id: history.id
                     }
                 })
 

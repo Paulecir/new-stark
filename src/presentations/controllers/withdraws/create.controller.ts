@@ -17,7 +17,8 @@ export const createWithdrawController = async (requestData: IRequest) => {
         const validatedData = await schemaCreateWithdraw.validate({...requestData.body, wallet: user.bep20_address, user_id: requestData.user.id }, { abortEarly: false });
 
         // Criar o usuário no banco de dados
-        const data = await WithdrawService.createWithdraw(validatedData)
+        const data = await Prisma.$transaction(async (tx) => await WithdrawService.createWithdraw(validatedData, tx), { timeout: 10000, maxWait: 10000 })
+
 
         return HttpResponse.successResponse({
             message: 'Withdraw registered successfully',
