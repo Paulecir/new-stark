@@ -4,7 +4,7 @@ import { FinancialService } from "@/services/financial";
 import { schema } from "./my-orders.schema";
 import { OrderService } from "@/services/order";
 
-export const ordersController = async (requestData: IRequest) => {
+export const myOrdersController = async (requestData: IRequest) => {
 
     try {
         // Validar os dados da requisição

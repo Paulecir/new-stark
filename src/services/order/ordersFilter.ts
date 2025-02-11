@@ -4,7 +4,7 @@ import { IFilter } from "@/presentations/interface/IFilter"
 
 export const ordersFilter = async (
     {
-        filter: { wallet },
+        filter,
         pagination = {},
         orderBy = { created_at: "desc" },
         user
@@ -16,17 +16,25 @@ export const ordersFilter = async (
         take: pageSize,
         skip: pageSize * (page - 1),
         where: {
-            AND: [
-            ]
+            AND: filter
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    login: true,
+                    email: true
+                }
+            }
         },
         orderBy
     })
-    if (!data) throw new NotFoundError("Hitory not found")
+    if (!data) throw new NotFoundError("Order not found")
 
     const total = await Prisma.order.count({
         where: {
-            AND: [
-            ]
+            AND: filter
         },
     })
 
