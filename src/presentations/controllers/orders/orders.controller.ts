@@ -10,7 +10,7 @@ export const ordersController = async (requestData: IRequest) => {
         const filter = []
        
         if (requestData.query.id) filter.push({ id: parseInt(requestData.query.id) })
-        if (requestData.query.order_id) filter.push({ order_id: requestData.query.description } )
+        if (requestData.query.order_id) filter.push({ order_id: requestData.query.order_id } )
         if (requestData.query.login) filter.push({ user: { login: { contains: requestData.query.login } } })
         if (requestData.query.email) filter.push({ user: { email: { contains: requestData.query.email } } })
         if (requestData.query.name) filter.push({ user: { name: { contains: requestData.query.name } } })

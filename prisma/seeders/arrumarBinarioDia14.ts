@@ -6,25 +6,28 @@ async function arrumar() {
     const balances = await Prisma.balanceHistory.findMany({
         where: {
             created_at: {
-                gt: moment("2025-02-16T00:00:00").toDate()
+                gt: moment("2025-02-14T00:00:00").toDate()
             },
-            name: {
-                startsWith: "Bonus Binary"
+            wallet: {
+                in: ["BINARY_RIGHT_POINT", "BINARY_LEFT_POINT"]
             }
         }
     })
 
     for (const balance of balances) {
         try {
+
+            console.log("B", balance.user_id, balance.wallet)
             await Prisma.$transaction(async (db) => {
                 await db.balance.updateMany({
                     where: {
-                        wallet: balance.wallet,
-                        user_id: balance.user_id
+                        user_id: balance.user_id,
+                        wallet: balance.wallet
                     },
+
                     data: {
                         amount: {
-                            decrement: balance.amount.toNumber()
+                            increment: balance.amount.toNumber()
                         }
                     }
                 })

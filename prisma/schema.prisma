@@ -103,6 +103,8 @@ model BalanceHistory {
   direction BalanceDirectionType
   amount    Decimal              @db.Decimal(20, 8)
 
+  identify String?
+
   ref_type String?
   ref_id   BigInt?
 

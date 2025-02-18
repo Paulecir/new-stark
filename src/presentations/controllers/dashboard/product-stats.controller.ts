@@ -32,9 +32,19 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
             where: {
                 user_id: requestData.user.id,
                 wallet: "MAIN",
-                name: {
-                    contains: " Direct "
-                }
+                OR: [
+                    {
+                        name: {
+                            contains: " Direct "
+                        }
+                    },
+                    {
+                        name: {
+                            startsWith: "Bonus Direto"
+                        }
+                    }
+                ]
+
             },
             _sum: {
                 amount: true
@@ -54,10 +64,13 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
             }
         })
 
-        const winwin = await Prisma.balance.findFirst({
+        const winwin = await Prisma.balanceHistory.aggregate({
+            _sum: {
+                amount: true
+            },
             where: {
                 user_id: requestData.user.id,
-                wallet: "WINWIN_BONUS"
+                identify: "WINWIN_BONUS"
             }
         })
 
@@ -72,7 +85,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
         if (categorywinwWin.commission_yield_type_commission === "dynamic") {
             let config = ((categorywinwWin.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
             if (config) percentwinwWin = parseFloat(config.value)
-        } else if (categorywinwWin.commission_yield_type_commission === "fixed") { 
+        } else if (categorywinwWin.commission_yield_type_commission === "fixed") {
             percentwinwWin = parseFloat((categorywinwWin.commission_yield_config as any)?.yield_fixed)
         }
 
@@ -85,10 +98,13 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
             WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = 'done'
             GROUP BY null`;
 
-        const tokenWay = await Prisma.balance.findFirst({
+        const tokenWay = await Prisma.balanceHistory.aggregate({
+            _sum: {
+                amount: true
+            },
             where: {
                 user_id: requestData.user.id,
-                wallet: "TOKENWAY_BONUS"
+                identify: "TOKENWAY_BONUS"
             }
         })
 
@@ -114,17 +130,23 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
             INNER JOIN products ON products.id = order_item.product_id 
             WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1 AND \`order\`.status = 'done'`
 
-        const tokenOne = await Prisma.balance.findFirst({
+        const tokenOne = await Prisma.balanceHistory.aggregate({
+            _sum: {
+                amount: true
+            },
             where: {
                 user_id: requestData.user.id,
-                wallet: "TOKENONE_BONUS"
+                identify: "TOKENONE_BONUS"
             }
         })
 
-        const tokenTeem = await Prisma.balance.findFirst({
+        const tokenTeem = await Prisma.balanceHistory.aggregate({
+            _sum: {
+                amount: true
+            },
             where: {
                 user_id: requestData.user.id,
-                wallet: "TOKENTEEN_BONUS"
+                identify: "TOKENTEEN_BONUS"
             }
         })
 
@@ -185,11 +207,11 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                 },
                 winWin: {
                     rendimentoDiario: {
-                        amount:(winwWinOrder?.[0]?.amount || 0) * (percentwinwWin / 100),
+                        amount: (winwWinOrder?.[0]?.amount || 0) * (percentwinwWin / 100),
                         tax: percentwinwWin
                     },
                     rendimentoTotal: {
-                        amount: winwin?.amount || 0,
+                        amount: winwin?._sum?.amount || 0,
                         total: (winwWinOrder?.[0]?.amount || 0) * (207 / 100),
                         qtd: parseInt(winwWinOrder?.[0]?.amount),
                         nextAmount: nextWinwin._sum?.total || 0,
@@ -202,29 +224,29 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                         tax: percentTokenWay
                     },
                     rendimentoTotal: {
-                        amount: tokenWay?.amount || 0,
+                        amount: tokenWay?._sum?.amount || 0,
                         total: (tokenWayOrder?.[0]?.amount || 0) * (300 / 100),
                         qtd: tokenWayOrder?.[0]?.quantity,
                         nextAmount: nextTokenWay._sum?.total || 0,
                         nextDate: '2025-02-31 00:00:00'
                     },
                     unilevel: {
-                        amount: tokenWay?.amount || 0,
+                        amount: tokenWay?._sum?.amount || 0,
                     }
                 },
                 tokenOne: {
                     rendimentoTotal: {
-                        amount: tokenOne?.amount || 0,
+                        amount: tokenOne?._sum?.amount || 0,
                         qtd: 0,
-                        total: tokenOne?.amount || 0
+                        total: tokenOne?._sum?.amount || 0
                     }
 
                 },
                 tokenTeem: {
                     rendimentoTotal: {
-                        amount: tokenTeem?.amount || 0,
+                        amount: tokenTeem?._sum?.amount || 0,
                         qtd: 0,
-                        total: tokenTeem?.amount || 0
+                        total: tokenTeem?._sum?.amount || 0
                     }
                 }
             },

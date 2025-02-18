@@ -1,5 +1,4 @@
 import PrismaLocal from "@/infra/db/prisma"
-import { addBalance } from "@/services/balance/addBalance"
 import { decBalance } from "@/services/balance/decBalance"
 import moment from "moment"
 
@@ -17,7 +16,7 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
 
                 }
             })
-
+            console.log("?", strategy)
             if (!strategy) return null;
 
             const current = await Prisma.user.findFirst({
@@ -49,15 +48,14 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                 INNER JOIN \`order\` O ON O.id = OI.order_id
                 INNER JOIN products P ON P.id = OI.product_id
                 INNER JOIN categories C ON C.id = P.category_id
-                WHERE P.category_id IN (2, 3, 4) AND O.user_id = ${strategy.user_id}
+                WHERE P.category_id IN (2, 3, 4) AND O.user_id = ${strategy.user_id} AND O.status = "done"
                 GROUP BY O.user_id
                 `
-
+                console.log("B")
                 const categoryBinaryQualify = await Prisma.categoryItem.findFirst({
                     where: {
-                        category: {
-                            binary_bonus_qualify: true
-                        },
+                        category_id: 4,
+                        type: 'BINARY',
                         max_value: {
                             gte: balanceBinaryCeilingUser?.[0]?.amount || 0
                         }
@@ -164,7 +162,7 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
             maxWait: 100000
         })
 
-        console.log("I", info.id)
+        console.log("I", info?.id)
 
         if (!info) break
 
