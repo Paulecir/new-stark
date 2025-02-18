@@ -5,6 +5,7 @@ import { faker } from "@faker-js/faker";
 import axios from "axios";
 import moment from "moment";
 import NodeMailer from "@/infra/mailer/nodemailer";
+import SendgridMailer from "@/infra/mailer/sendgrid";
 
 export const registerUser = async (data: any) => {
     try {
@@ -68,7 +69,7 @@ export const registerUser = async (data: any) => {
 
         const dataPassword = data.password || faker.internet.password()
 
-        const password = data.password ? await bcrypt.hash(data.password, 12) :  await bcrypt.hash(dataPassword, 12);
+        const password = data.password ? await bcrypt.hash(data.password, 12) : await bcrypt.hash(dataPassword, 12);
         const user = await Prisma.user.create({
             data: {
                 name: data.name,
@@ -87,7 +88,7 @@ export const registerUser = async (data: any) => {
             },
         });
 
-        await NodeMailer.sendMail({
+        await SendgridMailer.send({
             from: `"${process.env.MAIL_FROM_NAME} 👻" <${process.env.MAIL_FROM_ADDRESS}>`, // sender address
             to: data.email, // list of receivers
             subject: "Registro de usuario", // Subject line
@@ -194,10 +195,9 @@ export const registerUser = async (data: any) => {
                         </div>
                     </body>
                     </html>`
+        }).then(res => {
+            console.log("R", res)
         })
-            .then(res => {
-                console.log("R", res)
-            })
             .catch(err => {
                 console.log("E", err)
             })

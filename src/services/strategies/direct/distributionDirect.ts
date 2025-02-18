@@ -26,7 +26,7 @@ export const distributionDirect = async ({ order, item }: any, Prisma = PrismaLo
 
         if (current) {
             await addBalance({ 
-                name: `Bonus Direto (Pedido ${order.id}) - Pontos do Pedido: ${item.amount * (category.direct_bonus_yield.toNumber() / 100)} - Consultor: ${currentUser.id} `
+                name: `Bonus Direto (Pedido ${order.id}) - Pontos do Pedido: ${(item.amount * item.quantity) * (category.direct_bonus_yield.toNumber() / 100)} - Consultor: ${currentUser.id} `
                 , wallet: "MAIN"
                 , user_id: current.id
                 , amount: (item.amount * item.quantity) * (category.direct_bonus_yield.toNumber() / 100)
@@ -47,10 +47,10 @@ export const distributionDirect = async ({ order, item }: any, Prisma = PrismaLo
              }, Prisma)
 
              await addBalance({ 
-                name: `Bonus Direto (Pedido ${order.id}) - Pontos do Pedido: ${item.amount * (category.direct_bonus_yield.toNumber() / 100)} - Consultor: ${currentUser.id} `
+                name: `Bonus Direto (Pedido ${order.id}) - Pontos do Pedido: ${(item.amount * item.quantity) * (category.direct_bonus_yield.toNumber() / 100)} - Consultor: ${currentUser.id} `
                 , wallet: "DIRECT_BONUS"
                 , user_id: current.id
-                , amount: item.amount * (category.direct_bonus_yield.toNumber() / 100)
+                , amount: (item.amount * item.quantity) * (category.direct_bonus_yield.toNumber() / 100)
                 , ref_type: 'orderItem'
                 , ref_id: item.id
                 , extra_info: {
