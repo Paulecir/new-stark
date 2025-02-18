@@ -36,6 +36,7 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
     const categoryItem = await Prisma.categoryItem.findFirst({
         where: {
             category_id: item.product.category_id,
+            type: "UNILEVEL",
             max_value: { lt: sum }
         },
         orderBy: {

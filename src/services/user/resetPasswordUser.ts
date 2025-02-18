@@ -20,7 +20,7 @@ export const resetPasswordUser = async (data: any) => {
         await NodeMailer.sendMail({
             from: `${process.env.MAIL_FROM_NAME} <${process.env.MAIL_FROM_ADDRESS}>`, // sender address
             to: data.email, // list of receivers
-            subject: "Registro de usuario password", // Subject line
+            subject: "Stark Tecnologia y Tokenización S.A", // Subject line
             html: `<!DOCTYPE html>
                     <html lang="es">
                     <head>

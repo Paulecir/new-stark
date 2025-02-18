@@ -51,13 +51,12 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                 WHERE P.category_id IN (2, 3, 4) AND O.user_id = ${strategy.user_id} AND O.status = "done"
                 GROUP BY O.user_id
                 `
-                console.log("B")
                 const categoryBinaryQualify = await Prisma.categoryItem.findFirst({
                     where: {
                         category_id: 4,
                         type: 'BINARY',
                         max_value: {
-                            gte: balanceBinaryCeilingUser?.[0]?.amount || 0
+                            gte: balanceBinaryCeilingUser?.[0]?.amount.toNumber() || 0
                         }
                     },
                     orderBy: {
