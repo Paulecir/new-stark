@@ -28,14 +28,14 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                 const balanceRight = await Prisma.balance.findFirst({
                     where: {
                         user_id: strategy.user_id,
-                        wallet: "BINARY_RIGHT_POINT"
+                        wallet: "BINARY_RIGHT_POINT_NEW"
                     }
                 })
 
                 const balanceLeft = await Prisma.balance.findFirst({
                     where: {
                         user_id: strategy.user_id,
-                        wallet: "BINARY_LEFT_POINT"
+                        wallet: "BINARY_LEFT_POINT_NEW"
                     }
                 })
 
@@ -86,7 +86,7 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
 
                     await decBalance({
                         name: "Binary payment"
-                        , wallet: "BINARY_RIGHT_POINT"
+                        , wallet: "BINARY_RIGHT_POIN_NEW"
                         , user_id: binaryPay.user_id
                         , amount: parseFloat(amount)
                         , ref_type: 'strategyBinaryPay'
@@ -101,7 +101,7 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
 
                     await decBalance({
                         name: "Binary payment"
-                        , wallet: "BINARY_LEFT_POINT"
+                        , wallet: "BINARY_LEFT_POINT_NEW"
                         , user_id: binaryPay.user_id
                         , amount: parseFloat(amount)
                         , ref_type: 'strategyBinaryPay'
