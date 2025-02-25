@@ -1,7 +1,12 @@
 import Prisma from "../../src/infra/db/prisma";
+import { arrumarBinario } from "../../src/services/fix/arrumarBinario"
 
 async function arrumar() {
 
+    await arrumarBinario()
+
+    return;
+   
     const users = await Prisma.strategyBinary.findMany({
         orderBy: {
             hier: 'asc'

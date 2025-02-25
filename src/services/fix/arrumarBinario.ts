@@ -17,6 +17,9 @@ export async function arrumarBinario() {
                 category_id: {
                     in: [2, 3, 4]
                 }
+            },
+            id: {
+                gt: 17629
             }
         },
         include: {
@@ -103,7 +106,6 @@ export async function arrumarBinario() {
                 user_id: item.order.user_id
             },
             include: {
-
                 user: true,
                 parent: {
                     include: {
@@ -117,7 +119,6 @@ export async function arrumarBinario() {
             if (!binary.parent) break;
             // Aqui é de Direita
             if (binary?.parent?.right_id === binary.id) {
-
                 await addBalance({
                     name: "Binary add point"
                     , wallet: "BINARY_RIGHT_POINT_NEW"
