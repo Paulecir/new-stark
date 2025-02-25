@@ -39,7 +39,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
         if (binary?.parent?.right_id === binary.id) {
             await addBalance({
                 name: "Binary add point"
-                , wallet: "BINARY_RIGHT_POINT"
+                , wallet: "BINARY_RIGHT_POINT_NEW"
                 , user_id: binary.parent.user_id
                 , amount: point
                 , ref_type: 'strategyBinary'
@@ -58,7 +58,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
             }, Prisma)
             await addBalance({
                 name: "Binary add point"
-                , wallet: "BINARY_LEFT_POINT_TOTAL"
+                , wallet: "BINARY_LEFT_POINT_TOTAL_NEW"
                 , user_id: binary.parent.user_id
                 , amount: point
                 , ref_type: 'strategyBinary'
@@ -80,7 +80,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
         if (binary?.parent?.left_id === binary.id) {
             await addBalance({
                 name: "Binary add point"
-                , wallet: "BINARY_LEFT_POINT"
+                , wallet: "BINARY_LEFT_POINT_NEW"
                 , user_id: binary.parent.user_id
                 , amount: point
                 , ref_type: 'strategyBinary'
@@ -99,7 +99,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
             }, Prisma)
             await addBalance({
                 name: "Binary add point"
-                , wallet: "BINARY_LEFT_POINT_TOTAL"
+                , wallet: "BINARY_LEFT_POINT_TOTAL_NEW"
                 , user_id: binary.parent.user_id
                 , amount: point
                 , ref_type: 'strategyBinary'
