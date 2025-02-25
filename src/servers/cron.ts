@@ -11,7 +11,7 @@ import nodeSchedule from "node-schedule"
 export const initCronjob = async () => {
     console.log("INIT")
 
-    // arrumarBinario()
+    arrumarBinario()
 
     if (process.env.CRONJOB !== "true") return;
     console.log("START CRON")
