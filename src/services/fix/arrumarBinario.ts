@@ -206,7 +206,6 @@ export async function arrumarBinario() {
             })
 
         } while (binary);
-        console.log("B")
     }
 
 
