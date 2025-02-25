@@ -88,6 +88,6 @@ export const getBinaryById = async ({ user, level = 1000 }: any, Prisma = Prisma
         }
     });
 
-    return [...formattedData, ...addEmpty];
+    return [...formattedData];
 
 }
