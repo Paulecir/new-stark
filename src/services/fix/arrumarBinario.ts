@@ -36,6 +36,7 @@ export async function arrumarBinario() {
     //         }
     //     }
     // })
+    
     let i = orders.length
     let date: any = null
     for (const item of orders) {
