@@ -1,4 +1,5 @@
 import { Router } from "express"
+import PrismaLocal from "@/infra/db/prisma"
 
 import Prisma from "@/infra/db/prisma"
 import { makeCommission } from "@/services/commission/makeCommission"
@@ -11,6 +12,10 @@ import moment from "moment"
 import { checkAllPaymentPlisio } from "@/services/order/checkPaymentPlision"
 import multer from 'multer'
 import { OrderService } from "@/services/order"
+import { distributionDirect } from "@/services/strategies/direct/distributionDirect"
+import { distributionUnilevel } from "@/services/strategies/unilevel/distributionUnilevel"
+import { distributionBinary } from "@/services/strategies/binary/distributionBinary"
+import { qualifyBinary } from "@/services/strategies/binary/qualifyBinary"
 const upload = multer()
 const router = Router()
 
@@ -121,6 +126,47 @@ router.get("/pay", async (req, res) => {
   const a = await payCommission()
 
   res.json({ a })
+})
+
+router.post("/execorder", async (req, res) => {
+
+  const order = await PrismaLocal.order.findFirst({
+    where: {
+      id: req.body.id
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          login: true
+        }
+      },
+      OrderItem: {
+        include: {
+          product: {
+            include: {
+              category: true
+            }
+          }
+        }
+      }
+    }
+  })
+  for (const item of order.OrderItem) {
+    if (item.product.category.direct_bonus) distributionDirect({ order, item }, Prisma)
+
+    if (item.product.category.unilevel_bonus) await distributionUnilevel({ order, item }, Prisma)
+
+    if (item.product.category.binary_bonus_position) try { await addBinaryStrategy({ userId: parseInt(order.user_id.toString()) }, Prisma) } catch { }
+
+    if (item.product.category.binary_bonus) await distributionBinary({ order, item }, Prisma)
+
+    if (item.product.category.binary_bonus_qualify) await qualifyBinary({ order, item }, Prisma)
+  }
+
+  res.send({ ok: true })
 })
 
 export default router;

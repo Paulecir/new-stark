@@ -67,6 +67,7 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
 
     for (let i = 0; i < categoryItem.category.unilevel_bonus_levels; i++) {
 
+        if (i === 0) continue;
         if (!current.sponsor_id) break;
 
         current = await Prisma.user.findFirst({

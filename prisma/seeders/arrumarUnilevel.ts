@@ -2,14 +2,12 @@ import Prisma from "../../src/infra/db/prisma";
 
 async function arrumar() {
 
-    const balanceHistory = await Prisma.balanceHistory.findMany({
-        where: {
-            name: {
-                startsWith: "Win win Unilevel",
-            },
-            wallet: "MAIN"
-        }
-    })
+    const balanceHistory: any = await Prisma.$queryRaw`SELECT
+    *
+FROM
+  balance_history
+WHERE
+    name like "Token W%[1º%" and status = "ACTIVE"`
 
     for (const bh of balanceHistory) {
 
@@ -33,10 +31,10 @@ async function arrumar() {
             })
         })
 
-
-        console.log("B", bh.amount)
-
     }
+    //     console.log("B", bh.amount)
+
+    // }
 
 }
 

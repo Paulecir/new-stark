@@ -35,7 +35,7 @@ export const dashboardResume = async (
     const balance = await Prisma.balance.findMany({
         where: {
             user_id: user.id,
-            wallet: direction.toUpperCase() === "LEFT" ? "BINARY_LEFT_POINT" : direction.toUpperCase() === "RIGHT" ? "BINARY_RIGHT_POINT" : { in: ["BINARY_RIGHT_POINT", "BINARY_LEFT_POINT"] }
+            wallet: direction.toUpperCase() === "LEFT" ? "BINARY_LEFT_POINT_NEW" : direction.toUpperCase() === "RIGHT" ? "BINARY_RIGHT_POINT_NEW" : { in: ["BINARY_RIGHT_POINT_NEW", "BINARY_LEFT_POINT_NEW"] }
         }
     })
 
@@ -43,7 +43,7 @@ export const dashboardResume = async (
     const balanceTotal = await Prisma.balance.findMany({
         where: {
             user_id: user.id,
-            wallet: direction.toUpperCase() === "LEFT" ? "BINARY_LEFT_POINT_PAY" : direction.toUpperCase() === "RIGHT" ? "BINARY_RIGHT_POINT_PAY" : { in: ["BINARY_RIGHT_POINT_PAY", "BINARY_LEFT_POINT_PAY"] }
+            wallet: direction.toUpperCase() === "LEFT" ? "BINARY_LEFT_POINT_TOTAL_NEW" : direction.toUpperCase() === "RIGHT" ? "BINARY_RIGHT_POINT_TOTAL_NEW" : { in: ["BINARY_RIGHT_POINT_TOTAL_NEW", "BINARY_LEFT_POINT_TOTAL_NEW"] }
         }
     })
 
@@ -62,7 +62,7 @@ export const dashboardResume = async (
     let stats = {
         nodes,
         points,
-        totalPoints,
+        totalPoints: totalPoints,
         strategy: binary.strategy
     }
 

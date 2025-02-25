@@ -5,12 +5,22 @@ async function arrumar() {
 
     const balances = await Prisma.balanceHistory.findMany({
         where: {
-            created_at: {
-                gt: moment("2025-02-16T00:00:00").toDate()
-            },
-            name: {
-                startsWith: "Bonus Binary"
-            }
+            // created_at: {
+            //     gt: moment("2025-02-16T00:00:00").toDate()
+            // },
+            OR: [
+                {
+                    name: {
+                        startsWith: "Bonus Binary [2025-02-17]"
+                    }
+                },
+                {
+                    name: {
+                        startsWith: "Bonus Binary [2025-02-16]"
+                    }
+                }
+            ]
+            
         }
     })
 

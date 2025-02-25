@@ -115,7 +115,6 @@ export const makeCommission = async () => {
 
             do {
                 const insertable = insert.splice(0, 1000)
-                console.log(insert.length)
                 await Prisma.commission.createMany(
                     {
                         data: insertable,

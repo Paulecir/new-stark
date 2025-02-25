@@ -13,7 +13,6 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                         { date_check: null },
                         { date_check: { not: date } }
                     ]
-
                 }
             })
             console.log("?", strategy)
@@ -40,7 +39,7 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                     }
                 })
 
-                const balanceBinaryCeilingUser = await Prisma.$executeRaw`SELECT 
+                const balanceBinaryCeilingUser = await Prisma.$queryRaw`SELECT 
                     O.user_id,
                     sum(OI.amount * (C.binary_bonus_point_percent / 100)) as amount
                 FROM 
@@ -154,7 +153,6 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
             }
 
 
-            // throw new Error("ACERT")
             return strategy;
         }, {
             timeout: 100000,

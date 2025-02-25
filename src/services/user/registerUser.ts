@@ -89,7 +89,7 @@ export const registerUser = async (data: any) => {
         });
 
         await SendgridMailer.send({
-            from: `"${process.env.MAIL_FROM_NAME} 👻" <${process.env.MAIL_FROM_ADDRESS}>`, // sender address
+            from: `${process.env.MAIL_FROM_NAME} <${process.env.MAIL_FROM_ADDRESS}>`, // sender address
             to: data.email, // list of receivers
             subject: "Registro de usuario", // Subject line
             html: `<!DOCTYPE html>
