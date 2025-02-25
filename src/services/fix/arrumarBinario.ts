@@ -29,13 +29,13 @@ export async function arrumarBinario() {
         }
     })
 
-    await Prisma.balance.deleteMany({
-        where: {
-            wallet: {
-                in: ["BINARY_LEFT_POINT_NEW", "BINARY_RIGHT_POINT_NEW", "BINARY_LEFT_POINT_TOTAL_NEW", "BINARY_RIGHT_POINT_TOTAL_NEW"]
-            }
-        }
-    })
+    // await Prisma.balance.deleteMany({
+    //     where: {
+    //         wallet: {
+    //             in: ["BINARY_LEFT_POINT_NEW", "BINARY_RIGHT_POINT_NEW", "BINARY_LEFT_POINT_TOTAL_NEW", "BINARY_RIGHT_POINT_TOTAL_NEW"]
+    //         }
+    //     }
+    // })
     let i = orders.length
     let date: any = null
     for (const item of orders) {
