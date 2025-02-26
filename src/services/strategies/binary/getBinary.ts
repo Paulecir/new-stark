@@ -40,29 +40,29 @@ export const getBinaryById = async ({ user, level = 1000 }: any, Prisma = Prisma
     const formattedData = treeData.map((node, idx) => {
         let id = parseInt(`${(idx * 1000)}node.id`)
 
-        const axs: any = treeData.filter((f: any) => f.parent_id === node.id)
+        const axs: any = treeData.filter((f: any) => f.parentId === node.id)
 
-        if (axs.length === 0) {
-            addEmpty.push({
-                id: _idx++,
-                level: node.level - first.level + 1, // Subtraindo o nível da raiz
-                name: "Vazio", // Nome do usuário
-                avatar: "", // Caso tenha avatar, pode ser adicionado
-                points: 0, // Substitua por um cálculo real se necessário
-                parentId: node.id,
-                handle: "left", // Definindo handle com base em 'ref'
-            })
+        // if (axs.length === 0) {
+        //     addEmpty.push({
+        //         id: _idx++,
+        //         level: node.level - first.level + 1, // Subtraindo o nível da raiz
+        //         name: "Vazio", // Nome do usuário
+        //         avatar: "", // Caso tenha avatar, pode ser adicionado
+        //         points: 0, // Substitua por um cálculo real se necessário
+        //         parentId: node.id,
+        //         handle: "left", // Definindo handle com base em 'ref'
+        //     })
 
-            addEmpty.push({
-                id: _idx++,
-                level: node.level - first.level + 1, // Subtraindo o nível da raiz
-                name: "Vazio", // Nome do usuário
-                avatar: "", // Caso tenha avatar, pode ser adicionado
-                points: 0, // Substitua por um cálculo real se necessário
-                parentId: node.id,
-                handle: "right", // Definindo handle com base em 'ref'
-            })
-        }
+        //     addEmpty.push({
+        //         id: _idx++,
+        //         level: node.level - first.level + 1, // Subtraindo o nível da raiz
+        //         name: "Vazio", // Nome do usuário
+        //         avatar: "", // Caso tenha avatar, pode ser adicionado
+        //         points: 0, // Substitua por um cálculo real se necessário
+        //         parentId: node.id,
+        //         handle: "right", // Definindo handle com base em 'ref'
+        //     })
+        // }
 
          if (axs.length === 1) {
             addEmpty.push({
@@ -88,6 +88,6 @@ export const getBinaryById = async ({ user, level = 1000 }: any, Prisma = Prisma
         }
     });
 
-    return [...formattedData];
+    return [...formattedData, ...addEmpty];
 
 }
