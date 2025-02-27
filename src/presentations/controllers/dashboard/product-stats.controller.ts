@@ -215,7 +215,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                         total: (winwWinOrder?.[0]?.amount || 0) * (207 / 100),
                         qtd: parseInt(winwWinOrder?.[0]?.amount),
                         nextAmount: nextWinwin._sum?.total || 0,
-                        nextDate: '2025-02-27 00:00:00'
+                        nextDate: '2025-03-27 00:00:00'
                     }
                 },
                 tokenWay: {
@@ -228,7 +228,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                         total: (tokenWayOrder?.[0]?.amount || 0) * (300 / 100),
                         qtd: tokenWayOrder?.[0]?.quantity,
                         nextAmount: nextTokenWay._sum?.total || 0,
-                        nextDate: '2025-02-31 00:00:00'
+                        nextDate: '2025-03-27 00:00:00'
                     },
                     unilevel: {
                         amount: tokenWay?._sum?.amount || 0,
