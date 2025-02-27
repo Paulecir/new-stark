@@ -21,6 +21,7 @@ export const payCommission = async () => {
         let ct = commissions.length
 
         for (const commission of commissions) {
+            console.log("C", ct--)
             const order = await Prisma.commissionOrder.create({
                 data: {
                     obs: "",
