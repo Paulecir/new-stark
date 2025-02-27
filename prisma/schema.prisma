@@ -264,6 +264,7 @@ model Category {
   CommissionScheduler CommissionScheduler[] @relation("category")
 
   @@map("categories")
+  CommissionOrder CommissionOrder[] @relation("category")
 }
 
 model CategoryItem {
@@ -497,13 +498,15 @@ model CommissionOrder {
   total    Decimal         @db.Decimal(20, 8)
   status   CommisionStatus @default(PENDING)
   date_ref String
+  category    Category               @relation("category", fields: [category_id], references: [id])
+  category_id BigInt                 @db.UnsignedBigInt
 
   created_at DateTime?    @default(now())
   updated_at DateTime?    @updatedAt
   Commission Commission[] @relation("commissionOrder")
   Withdraw   Withdraw[]   @relation("commissionOrder")
 
-  @@unique([user_id, date_ref, status])
+  @@unique([user_id, date_ref, category_id])
   @@map("commission_order")
 }
 
