@@ -10,6 +10,7 @@ import { financialExtractPendingController } from "@/presentations/controllers/f
 import { financialExtractBinaryController } from "@/presentations/controllers/financial/extract-binary.controller"
 import { retiroRejectExtractController } from "@/presentations/controllers/financial/retiro-reject.controller"
 import { retiroStatsController } from "@/presentations/controllers/financial/retiro-stats.controller"
+import { financialExtractPayedController } from "@/presentations/controllers/financial/extract-payed.controller"
 
 const router = Router()
 
@@ -23,6 +24,12 @@ router.post("/extract-pending",
   // #swagger.tags = ['Webhook']
   authMiddleware,
   expressRouteAdapter(financialExtractPendingController)
+)
+
+router.post("/extract-payed",
+  // #swagger.tags = ['Webhook']
+  authMiddleware,
+  expressRouteAdapter(financialExtractPayedController)
 )
 
 router.post("/extract-binary",
