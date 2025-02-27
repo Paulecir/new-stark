@@ -1,6 +1,6 @@
 import Prisma from "../../infra/db/prisma"
 
-export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type, ref_id }: any, db = Prisma) => {
+export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type, ref_id }: any, db = Prisma, force = false) => {
 
     await db.$queryRawUnsafe(
         `SELECT * FROM balance WHERE user_id = ? AND wallet = ? FOR UPDATE`,
@@ -35,7 +35,7 @@ export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type,
         }
     })
 
-    if (balance.amount.toNumber() < 0) {
+    if (balance.amount.toNumber() < 0 && !force) {
         console.log("F", { name, wallet, user_id, amount, ref_type, ref_id })
         throw new Error("INSUFICIENT_FUNDS")
     }
