@@ -9,7 +9,7 @@ export const payCommission = async () => {
              SELECT 
                 c.user_id,
                 cs.category_id,
-                sum(c.amount) as amount
+                sum(c.total) as amount
             FROM 
                 commission as c
             INNER JOIN commission_scheduler cs ON cs.id = c.scheduler_id
