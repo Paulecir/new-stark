@@ -4,6 +4,7 @@ import { changePasswordUserController } from "@/presentations/controllers/users/
 import { filterUserSessionsController } from "@/presentations/controllers/users/filter-sessions.controller"
 import { filterUserController } from "@/presentations/controllers/users/filter.controller"
 import { filterUserSelectController } from "@/presentations/controllers/users/filterSelect.controlle"
+import { getDirectStatsController } from "@/presentations/controllers/users/get-direct-stats.controller"
 import { getDirectController } from "@/presentations/controllers/users/get-direct.controller"
 import { getUserController } from "@/presentations/controllers/users/get.controller"
 import { resetPasswordUserController } from "@/presentations/controllers/users/reset-password.controller"
@@ -17,6 +18,11 @@ const router = Router()
 router.get("/direct",
   authMiddleware,
   expressRouteAdapter(getDirectController)
+)
+
+router.get("/direct/stats",
+  authMiddleware,
+  expressRouteAdapter(getDirectStatsController)
 )
 
 router.get("/sessions",
