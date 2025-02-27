@@ -34,6 +34,8 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
         }
     })
 
+    const ref_id: any = binary.id
+
     do {
         if (!binary.parent) break;
         if (binary?.parent?.right_id === binary.id) {
@@ -43,7 +45,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                 , user_id: binary.parent.user_id
                 , amount: point
                 , ref_type: 'strategyBinary'
-                , ref_id: binary.parent.id
+                , ref_id
                 , extra_info: {
                     from: currentUser.id,
                     fromName: currentUser.name,
@@ -54,6 +56,8 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                     productId: item.product.id,
                     productName: item.product.name,
                     productPrice: item.product.price,
+                    orderId: order.id,
+                    orderItemId: item.id
                 }
             }, Prisma)
             await addBalance({
@@ -62,7 +66,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                 , user_id: binary.parent.user_id
                 , amount: point
                 , ref_type: 'strategyBinary'
-                , ref_id: binary.parent.id
+                , ref_id
                 , extra_info: {
                     from: currentUser.id,
                     fromName: currentUser.name,
@@ -73,6 +77,8 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                     productId: item.product.id,
                     productName: item.product.name,
                     productPrice: item.product.price,
+                    orderId: order.id,
+                    orderItemId: item.id
                 }
             }, Prisma)
         }
@@ -84,7 +90,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                 , user_id: binary.parent.user_id
                 , amount: point
                 , ref_type: 'strategyBinary'
-                , ref_id: binary.parent.id
+                , ref_id
                 , extra_info: {
                     from: currentUser.id,
                     fromName: currentUser.name,
@@ -95,6 +101,8 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                     productId: item.product.id,
                     productName: item.product.name,
                     productPrice: item.product.price,
+                    orderId: order.id,
+                    orderItemId: item.id
                 }
             }, Prisma)
             await addBalance({
@@ -103,7 +111,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                 , user_id: binary.parent.user_id
                 , amount: point
                 , ref_type: 'strategyBinary'
-                , ref_id: binary.parent.id
+                , ref_id
                 , extra_info: {
                     from: currentUser.id,
                     fromName: currentUser.name,
@@ -114,6 +122,8 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
                     productId: item.product.id,
                     productName: item.product.name,
                     productPrice: item.product.price,
+                    orderId: order.id,
+                    orderItemId: item.id
                 }
             }, Prisma)
 

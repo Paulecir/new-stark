@@ -490,18 +490,20 @@ model OrderItemDistribution {
 }
 
 model CommissionOrder {
-  id      BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
-  obs     String          @db.MediumText
-  user    User            @relation("user", fields: [user_id], references: [id])
-  user_id BigInt          @db.UnsignedBigInt
-  total   Decimal         @db.Decimal(20, 8)
-  status  CommisionStatus @default(PENDING)
+  id       BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
+  obs      String          @db.MediumText
+  user     User            @relation("user", fields: [user_id], references: [id])
+  user_id  BigInt          @db.UnsignedBigInt
+  total    Decimal         @db.Decimal(20, 8)
+  status   CommisionStatus @default(PENDING)
+  date_ref String
 
   created_at DateTime?    @default(now())
   updated_at DateTime?    @updatedAt
   Commission Commission[] @relation("commissionOrder")
   Withdraw   Withdraw[]   @relation("commissionOrder")
 
+  @@unique([user_id, status])
   @@map("commission_order")
 }
 

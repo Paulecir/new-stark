@@ -38,7 +38,7 @@ export const approveCommission = async (data: any) => {
                     name: "Commission approbe"
                     , wallet: "MAIN"
                     , user_id: order.user_id
-                    , amount: payment._sum.amount
+                    , amount: payment._sum.amount.toNumber()
                     , ref_type: 'commissionOrder'
                     , ref_id: order.id
                     , extra_info: {
