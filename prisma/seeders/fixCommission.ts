@@ -4,5 +4,4 @@ async function arrumar() {
     await makeCommission()
 }
 
-
 arrumar()

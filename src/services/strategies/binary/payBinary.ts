@@ -82,11 +82,11 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                     }
                 })
 
-                if (amount > 0) {
+                if (parseFloat(amount) > 0) {
 
                     await decBalance({
                         name: "Binary payment"
-                        , wallet: "BINARY_RIGHT_POIN_NEW"
+                        , wallet: "BINARY_RIGHT_POINT_NEW"
                         , user_id: binaryPay.user_id
                         , amount: parseFloat(amount)
                         , ref_type: 'strategyBinaryPay'
