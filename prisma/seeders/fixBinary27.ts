@@ -6,7 +6,7 @@ async function arrumar() {
     const users: any = await Prisma.$queryRaw`SELECT
         *,
         strategy_binary.id as strategy_binary_id,
-        users.name as users_name,
+        users.name as user_name,
         users.login as user_login
     FROM
         balance_history
@@ -14,10 +14,10 @@ async function arrumar() {
         INNER JOIN users ON users.id = balance_history.user_id
     WHERE
         balance_history.wallet = "BINARY_LEFT_POINT_PAY"
-        and balance_history.name = "Bonus Binary [2025-02-27]"`
+        and balance_history.name = "Bonus Binary [2025-02-27]" LIMIT 1`
 
     for (const user of users) {
-        console.log("U", user.id)
+        
 
         if (user.wallet === "BINARY_LEFT_POINT_PAY") {
             await decBalance({
