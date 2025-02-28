@@ -14,7 +14,7 @@ async function arrumar() {
         INNER JOIN users ON users.id = balance_history.user_id
     WHERE
         balance_history.wallet = "BINARY_LEFT_POINT_PAY"
-        and balance_history.name = "Bonus Binary [2025-02-27]" LIMIT 1`
+        and balance_history.name = "Bonus Binary [2025-02-27]"`
 
     for (const user of users) {
         
