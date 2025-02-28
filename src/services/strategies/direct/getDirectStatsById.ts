@@ -20,7 +20,16 @@ export const getDirectStatsById = async ({ id, level = 2, user }: any, Prisma = 
             sponsor_id: id,
             Order: {
                 some: {
-                    status: "done"
+                    status: "done",
+                    OrderItem: {
+                        some: {
+                            product: {
+                                category_id: {
+                                    in: [2, 3, 4]
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -41,7 +50,16 @@ export const getDirectStatsById = async ({ id, level = 2, user }: any, Prisma = 
             },
             Order: {
                 some: {
-                    status: "done"
+                    status: "done",
+                    OrderItem: {
+                        some: {
+                            product: {
+                                category_id: {
+                                    in: [2, 3, 4]
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

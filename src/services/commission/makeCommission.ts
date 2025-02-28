@@ -12,7 +12,7 @@ export const makeCommission = async () => {
         }
     })
 
-    if (!commission) return;
+    if (!commission) return false;
     try {
         await PrismaLocal.$transaction(async (Prisma) => {
             const category = await Prisma.category.findFirst({
@@ -147,6 +147,9 @@ export const makeCommission = async () => {
         })
     } catch (err) {
         console.log("E", err)
+        return false;
+    } finally {
+        return true;
     }
 
 }
