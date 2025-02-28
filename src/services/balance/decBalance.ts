@@ -7,7 +7,10 @@ export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type,
         user_id, wallet
     );
 
-    
+    console.log({
+        name, direction: "DEBIT", wallet, user_id, amount, ref_type, ref_id
+    })
+
     const last = await db.balanceHistory.create({
         data: {
             name, direction: "DEBIT", wallet, user_id, amount, ref_type, ref_id

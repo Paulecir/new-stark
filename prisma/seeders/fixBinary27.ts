@@ -17,21 +17,20 @@ async function arrumar() {
         and balance_history.name = "Bonus Binary [2025-02-27]"`
 
     for (const user of users) {
-        
 
-        if (user.wallet === "BINARY_LEFT_POINT_PAY") {
+        await Prisma.$transaction(async (Prisma) => {
             await decBalance({
                 name: "Binary payment"
                 , wallet: "BINARY_RIGHT_POINT_NEW"
                 , user_id: user.user_id
-                , amount: user.amount.toNumber * 10
+                , amount: user.amount.toNumber() * 10
                 , ref_type: 'strategyBinaryPay'
-                , ref_id: user.strategy_binary
+                , ref_id: user.strategy_binary_id
                 , extra_info: {
                     to: user?.user_id,
                     toName: user?.users_name,
                     toLogin: user?.user_login,
-                    binaryId: user.strategy_binary,
+                    binaryId: user?.strategy_binary_id,
                 }
             }, Prisma)
 
@@ -39,17 +38,19 @@ async function arrumar() {
                 name: "Binary payment"
                 , wallet: "BINARY_LEFT_POINT_NEW"
                 , user_id: user.user_id
-                , amount: user.amount.toNumber * 10
+                , amount: user.amount.toNumber() * 10
                 , ref_type: 'strategyBinaryPay'
-                , ref_id: user.strategy_binary
+                , ref_id: user.strategy_binary_id
                 , extra_info: {
                     to: user?.user_id,
                     toName: user?.users_name,
                     toLogin: user?.user_login,
-                    binaryId: user.strategy_binary,
+                    binaryId: user?.strategy_binary_id,
                 }
             }, Prisma)
-        }
+
+        }, { timeout: 1000000 , maxWait: 100000})
+
 
     }
 }
