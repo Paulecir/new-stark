@@ -23,7 +23,7 @@ export const makeResidual = async () => {
                     co.category_id,
                     co.user_id,
                     sum(co.total) total,
-                    sum(co.total) * 0.1 residual,
+                    sum(co.total) * 0.001 residual,
                     sum(oi.amount * oi.quantity) as amount
                 FROM
                 commission_order co
