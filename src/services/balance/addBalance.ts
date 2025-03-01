@@ -18,11 +18,19 @@ export const addBalance = async ({ name = "", wallet, user_id, amount, ref_type,
         user_id, wallet
     );
 
+    const lastBalance = await db.balance.findFirst({
+        where: {
+            user_id: user_id,
+            wallet
+        },
+    })
+
     const last = await db.balanceHistory.create({
         data: {
-            name, direction: "CREDIT", wallet, user_id, amount, ref_type, ref_id, extra_info
+            name, direction: "CREDIT", wallet, user_id, amount, ref_type, ref_id, extra_info, last_balance: lastBalance?.amount || 0
         }
     })
+
 
     await db.balance.upsert({
         where: {

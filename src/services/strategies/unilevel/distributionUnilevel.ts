@@ -84,7 +84,7 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
                 , wallet: "MAIN"
                 , user_id: current.id
                 , amount: item.amount * (categoryItem.level_values[i] / 100)
-                , ref_type: 'orderItem'
+                , ref_type: 'commissionOrder'
                 , ref_id: item.id
                 , extra_info: {
                     from: currentUser.id,

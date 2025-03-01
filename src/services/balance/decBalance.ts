@@ -7,13 +7,16 @@ export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type,
         user_id, wallet
     );
 
-    console.log({
-        name, direction: "DEBIT", wallet, user_id, amount, ref_type, ref_id
+    const lastBalance = await db.balance.findFirst({
+        where: {
+            user_id: user_id,
+            wallet
+        },
     })
 
     const last = await db.balanceHistory.create({
         data: {
-            name, direction: "DEBIT", wallet, user_id, amount, ref_type, ref_id
+            name, direction: "DEBIT", wallet, user_id, amount, ref_type, ref_id, last_balance: lastBalance?.amount || 0
         }
     })
 
