@@ -95,13 +95,14 @@ model Balance {
 }
 
 model BalanceHistory {
-  id        Int                  @id @default(autoincrement())
-  name      String?
-  user      User                 @relation("user", fields: [user_id], references: [id])
-  user_id   BigInt               @db.UnsignedBigInt
-  wallet    WalletType           @default(MAIN)
-  direction BalanceDirectionType
-  amount    Decimal              @db.Decimal(20, 8)
+  id           Int                  @id @default(autoincrement())
+  name         String?
+  user         User                 @relation("user", fields: [user_id], references: [id])
+  user_id      BigInt               @db.UnsignedBigInt
+  wallet       WalletType           @default(MAIN)
+  direction    BalanceDirectionType
+  amount       Decimal              @db.Decimal(20, 8)
+  last_balance Decimal              @default(0) @db.Decimal(20, 8)
 
   identify String?
 
@@ -262,9 +263,9 @@ model Category {
 
   Product             Product[]
   CommissionScheduler CommissionScheduler[] @relation("category")
+  CommissionOrder     CommissionOrder[]     @relation("category")
 
   @@map("categories")
-  CommissionOrder CommissionOrder[] @relation("category")
 }
 
 model CategoryItem {
@@ -491,15 +492,15 @@ model OrderItemDistribution {
 }
 
 model CommissionOrder {
-  id       BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
-  obs      String          @db.MediumText
-  user     User            @relation("user", fields: [user_id], references: [id])
-  user_id  BigInt          @db.UnsignedBigInt
-  total    Decimal         @db.Decimal(20, 8)
-  status   CommisionStatus @default(PENDING)
-  date_ref String
-  category    Category               @relation("category", fields: [category_id], references: [id])
-  category_id BigInt                 @db.UnsignedBigInt
+  id          BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
+  obs         String          @db.MediumText
+  user        User            @relation("user", fields: [user_id], references: [id])
+  user_id     BigInt          @db.UnsignedBigInt
+  total       Decimal         @db.Decimal(20, 8)
+  status      CommisionStatus @default(PENDING)
+  date_ref    String
+  category    Category        @relation("category", fields: [category_id], references: [id])
+  category_id BigInt          @db.UnsignedBigInt
 
   created_at DateTime?    @default(now())
   updated_at DateTime?    @updatedAt
