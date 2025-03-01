@@ -22,15 +22,18 @@ export const makeResidual = async () => {
                     co.id,
                     co.category_id,
                     co.user_id,
-                    sum(co.total) total,
-                    sum(co.total) * 0.001 residual,
+                    co.total,
+                    co.total * 0.001 residual,
                     sum(oi.amount * oi.quantity) as amount
                 FROM
-                commission_order co
-                INNER JOIN \`order\` o ON o.user_id = co.user_id
-                INNER JOIN order_item oi ON oi.order_id = o.id
+                    commission_order co
+                    INNER JOIN \`order\` o ON o.user_id = co.user_id
+                    INNER JOIN order_item oi ON oi.order_id = o.id
                 WHERE
-                    co.date_ref = "2025-02-27" and co.status = "PAYED" and co.category_id = 1 and o.status = "DONE"
+                    co.date_ref = "2025-02-27"
+                    and co.status = "PAYED"
+                    and co.category_id = 1
+                    and o.status = "DONE"
                 GROUP BY
                     co.id, co.user_id`
 
@@ -116,7 +119,6 @@ export const makeResidual = async () => {
 
 
                         }
-                        throw new Error('teste')
 
                     } catch (error) {
                         console.error(error)
