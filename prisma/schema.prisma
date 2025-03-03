@@ -7,51 +7,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Modelo de usuário
 model User {
-  id                        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  name                      String    @db.VarChar(255)
-  avatar                    String?   @db.MediumText
-  login                     String    @unique(map: "users_login_unique") @db.VarChar(255)
-  email                     String    @unique(map: "users_email_unique") @db.VarChar(255)
-  phone                     String?   @db.VarChar(255)
-  birthday                  String?   @db.VarChar(255)
-  email_verified_at         DateTime? @db.Timestamp(0)
-  password                  String    @db.Text
-  two_factor_secret         String?   @db.Text
-  two_factor_recovery_codes String?   @db.Text
-  two_factor_confirmed_at   DateTime? @db.Timestamp(0)
-  remember_token            String?   @db.VarChar(100)
-  current_team_id           BigInt?   @db.UnsignedBigInt
-  profile_photo_path        String?   @db.VarChar(2048)
-  profile                   String    @default("user")
-  bep20_address             String?   @db.VarChar(255)
-  bep20_public_key          String?   @db.MediumText
-  bep20_private_key         String?   @db.MediumText
-  last_login                DateTime? @db.DateTime(0)
-  last_login_ip             String?   @db.VarChar(45)
-  country_code              String?   @db.VarChar(255)
-  country_name              String?   @db.VarChar(255)
+  id                        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt // ID do usuário
+  name                      String    @db.VarChar(255) // Nome do usuário
+  avatar                    String?   @db.MediumText // Avatar do usuário
+  login                     String    @unique(map: "users_login_unique") @db.VarChar(255) // Login do usuário
+  email                     String    @unique(map: "users_email_unique") @db.VarChar(255) // Email do usuário
+  phone                     String?   @db.VarChar(255) // Telefone do usuário
+  birthday                  String?   @db.VarChar(255) // Data de nascimento do usuário
+  email_verified_at         DateTime? @db.Timestamp(0) // Data de verificação do email
+  password                  String    @db.Text // Senha do usuário
+  two_factor_secret         String?   @db.Text // Segredo de autenticação de dois fatores
+  two_factor_recovery_codes String?   @db.Text // Códigos de recuperação de autenticação de dois fatores
+  two_factor_confirmed_at   DateTime? @db.Timestamp(0) // Data de confirmação da autenticação de dois fatores
+  remember_token            String?   @db.VarChar(100) // Token de lembrança
+  current_team_id           BigInt?   @db.UnsignedBigInt // ID do time atual
+  profile_photo_path        String?   @db.VarChar(2048) // Caminho da foto de perfil
+  profile                   String    @default("user") // Perfil do usuário
+  bep20_address             String?   @db.VarChar(255) // Endereço BEP20
+  bep20_public_key          String?   @db.MediumText // Chave pública BEP20
+  bep20_private_key         String?   @db.MediumText // Chave privada BEP20
+  last_login                DateTime? @db.DateTime(0) // Data do último login
+  last_login_ip             String?   @db.VarChar(45) // IP do último login
+  country_code              String?   @db.VarChar(255) // Código do país
+  country_name              String?   @db.VarChar(255) // Nome do país
 
-  latitude  String?
-  longitude String?
+  latitude  String? // Latitude do usuário
+  longitude String? // Longitude do usuário
 
-  document_type DocumentType? @default(CPF)
-  document      String?
-  gender        String?
+  document_type DocumentType? @default(CPF) // Tipo de documento
+  document      String? // Documento do usuário
+  gender        String? // Gênero do usuário
 
-  sponsor    User?   @relation("sponsor", fields: [sponsor_id], references: [id])
-  sponsor_id BigInt? @db.UnsignedBigInt
+  sponsor    User?   @relation("sponsor", fields: [sponsor_id], references: [id]) // Patrocinador do usuário
+  sponsor_id BigInt? @db.UnsignedBigInt // ID do patrocinador
 
-  sponsor_migration String?
+  sponsor_migration String? // Migração do patrocinador
 
-  binary_parent_id BigInt?         @db.UnsignedBigInt
-  position         users_position?
-  is_active        Boolean         @default(false)
+  binary_parent_id BigInt?         @db.UnsignedBigInt // ID do pai binário
+  position         users_position? // Posição do usuário
+  is_active        Boolean         @default(false) // Status de atividade do usuário
 
-  ancestry String? @db.Text
+  ancestry String? @db.Text // Ancestralidade do usuário
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação do usuário
+  updated_at DateTime? @updatedAt // Data de atualização do usuário
 
   users_users_binary_parent_idTousers       User?  @relation("users_binary_parent_idTousers", fields: [binary_parent_id], references: [id], onUpdate: Restrict, map: "users_binary_parent_id_foreign")
   other_users_users_binary_parent_idTousers User[] @relation("users_binary_parent_idTousers")
@@ -80,144 +81,153 @@ model User {
   @@map("users")
 }
 
+// Modelo de saldo
 model Balance {
-  user    User       @relation("user", fields: [user_id], references: [id])
-  user_id BigInt     @db.UnsignedBigInt
-  wallet  WalletType @default(MAIN)
-  amount  Decimal    @db.Decimal(20, 8)
+  user    User       @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt     @db.UnsignedBigInt // ID do usuário
+  wallet  WalletType @default(MAIN) // Tipo de carteira
+  amount  Decimal    @db.Decimal(20, 8) // Quantidade de saldo
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação do saldo
+  updated_at DateTime? @updatedAt // Data de atualização do saldo
 
   @@id(name: "balanceId", [user_id, wallet])
   @@unique([user_id, wallet])
   @@map("balance")
 }
 
+// Histórico de saldo
 model BalanceHistory {
-  id           Int                  @id @default(autoincrement())
-  name         String?
-  user         User                 @relation("user", fields: [user_id], references: [id])
-  user_id      BigInt               @db.UnsignedBigInt
-  wallet       WalletType           @default(MAIN)
-  direction    BalanceDirectionType
-  amount       Decimal              @db.Decimal(20, 8)
-  last_balance Decimal              @default(0) @db.Decimal(20, 8)
+  id           Int                  @id @default(autoincrement()) // ID do histórico de saldo
+  name         String? // Nome do histórico de saldo
+  user         User                 @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id      BigInt               @db.UnsignedBigInt // ID do usuário
+  wallet       WalletType           @default(MAIN) // Tipo de carteira
+  direction    BalanceDirectionType // Direção do saldo (crédito ou débito)
+  amount       Decimal              @db.Decimal(20, 8) // Quantidade de saldo
+  last_balance Decimal              @default(0) @db.Decimal(20, 8) // Último saldo
 
-  identify String?
+  identify String? // Identificação do histórico de saldo
 
-  ref_type String?
-  ref_id   BigInt?
+  ref_type String? // Tipo de referência
+  ref_id   BigInt? // ID de referência
 
-  extra_info Json?
+  extra_info Json? // Informações extras
 
-  status StatusBalance @default(ACTIVE)
+  status StatusBalance @default(ACTIVE) // Status do saldo
 
-  created_at DateTime?    @default(now())
-  updated_at DateTime?    @updatedAt
+  created_at DateTime?    @default(now()) // Data de criação do histórico de saldo
+  updated_at DateTime?    @updatedAt // Data de atualização do histórico de saldo
   Commission Commission[] @relation("commission")
   Withdraw   Withdraw[]   @relation("commission")
 
   @@map("balance_history")
 }
 
+// Modelo de ordem de saldo
 model BalanceOrder {
-  id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement()) // ID da ordem de saldo
 
-  description String
+  description String // Descrição da ordem de saldo
 
-  user    User   @relation("user", fields: [user_id], references: [id])
-  user_id BigInt @db.UnsignedBigInt
+  user    User   @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt @db.UnsignedBigInt // ID do usuário
 
-  releasedBy     User   @relation("releasedBY", fields: [released_by_id], references: [id])
-  released_by_id BigInt @db.UnsignedBigInt
+  releasedBy     User   @relation("releasedBY", fields: [released_by_id], references: [id]) // Usuário que liberou a ordem
+  released_by_id BigInt @db.UnsignedBigInt // ID do usuário que liberou a ordem
 
-  amount Decimal @db.Decimal(20, 8)
+  amount Decimal @db.Decimal(20, 8) // Quantidade da ordem de saldo
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da ordem de saldo
+  updated_at DateTime? @updatedAt // Data de atualização da ordem de saldo
 
   @@map("balance_order")
 }
 
+// Status do saldo
 enum StatusBalance {
-  ACTIVE
-  INACTIVE
+  ACTIVE // Saldo ativo
+  INACTIVE // Saldo inativo
 }
 
+// Token de redefinição de senha
 model PasswordResetToken {
-  email String @id @db.VarChar(255)
-  token String @db.VarChar(255)
+  email String @id @db.VarChar(255) // Email do usuário
+  token String @db.VarChar(255) // Token de redefinição de senha
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação do token
+  updated_at DateTime? @updatedAt // Data de atualização do token
 
   @@map("password_reset_tokens")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+// Modelo de redefinição de senha
 model PasswordReset {
-  id    BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  email String @db.VarChar(255)
-  token String @db.VarChar(255)
+  id    BigInt @id @default(autoincrement()) @db.UnsignedBigInt // ID da redefinição de senha
+  email String @db.VarChar(255) // Email do usuário
+  token String @db.VarChar(255) // Token de redefinição de senha
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da redefinição de senha
+  updated_at DateTime? @updatedAt // Data de atualização da redefinição de senha
 
   @@index([email], map: "password_resets_email_index")
   @@map("password_resets")
 }
 
+// Token de acesso pessoal
 model PersonalAccessToken {
-  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  tokenable_type String    @db.VarChar(255)
-  tokenable_id   BigInt    @db.UnsignedBigInt
-  name           String    @db.VarChar(255)
-  token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
-  abilities      String?   @db.Text
-  last_used_at   DateTime? @db.Timestamp(0)
-  expires_at     DateTime? @db.Timestamp(0)
+  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt // ID do token de acesso pessoal
+  tokenable_type String    @db.VarChar(255) // Tipo de token
+  tokenable_id   BigInt    @db.UnsignedBigInt // ID do token
+  name           String    @db.VarChar(255) // Nome do token
+  token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64) // Token de acesso pessoal
+  abilities      String?   @db.Text // Habilidades do token
+  last_used_at   DateTime? @db.Timestamp(0) // Data de último uso do token
+  expires_at     DateTime? @db.Timestamp(0) // Data de expiração do token
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação do token
+  updated_at DateTime? @updatedAt // Data de atualização do token
 
   @@index([tokenable_type, tokenable_id], map: "personal_access_tokens_tokenable_type_tokenable_id_index")
   @@map("personal_access_tokens")
 }
 
+// Modelo de produto
 model Product {
-  id          BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
-  name        String              @db.VarChar(100)
-  description String?             @db.Text
-  price       Decimal             @db.Decimal(20, 8)
-  points      Decimal             @default(0) @db.Decimal(20, 8)
-  yield_type  products_yield_type @default(diary)
-  yield       Decimal             @db.Decimal(20, 8)
+  id          BigInt              @id @default(autoincrement()) @db.UnsignedBigInt // ID do produto
+  name        String              @db.VarChar(100) // Nome do produto
+  description String?             @db.Text // Descrição do produto
+  price       Decimal             @db.Decimal(20, 8) // Preço do produto
+  points      Decimal             @default(0) @db.Decimal(20, 8) // Pontos do produto
+  yield_type  products_yield_type @default(diary) // Tipo de rendimento do produto
+  yield       Decimal             @db.Decimal(20, 8) // Rendimento do produto
 
-  hidden      Boolean?  @default(false)
-  category    Category? @relation(fields: [category_id], references: [id])
-  category_id BigInt?   @db.UnsignedBigInt
+  hidden      Boolean?  @default(false) // Produto oculto
+  category    Category? @relation(fields: [category_id], references: [id]) // Categoria do produto
+  category_id BigInt?   @db.UnsignedBigInt // ID da categoria
 
-  images Json?
+  images Json? // Imagens do produto
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação do produto
+  updated_at DateTime? @updatedAt // Data de atualização do produto
 
   OrderItem OrderItem[] @relation("product")
 
   @@map("products")
 }
 
+// Modelo de carteira
 model Wallet {
-  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  name    String
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id BigInt @db.UnsignedBigInt
+  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt // ID da carteira
+  name    String // Nome da carteira
+  user    User   @relation(fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt @db.UnsignedBigInt // ID do usuário
 
-  hash String @db.VarChar(100)
+  hash String @db.VarChar(100) // Hash da carteira
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da carteira
+  updated_at DateTime? @updatedAt // Data de atualização da carteira
 
   OrderItem OrderItem[] @relation("wallet")
 
@@ -226,40 +236,41 @@ model Wallet {
   @@map("wallet")
 }
 
+// Modelo de categoria
 model Category {
-  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  name String @db.VarChar(100)
+  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt // ID da categoria
+  name String @db.VarChar(100) // Nome da categoria
 
-  direct_bonus        Boolean?
-  direct_bonus_yield  Decimal? @db.Decimal(20, 8)
-  direct_bonus_levels Int?
+  direct_bonus        Boolean? // Bônus direto
+  direct_bonus_yield  Decimal? @db.Decimal(20, 8) // Rendimento do bônus direto
+  direct_bonus_levels Int? // Níveis do bônus direto
 
-  unilevel_bonus        Boolean? @default(false)
-  unilevel_bonus_yield  Decimal? @db.Decimal(20, 8)
-  unilevel_bonus_levels Int?
+  unilevel_bonus        Boolean? @default(false) // Bônus unilevel
+  unilevel_bonus_yield  Decimal? @db.Decimal(20, 8) // Rendimento do bônus unilevel
+  unilevel_bonus_levels Int? // Níveis do bônus unilevel
 
-  residual_bonus        Boolean?
-  residual_bonus_yield  Decimal? @db.Decimal(20, 8)
-  residual_bonus_levels Int?
+  residual_bonus        Boolean? // Bônus residual
+  residual_bonus_yield  Decimal? @db.Decimal(20, 8) // Rendimento do bônus residual
+  residual_bonus_levels Int? // Níveis do bônus residual
 
-  binary_bonus               Boolean? @default(false)
-  binary_bonus_position      Boolean? @default(false)
-  binary_bonus_yield         Decimal? @db.Decimal(20, 8)
-  binary_bonus_point_percent Decimal? @db.Decimal(20, 8)
-  binary_bonus_levels        Int?
-  binary_bonus_qualify       Boolean  @default(false)
+  binary_bonus               Boolean? @default(false) // Bônus binário
+  binary_bonus_position      Boolean? @default(false) // Posição do bônus binário
+  binary_bonus_yield         Decimal? @db.Decimal(20, 8) // Rendimento do bônus binário
+  binary_bonus_point_percent Decimal? @db.Decimal(20, 8) // Percentual de pontos do bônus binário
+  binary_bonus_levels        Int? // Níveis do bônus binário
+  binary_bonus_qualify       Boolean  @default(false) // Qualificação do bônus binário
 
-  commission                       Boolean?            @default(false)
-  commission_pay_type              products_yield_type @default(diary)
-  commission_pay_config            Json?
-  commission_yield_type            products_yield_type @default(diary)
-  commission_yield_type_commission String?
-  commission_yield_config          Json?
+  commission                       Boolean?            @default(false) // Comissão
+  commission_pay_type              products_yield_type @default(diary) // Tipo de pagamento da comissão
+  commission_pay_config            Json? // Configuração de pagamento da comissão
+  commission_yield_type            products_yield_type @default(diary) // Tipo de rendimento da comissão
+  commission_yield_type_commission String? // Tipo de comissão de rendimento
+  commission_yield_config          Json? // Configuração de rendimento da comissão
 
   CategoryItem CategoryItem[]
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da categoria
+  updated_at DateTime? @updatedAt // Data de atualização da categoria
 
   Product             Product[]
   CommissionScheduler CommissionScheduler[] @relation("category")
@@ -268,86 +279,90 @@ model Category {
   @@map("categories")
 }
 
+// Item de categoria
 model CategoryItem {
-  id           BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
-  type         StrategyConfigType
-  category     Category           @relation(fields: [category_id], references: [id])
-  category_id  BigInt             @db.UnsignedBigInt
-  max_value    Decimal?           @db.Decimal(20, 8)
-  level_values Json
+  id           BigInt             @id @default(autoincrement()) @db.UnsignedBigInt // ID do item de categoria
+  type         StrategyConfigType // Tipo de configuração de estratégia
+  category     Category           @relation(fields: [category_id], references: [id]) // Relacionamento com a categoria
+  category_id  BigInt             @db.UnsignedBigInt // ID da categoria
+  max_value    Decimal?           @db.Decimal(20, 8) // Valor máximo
+  level_values Json // Valores de nível
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação do item de categoria
+  updated_at DateTime? @updatedAt // Data de atualização do item de categoria
 
   @@unique([type, category_id, max_value])
   @@map("category_items")
 }
 
+// Sessão de usuário
 model UserSession {
-  id           BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
-  access_token String  @db.LongText
-  ip_address   String? @db.VarChar(45)
+  id           BigInt  @id @default(autoincrement()) @db.UnsignedBigInt // ID da sessão de usuário
+  access_token String  @db.LongText // Token de acesso
+  ip_address   String? @db.VarChar(45) // Endereço IP
 
-  latitude  String?
-  longitude String?
+  latitude  String? // Latitude
+  longitude String? // Longitude
 
-  user    User?   @relation("user", fields: [user_id], references: [id])
-  user_id BigInt? @db.UnsignedBigInt
+  user    User?   @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt? @db.UnsignedBigInt // ID do usuário
 
-  status user_session @default(active)
+  status user_session @default(active) // Status da sessão
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da sessão
+  updated_at DateTime? @updatedAt // Data de atualização da sessão
 
   @@map("user_session")
 }
 
+// Sessão
 model Session {
-  id      String  @id @db.VarChar(255)
-  user_id BigInt? @db.UnsignedBigInt
+  id      String  @id @db.VarChar(255) // ID da sessão
+  user_id BigInt? @db.UnsignedBigInt // ID do usuário
 
-  ip_address    String? @db.VarChar(45)
-  user_agent    String? @db.Text
-  payload       String  @db.LongText
-  last_activity Int
+  ip_address    String? @db.VarChar(45) // Endereço IP
+  user_agent    String? @db.Text // Agente do usuário
+  payload       String  @db.LongText // Payload
+  last_activity Int // Última atividade
 
   @@index([last_activity], map: "sessions_last_activity_index")
   @@index([user_id], map: "sessions_user_id_index")
   @@map("sessions")
 }
 
+// Estratégia binária
 model StrategyBinary {
-  id      BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
-  user    User?   @relation("user", fields: [user_id], references: [id])
-  user_id BigInt? @db.UnsignedBigInt
+  id      BigInt  @id @default(autoincrement()) @db.UnsignedBigInt // ID da estratégia binária
+  user    User?   @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt? @db.UnsignedBigInt // ID do usuário
 
-  ref           String @default("")
-  hier          String @db.LongText()
-  level         Int    @default(0)
-  autoDirection String @default("L")
+  ref           String @default("") // Referência
+  hier          String @db.LongText() // Hierarquia
+  level         Int    @default(0) // Nível
+  autoDirection String @default("L") // Direção automática
 
-  parent    StrategyBinary? @relation("parent", fields: [parent_id], references: [id])
-  parent_id BigInt?         @db.UnsignedBigInt
+  parent    StrategyBinary? @relation("parent", fields: [parent_id], references: [id]) // Pai da estratégia binária
+  parent_id BigInt?         @db.UnsignedBigInt // ID do pai
 
-  left         StrategyBinary? @relation("left", fields: [left_id], references: [id])
-  left_id      BigInt?         @db.UnsignedBigInt
-  left_count   BigInt          @default(0)
+  left         StrategyBinary? @relation("left", fields: [left_id], references: [id]) // Esquerda da estratégia binária
+  left_id      BigInt?         @db.UnsignedBigInt // ID da esquerda
+  left_count   BigInt          @default(0) // Contagem da esquerda
   // left_point   BigInt          @default(0)
-  left_qualify Boolean         @default(false)
+  left_qualify Boolean         @default(false) // Qualificação da esquerda
 
-  right         StrategyBinary? @relation("right", fields: [right_id], references: [id])
-  right_id      BigInt?         @db.UnsignedBigInt
-  right_count   BigInt          @default(0)
+  right         StrategyBinary? @relation("right", fields: [right_id], references: [id]) // Direita da estratégia binária
+  right_id      BigInt?         @db.UnsignedBigInt // ID da direita
+  right_count   BigInt          @default(0) // Contagem da direita
   // right_point   BigInt          @default(0)
-  right_qualify Boolean         @default(false)
+  right_qualify Boolean         @default(false) // Qualificação da direita
 
-  qualify  Boolean                 @default(false)
-  strategy StrategyBinaryDirection @default(AUTO)
+  qualify  Boolean                 @default(false) // Qualificação
+  strategy StrategyBinaryDirection @default(AUTO) // Direção da estratégia
 
-  date_check String?
+  date_check String? // Data de verificação
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da estratégia binária
+  updated_at DateTime? @updatedAt // Data de atualização da estratégia binária
 
   ParentStrategyBinary StrategyBinary[]    @relation("parent")
   LeftStrategyBinary   StrategyBinary[]    @relation("left")
@@ -357,153 +372,161 @@ model StrategyBinary {
   @@map("strategy_binary")
 }
 
+// Pagamento de estratégia binária
 model StrategyBinaryPay {
-  id                  BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt
-  direction           StrategyBinaryPayDirection @default(NONE)
-  date                String
-  binary              StrategyBinary             @relation("parent", fields: [binary_id], references: [id])
-  binary_id           BigInt                     @db.UnsignedBigInt
-  user                User                       @relation("user", fields: [user_id], references: [id])
-  user_id             BigInt                     @db.UnsignedBigInt
-  amount              Decimal                    @db.Decimal(20, 8)
-  amountCeilingUser   Decimal?                   @db.Decimal(20, 8)
-  percentTotalCeiling Decimal?                   @db.Decimal(20, 8)
-  amountTotalCeiling  Decimal?                   @db.Decimal(20, 8)
-  amountPayed         Decimal?                   @default(0) @db.Decimal(20, 8)
-  points              Decimal                    @db.Decimal(20, 8)
-  qualify             Boolean                    @default(false)
-  mirror              Json?
+  id                  BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt // ID do pagamento de estratégia binária
+  direction           StrategyBinaryPayDirection @default(NONE) // Direção do pagamento
+  date                String // Data do pagamento
+  binary              StrategyBinary             @relation("parent", fields: [binary_id], references: [id]) // Estratégia binária
+  binary_id           BigInt                     @db.UnsignedBigInt // ID da estratégia binária
+  user                User                       @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id             BigInt                     @db.UnsignedBigInt // ID do usuário
+  amount              Decimal                    @db.Decimal(20, 8) // Quantidade do pagamento
+  amountCeilingUser   Decimal?                   @db.Decimal(20, 8) // Quantidade máxima do usuário
+  percentTotalCeiling Decimal?                   @db.Decimal(20, 8) // Percentual máximo total
+  amountTotalCeiling  Decimal?                   @db.Decimal(20, 8) // Quantidade máxima total
+  amountPayed         Decimal?                   @default(0) @db.Decimal(20, 8) // Quantidade paga
+  points              Decimal                    @db.Decimal(20, 8) // Pontos
+  qualify             Boolean                    @default(false) // Qualificação
+  mirror              Json? // Espelho
 
-  status StatusBinaryPay @default(PENDING)
+  status StatusBinaryPay @default(PENDING) // Status do pagamento
 
-  created_at DateTime  @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime  @default(now()) // Data de criação do pagamento
+  updated_at DateTime? @updatedAt // Data de atualização do pagamento
 
   @@unique([date, binary_id, user_id])
   @@map("strategy_binary_pay")
 }
 
+// Configuração de estratégia
 model StrategyConfig {
-  id      BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
-  type    StrategyConfigType
-  level   Int
-  value   Decimal?           @db.Decimal(20, 8)
-  limit   Decimal?           @db.Decimal(20, 8)
-  percent Decimal?           @db.Decimal(20, 8)
+  id      BigInt             @id @default(autoincrement()) @db.UnsignedBigInt // ID da configuração de estratégia
+  type    StrategyConfigType // Tipo de configuração de estratégia
+  level   Int // Nível da configuração
+  value   Decimal?           @db.Decimal(20, 8) // Valor da configuração
+  limit   Decimal?           @db.Decimal(20, 8) // Limite da configuração
+  percent Decimal?           @db.Decimal(20, 8) // Percentual da configuração
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da configuração
+  updated_at DateTime? @updatedAt // Data de atualização da configuração
 
   @@unique([type, level, value])
   @@map("strategy_config")
 }
 
+// Progresso de estratégia
 model StrategyProgress {
   type    StrategyConfigType
-  user    User               @relation("user", fields: [user_id], references: [id])
-  user_id BigInt             @db.UnsignedBigInt
+  user    User               @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt             @db.UnsignedBigInt // ID do usuário
 
-  amount Decimal @default(0) @db.Decimal(20, 8)
+  amount Decimal @default(0) @db.Decimal(20, 8) // Quantidade de progresso
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação do progresso
+  updated_at DateTime? @updatedAt // Data de atualização do progresso
 
   @@id([type, user_id])
   @@unique([type, user_id])
   @@map("strategy_progress")
 }
 
+// Tipos de configuração de estratégia
 enum StrategyConfigType {
-  DIRECT
-  UNILEVEL
-  UNILEVER
-  BINARY
-  RESIDUAL
+  DIRECT // Configuração direta
+  UNILEVEL // Configuração unilevel
+  UNILEVER // Configuração unilever
+  BINARY // Configuração binária
+  RESIDUAL // Configuração residual
 }
 
+// Modelo de ordem
 model Order {
-  id       BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
-  order_id String
-  user     User    @relation("user", fields: [user_id], references: [id])
-  user_id  BigInt  @db.UnsignedBigInt
-  total    Decimal @default(0) @db.Decimal(20, 8)
+  id       BigInt  @id @default(autoincrement()) @db.UnsignedBigInt // ID da ordem
+  order_id String // ID da ordem
+  user     User    @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id  BigInt  @db.UnsignedBigInt // ID do usuário
+  total    Decimal @default(0) @db.Decimal(20, 8) // Total da ordem
 
-  payment_method OrderPaymentmMethod @default(UNKNOWN)
-  payment        Json?
-  payment_result Json?
+  payment_method OrderPaymentmMethod @default(UNKNOWN) // Método de pagamento da ordem
+  payment        Json? // Pagamento
+  payment_result Json? // Resultado do pagamento
 
-  paymentBy     User?   @relation("paymentBy", fields: [payment_by_id], references: [id])
-  payment_by_id BigInt? @db.UnsignedBigInt
+  paymentBy     User?   @relation("paymentBy", fields: [payment_by_id], references: [id]) // Usuário que realizou o pagamento
+  payment_by_id BigInt? @db.UnsignedBigInt // ID do usuário que realizou o pagamento
 
-  status                Status                  @default(init)
-  created_at            DateTime                @default(now())
-  updated_at            DateTime?               @updatedAt
+  status                Status                  @default(init) // Status da ordem
+  created_at            DateTime                @default(now()) // Data de criação da ordem
+  updated_at            DateTime?               @updatedAt // Data de atualização da ordem
   OrderItem             OrderItem[]             @relation("order")
   OrderItemDistribution OrderItemDistribution[] @relation("order")
 
   @@map("order")
 }
 
+// Item de ordem
 model OrderItem {
-  id       BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  order    Order  @relation("order", fields: [order_id], references: [id])
-  order_id BigInt @db.UnsignedBigInt
+  id       BigInt @id @default(autoincrement()) @db.UnsignedBigInt // ID do item de ordem
+  order    Order  @relation("order", fields: [order_id], references: [id]) // Relacionamento com a ordem
+  order_id BigInt @db.UnsignedBigInt // ID da ordem
 
-  product    Product @relation("product", fields: [product_id], references: [id])
-  product_id BigInt  @db.UnsignedBigInt
+  product    Product @relation("product", fields: [product_id], references: [id]) // Relacionamento com o produto
+  product_id BigInt  @db.UnsignedBigInt // ID do produto
 
-  quantity Int     @default(1)
-  amount   Decimal @db.Decimal(20, 8)
+  quantity Int     @default(1) // Quantidade do item
+  amount   Decimal @db.Decimal(20, 8) // Quantidade do item
 
-  wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id])
-  wallet_id BigInt? @db.UnsignedBigInt
+  wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id]) // Relacionamento com a carteira
+  wallet_id BigInt? @db.UnsignedBigInt // ID da carteira
 
-  info Json?
+  info Json? // Informações do item
 
-  created_at            DateTime                @default(now())
-  updated_at            DateTime?               @updatedAt
+  created_at            DateTime                @default(now()) // Data de criação do item
+  updated_at            DateTime?               @updatedAt // Data de atualização do item
   OrderItemDistribution OrderItemDistribution[] @relation("orderItem")
   Commission            Commission[]            @relation("orderItem")
 
   @@map("order_item")
 }
 
+// Distribuição de item de ordem
 model OrderItemDistribution {
-  id       BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
-  strategy StrategyType
-  status   StrategyStatusType
-  amount   Decimal            @db.Decimal(20, 8)
-  percent  Decimal            @db.Decimal(20, 8)
+  id       BigInt             @id @default(autoincrement()) @db.UnsignedBigInt // ID da distribuição de item de ordem
+  strategy StrategyType // Tipo de estratégia
+  status   StrategyStatusType // Status da estratégia
+  amount   Decimal            @db.Decimal(20, 8) // Quantidade da distribuição
+  percent  Decimal            @db.Decimal(20, 8) // Percentual da distribuição
 
-  order    Order  @relation("order", fields: [order_id], references: [id])
-  order_id BigInt @db.UnsignedBigInt
+  order    Order  @relation("order", fields: [order_id], references: [id]) // Relacionamento com a ordem
+  order_id BigInt @db.UnsignedBigInt // ID da ordem
 
-  orderItem     OrderItem @relation("orderItem", fields: [order_item_id], references: [id])
-  order_item_id BigInt    @db.UnsignedBigInt
+  orderItem     OrderItem @relation("orderItem", fields: [order_item_id], references: [id]) // Relacionamento com o item de ordem
+  order_item_id BigInt    @db.UnsignedBigInt // ID do item de ordem
 
-  user    User   @relation("user", fields: [user_id], references: [id])
-  user_id BigInt @db.UnsignedBigInt
+  user    User   @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt @db.UnsignedBigInt // ID do usuário
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da distribuição
+  updated_at DateTime? @updatedAt // Data de atualização da distribuição
 
   @@unique([order_item_id, user_id, strategy], name: "order_item_distribution_idx")
   @@map("order_item_distribution")
 }
 
+// Ordem de comissão
 model CommissionOrder {
-  id          BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
-  obs         String          @db.MediumText
-  user        User            @relation("user", fields: [user_id], references: [id])
-  user_id     BigInt          @db.UnsignedBigInt
-  total       Decimal         @db.Decimal(20, 8)
-  status      CommisionStatus @default(PENDING)
-  date_ref    String
-  category    Category        @relation("category", fields: [category_id], references: [id])
-  category_id BigInt          @db.UnsignedBigInt
+  id          BigInt          @id @default(autoincrement()) @db.UnsignedBigInt // ID da ordem de comissão
+  obs         String          @db.MediumText // Observação da ordem de comissão
+  user        User            @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id     BigInt          @db.UnsignedBigInt // ID do usuário
+  total       Decimal         @db.Decimal(20, 8) // Total da ordem de comissão
+  status      CommisionStatus @default(PENDING) // Status da ordem de comissão
+  date_ref    String // Data de referência
+  category    Category        @relation("category", fields: [category_id], references: [id]) // Relacionamento com a categoria
+  category_id BigInt          @db.UnsignedBigInt // ID da categoria
 
-  created_at DateTime?    @default(now())
-  updated_at DateTime?    @updatedAt
+  created_at DateTime?    @default(now()) // Data de criação da ordem de comissão
+  updated_at DateTime?    @updatedAt // Data de atualização da ordem de comissão
   Commission Commission[] @relation("commissionOrder")
   Withdraw   Withdraw[]   @relation("commissionOrder")
 
@@ -511,19 +534,22 @@ model CommissionOrder {
   @@map("commission_order")
 }
 
+// Saque
 model Withdraw {
-  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt // ID do saque
 
-  user    User   @relation("user", fields: [user_id], references: [id])
-  user_id BigInt @db.UnsignedBigInt
+  user    User   @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt @db.UnsignedBigInt // ID do usuário
 
-  wallet String? @db.MediumText
+  wallet String? @db.MediumText // Carteira
 
-  amount Decimal @db.Decimal(20, 8)
+  original_amount Decimal @db.Decimal(20, 8) // Quantidade original do saque
+  amount          Decimal @db.Decimal(20, 8) // Quantidade do saque
 
-  obs String? @db.MediumText
+  obs String? @db.MediumText // Observação do saque
 
-  status StatusWithdraw @default(PENDING)
+  status StatusWithdraw @default(PENDING) // Status do saque
+  hash   String?        @db.MediumText // Hash de retorno do saque
 
   balanceHistory     BalanceHistory? @relation("commission", fields: [balance_history_id], references: [id])
   balance_history_id Int?
@@ -531,14 +557,15 @@ model Withdraw {
   commissionOrder     CommissionOrder? @relation("commissionOrder", fields: [commission_order_id], references: [id])
   commission_order_id BigInt?          @db.UnsignedBigInt
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação do saque
+  updated_at DateTime? @updatedAt // Data de atualização do saque
 
   @@map("withdraw")
 }
 
+// Comissão
 model Commission {
-  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt // ID da comissão
 
   commissionOrder     CommissionOrder? @relation("commissionOrder", fields: [commission_order_id], references: [id])
   commission_order_id BigInt?          @db.UnsignedBigInt
@@ -546,196 +573,217 @@ model Commission {
   scheduler    CommissionScheduler @relation("scheduler", fields: [scheduler_id], references: [id])
   scheduler_id BigInt              @db.UnsignedBigInt
 
-  user    User   @relation("user", fields: [user_id], references: [id])
-  user_id BigInt @db.UnsignedBigInt
+  user    User   @relation("user", fields: [user_id], references: [id]) // Relacionamento com o usuário
+  user_id BigInt @db.UnsignedBigInt // ID do usuário
 
-  orderItem     OrderItem @relation("orderItem", fields: [order_item_id], references: [id])
-  order_item_id BigInt    @db.UnsignedBigInt
+  orderItem     OrderItem @relation("orderItem", fields: [order_item_id], references: [id]) // Relacionamento com o item de ordem
+  order_item_id BigInt    @db.UnsignedBigInt // ID do item de ordem
 
-  wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id])
-  wallet_id BigInt? @db.UnsignedBigInt
+  wallet    Wallet? @relation("wallet", fields: [wallet_id], references: [id]) // Relacionamento com a carteira
+  wallet_id BigInt? @db.UnsignedBigInt // ID da carteira
 
-  status CommisionStatus @default(PENDING)
+  status CommisionStatus @default(PENDING) // Status da comissão
 
-  amount  Decimal @db.Decimal(20, 8)
-  total   Decimal @db.Decimal(20, 8)
-  percent Decimal @db.Decimal(20, 8)
+  amount  Decimal @db.Decimal(20, 8) // Quantidade da comissão
+  total   Decimal @db.Decimal(20, 8) // Total da comissão
+  percent Decimal @db.Decimal(20, 8) // Percentual da comissão
 
-  diffDays Int @default(1)
+  diffDays Int @default(1) // Diferença de dias
 
-  date DateTime
+  date DateTime // Data da comissão
 
   balanceHistory     BalanceHistory? @relation("commission", fields: [balance_history_id], references: [id])
   balance_history_id Int?
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
+  created_at DateTime? @default(now()) // Data de criação da comissão
+  updated_at DateTime? @updatedAt // Data de atualização da comissão
 
   @@unique([scheduler_id, user_id, order_item_id])
   @@map("commission")
 }
 
+// Agendador de comissão
 model CommissionScheduler {
-  id          BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
-  type        SchedulerCommisionType
-  category    Category               @relation("category", fields: [category_id], references: [id])
-  category_id BigInt                 @db.UnsignedBigInt
+  id          BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt // ID do agendador de comissão
+  type        SchedulerCommisionType // Tipo de agendamento de comissão
+  category    Category               @relation("category", fields: [category_id], references: [id]) // Relacionamento com a categoria
+  category_id BigInt                 @db.UnsignedBigInt // ID da categoria
 
-  status SchedulerCommisionStatus @default(SCHEDULER)
+  status SchedulerCommisionStatus @default(SCHEDULER) // Status do agendamento de comissão
 
-  amount Decimal @db.Decimal(20, 8)
+  amount Decimal @db.Decimal(20, 8) // Quantidade do agendamento
 
-  date DateTime
+  date DateTime // Data do agendamento
 
-  created_at DateTime?    @default(now())
-  updated_at DateTime?    @updatedAt
+  created_at DateTime?    @default(now()) // Data de criação do agendamento
+  updated_at DateTime?    @updatedAt // Data de atualização do agendamento
   Commission Commission[] @relation("scheduler")
 
   @@unique([type, category_id, date])
   @@map("commission_scheduler")
 }
 
+// Importação de ordens
 model ImportOrders {
-  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  info Json?
+  id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt // ID da importação de ordens
+  info Json? // Informações da importação
 
   @@map("import_orders")
 }
 
+// Webhook
 model Webhook {
-  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  request Json?
+  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt // ID do webhook
+  request Json? // Requisição do webhook
 
   @@map("webhook")
 }
 
+// Tipos de agendamento de comissão
 enum SchedulerCommisionType {
-  COMMISSION
-  RESIDUAL
+  COMMISSION // Comissão
+  RESIDUAL // Residual
 }
 
+// Status de agendamento de comissão
 enum SchedulerCommisionStatus {
-  SCHEDULER
-  DONE
-  CANCEL
+  SCHEDULER // Agendado
+  DONE // Concluído
+  CANCEL // Cancelado
 }
 
+// Status de comissão
 enum CommisionStatus {
-  PENDING
-  ASSOCIATED
-  PAYED
-  CANCEL
+  PENDING // Pendente
+  ASSOCIATED // Associado
+  PAYED // Pago
+  CANCEL // Cancelado
 }
 
+// Tipos de rendimento de produtos
 enum products_yield_type {
-  diary
-  weekly
-  monthly
-  semiannual
-  annual
+  diary // Diário
+  weekly // Semanal
+  monthly // Mensal
+  semiannual // Semestral
+  annual // Anual
 }
 
+// Perfis de usuários
 enum users_profile {
-  admin
-  user
-  admin_watch
+  admin // Administrador
+  user // Usuário
+  admin_watch // Administrador de visualização
 }
 
+// Posições de usuários
 enum users_position {
-  left
-  right
+  left // Esquerda
+  right // Direita
 }
 
+// Sessão de usuário
 enum user_session {
-  active
-  inactive
+  active // Ativa
+  inactive // Inativa
 }
 
+// Status de ordem
 enum Status {
-  init
-  pending
-  done
-  canceled
+  init // Iniciada
+  pending // Pendente
+  done // Concluída
+  canceled // Cancelada
 }
 
+// Tipos de estratégia
 enum StrategyType {
-  DIRECT
-  UNILEVEL
-  UNILEVER
-  BINARY
-  RESIDUAL
+  DIRECT // Direta
+  UNILEVEL // Unilevel
+  UNILEVER // Unilever
+  BINARY // Binária
+  RESIDUAL // Residual
 }
 
+// Status de estratégia
 enum StrategyStatusType {
-  QUEUED
-  ERROR
-  DONE
+  QUEUED // Em fila
+  ERROR // Erro
+  DONE // Concluída
 }
 
+// Tipos de carteira
 enum WalletType {
-  MAIN
-  PENDING
-  WITHDRAW
-  GENERAL_POINT
-  BINARY_CEILING_USER
-  BINARY_LEFT_POINT
-  BINARY_RIGHT_POINT
-  BINARY_LEFT_POINT_NEW
-  BINARY_RIGHT_POINT_NEW
-  BINARY_LEFT_POINT_TOTAL_NEW
-  BINARY_RIGHT_POINT_TOTAL_NEW
-  BINARY_LEFT_POINT_PAY
-  BINARY_LEFT_POINT_TOTAL
-  BINARY_RIGHT_POINT_PAY
-  BINARY_RIGHT_POINT_TOTAL
-  DIRECT_BONUS
-  WINWIN_BONUS
-  TOKENWAY_BONUS
-  TOKENTEEN_BONUS
-  TOKENONE_BONUS
-  BINARY_BONUS
+  MAIN // Principal
+  PENDING // Pendente
+  WITHDRAW // Saque
+  GENERAL_POINT // Ponto geral
+  BINARY_CEILING_USER // Teto binário do usuário
+  BINARY_LEFT_POINT // Ponto esquerdo binário
+  BINARY_RIGHT_POINT // Ponto direito binário
+  BINARY_LEFT_POINT_NEW // Novo ponto esquerdo binário
+  BINARY_RIGHT_POINT_NEW // Novo ponto direito binário
+  BINARY_LEFT_POINT_TOTAL_NEW // Novo total de pontos esquerdo binário
+  BINARY_RIGHT_POINT_TOTAL_NEW // Novo total de pontos direito binário
+  BINARY_LEFT_POINT_PAY // Pagamento de ponto esquerdo binário
+  BINARY_LEFT_POINT_TOTAL // Total de pontos esquerdo binário
+  BINARY_RIGHT_POINT_PAY // Pagamento de ponto direito binário
+  BINARY_RIGHT_POINT_TOTAL // Total de pontos direito binário
+  DIRECT_BONUS // Bônus direto
+  WINWIN_BONUS // Bônus WinWin
+  TOKENWAY_BONUS // Bônus TokenWay
+  TOKENTEEN_BONUS // Bônus TokenTeen
+  TOKENONE_BONUS // Bônus TokenOne
+  BINARY_BONUS // Bônus binário
 }
 
+// Direção do saldo
 enum BalanceDirectionType {
-  CREDIT
-  DEBIT
+  CREDIT // Crédito
+  DEBIT // Débito
 }
 
+// Status de pagamento binário
 enum StatusBinaryPay {
-  PENDING
-  PAYED
-  ERROR
-  NOTQUALIFY
+  PENDING // Pendente
+  PAYED // Pago
+  ERROR // Erro
+  NOTQUALIFY // Não qualificado
 }
 
+// Status de saque
 enum StatusWithdraw {
-  PENDING
-  SCHEDULER
-  PAYED
-  REJECT
-  CANCELED
+  PENDING // Pendente
+  SCHEDULER // Agendado
+  PAYED // Pago
+  REJECT // Rejeitado
+  CANCELED // Cancelado
 }
 
+// Métodos de pagamento de ordem
 enum OrderPaymentmMethod {
-  UNKNOWN
-  BALANCE
-  CRIPTO
-  PLISIO
+  UNKNOWN // Desconhecido
+  BALANCE // Saldo
+  CRIPTO // Cripto
+  PLISIO // Plisio
 }
 
+// Direção de pagamento binário
 enum StrategyBinaryPayDirection {
-  NONE
-  LEFT
-  RIGHT
+  NONE // Nenhuma
+  LEFT // Esquerda
+  RIGHT // Direita
 }
 
+// Direção de estratégia binária
 enum StrategyBinaryDirection {
-  AUTO
-  RIGHT
-  LEFT
+  AUTO // Automática
+  RIGHT // Direita
+  LEFT // Esquerda
 }
 
+// Tipos de documento
 enum DocumentType {
-  CPF
-  CNPJ
+  CPF // CPF
+  CNPJ // CNPJ
 }
