@@ -6,204 +6,110 @@ import { UserService } from "@/services/user";
 import moment from "moment";
 
 export const dashboardProductStatsController = async (requestData: IRequest) => {
-
     try {
-        // Validar os dados da requisição
-        // Criar o usuário no banco de dados
-        // const data = await UserService.dashboardStats({
-        //     user: requestData.user
-        // })
-
-        // const direct = await Prisma.balance.findFirst({
-        //     where: {
-        //         user_id: requestData.user.id,
-        //         wallet: "DIRECT_BONUS"
-        //     }
-        // })
-
-        // const binary = await Prisma.balance.findFirst({
-        //     where: {
-        //         user_id: requestData.user.id,
-        //         wallet: "BINARY_BONUS"
-        //     }
-        // })
-
-        const direct = await Prisma.balanceHistory.aggregate({
-            where: {
-                user_id: requestData.user.id,
-                wallet: "MAIN",
-                OR: [
-                    {
-                        name: {
-                            contains: " Direct "
-                        }
-                    },
-                    {
-                        name: {
-                            startsWith: "Bonus Direto"
-                        }
-                    }
-                ]
-
-            },
-            _sum: {
-                amount: true
-            }
-        })
-
-        const binary = await Prisma.balanceHistory.aggregate({
-            where: {
-                user_id: requestData.user.id,
-                wallet: "MAIN",
-                name: {
-                    startsWith: "Bonus Binary"
+        // Executa as consultas em paralelo
+        const [
+            direct,
+            binary,
+            winwin,
+            categorywinwWin,
+            winwWinOrder,
+            tokenWay,
+            categoryTokenWay,
+            tokenWayOrder,
+            tokenOne,
+            tokenTeem,
+            total,
+            ativos,
+            nextWinwin,
+            nextTokenWay
+        ] = await Promise.all([
+            Prisma.balanceHistory.aggregate({
+                where: {
+                    user_id: requestData.user.id,
+                    wallet: "MAIN",
+                    OR: [
+                        { name: { contains: " Direct " } },
+                        { name: { startsWith: "Bonus Direto" } }
+                    ]
+                },
+                _sum: { amount: true }
+            }),
+            Prisma.balanceHistory.aggregate({
+                where: {
+                    user_id: requestData.user.id,
+                    wallet: "MAIN",
+                    name: { startsWith: "Bonus Binary" }
+                },
+                _sum: { amount: true }
+            }),
+            Prisma.balanceHistory.aggregate({
+                _sum: { amount: true },
+                where: { user_id: requestData.user.id, identify: "WINWIN_BONUS" }
+            }),
+            Prisma.category.findFirst({ where: { id: 4 } }),
+            Prisma.$queryRaw`SELECT SUM(order_item.amount * order_item.quantity) as amount FROM order_item INNER JOIN \`order\` ON \`order\`.id = order_item.order_id INNER JOIN products ON products.id = order_item.product_id WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = 'done' GROUP BY null`,
+            Prisma.balanceHistory.aggregate({
+                _sum: { amount: true },
+                where: { user_id: requestData.user.id, identify: "TOKENWAY_BONUS" }
+            }),
+            Prisma.category.findFirst({ where: { id: 1 } }),
+            Prisma.$queryRaw`SELECT SUM(order_item.amount * order_item.quantity) as amount, SUM(order_item.quantity) as quantity FROM order_item INNER JOIN \`order\` ON \`order\`.id = order_item.order_id INNER JOIN products ON products.id = order_item.product_id WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1 AND \`order\`.status = 'done'`,
+            Prisma.balanceHistory.aggregate({
+                _sum: { amount: true },
+                where: { user_id: requestData.user.id, identify: "TOKENONE_BONUS" }
+            }),
+            Prisma.balanceHistory.aggregate({
+                _sum: { amount: true },
+                where: { user_id: requestData.user.id, identify: "TOKENTEEN_BONUS" }
+            }),
+            Prisma.user.count({
+                where: { ancestry: { contains: `#${requestData.user.id}#` } }
+            }),
+            Prisma.user.count({
+                where: {
+                    ancestry: { contains: `#${requestData.user.id}#` },
+                    Order: { some: {} }
                 }
-            },
-            _sum: {
-                amount: true
-            }
-        })
+            }),
+            Prisma.commission.aggregate({
+                where: {
+                    user_id: requestData.user.id,
+                    status: "PENDING",
+                    scheduler: { category_id: 4 }
+                },
+                _sum: { total: true }
+            }),
+            Prisma.commission.aggregate({
+                where: {
+                    user_id: requestData.user.id,
+                    status: "PENDING",
+                    scheduler: { category_id: 1 }
+                },
+                _sum: { total: true }
+            })
+        ]);
 
-        const winwin = await Prisma.balanceHistory.aggregate({
-            _sum: {
-                amount: true
-            },
-            where: {
-                user_id: requestData.user.id,
-                identify: "WINWIN_BONUS"
-            }
-        })
-
-        const categorywinwWin = await Prisma.category.findFirst({
-            where: {
-                id: 4
-            }
-        })
-
-        let percentwinwWin = 0
-
+        let percentwinwWin = 0;
         if (categorywinwWin.commission_yield_type_commission === "dynamic") {
-            let config = ((categorywinwWin.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
-            if (config) percentwinwWin = parseFloat(config.value)
+            let config = ((categorywinwWin.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"));
+            if (config) percentwinwWin = parseFloat(config.value);
         } else if (categorywinwWin.commission_yield_type_commission === "fixed") {
-            percentwinwWin = parseFloat((categorywinwWin.commission_yield_config as any)?.yield_fixed)
+            percentwinwWin = parseFloat((categorywinwWin.commission_yield_config as any)?.yield_fixed);
         }
 
-        const winwWinOrder = await Prisma.$queryRaw`SELECT 
-                SUM(order_item.amount * order_item.quantity) as amount
-            FROM 
-                order_item
-            INNER JOIN \`order\` ON \`order\`.id = order_item.order_id
-            INNER JOIN products ON products.id = order_item.product_id 
-            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = 'done'
-            GROUP BY null`;
-
-        const tokenWay = await Prisma.balanceHistory.aggregate({
-            _sum: {
-                amount: true
-            },
-            where: {
-                user_id: requestData.user.id,
-                identify: "TOKENWAY_BONUS"
-            }
-        })
-
-        const categoryTokenWay = await Prisma.category.findFirst({
-            where: {
-                id: 1
-            }
-        })
-
-        let percentTokenWay = 0
-
+        let percentTokenWay = 0;
         if (categoryTokenWay.commission_yield_type_commission === "dynamic") {
-            let config = ((categoryTokenWay.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
-            if (config) percentTokenWay = parseFloat(config.value)
+            let config = ((categoryTokenWay.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"));
+            if (config) percentTokenWay = parseFloat(config.value);
         }
-
-        const tokenWayOrder = await Prisma.$queryRaw`SELECT 
-                SUM(order_item.amount * order_item.quantity) as amount,
-                SUM(order_item.quantity) as quantity
-            FROM 
-                order_item
-            INNER JOIN \`order\` ON \`order\`.id = order_item.order_id
-            INNER JOIN products ON products.id = order_item.product_id 
-            WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1 AND \`order\`.status = 'done'`
-
-        const tokenOne = await Prisma.balanceHistory.aggregate({
-            _sum: {
-                amount: true
-            },
-            where: {
-                user_id: requestData.user.id,
-                identify: "TOKENONE_BONUS"
-            }
-        })
-
-        const tokenTeem = await Prisma.balanceHistory.aggregate({
-            _sum: {
-                amount: true
-            },
-            where: {
-                user_id: requestData.user.id,
-                identify: "TOKENTEEN_BONUS"
-            }
-        })
-
-        const total = await Prisma.user.count({
-            where: {
-                ancestry: { contains: `#${requestData.user.id}#` },
-            },
-        });
-
-        const ativos = await Prisma.user.count({
-            where: {
-                ancestry: { contains: `#${requestData.user.id}#` },
-                Order: { some: {} }
-            },
-        });
-
-        const nextWinwin = await Prisma.commission.aggregate({
-            where: {
-                user_id: requestData.user.id,
-                status: "PENDING",
-                scheduler: {
-                    category_id: 4
-                }
-            },
-            _sum: {
-                total: true
-            }
-        })
-
-        const nextTokenWay = await Prisma.commission.aggregate({
-            where: {
-                user_id: requestData.user.id,
-                status: "PENDING",
-                scheduler: {
-                    category_id: 1
-                }
-            },
-            _sum: {
-                total: true
-            }
-        })
-
 
         return HttpResponse.successResponse({
-            // ...data,
             data: {
-                equipe: {
-                    ativos,
-                    total
-                },
+                equipe: { ativos, total },
                 bonus: {
-                    direto: {
-                        amount: direct?._sum.amount || 0
-                    },
-                    binario: {
-                        amount: binary?._sum.amount || 0
-                    }
+                    direto: { amount: direct?._sum.amount || 0 },
+                    binario: { amount: binary?._sum.amount || 0 }
                 },
                 winWin: {
                     rendimentoDiario: {
@@ -230,9 +136,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                         nextAmount: nextTokenWay._sum?.total || 0,
                         nextDate: '2025-03-27 00:00:00'
                     },
-                    unilevel: {
-                        amount: tokenWay?._sum?.amount || 0,
-                    }
+                    unilevel: { amount: tokenWay?._sum?.amount || 0 }
                 },
                 tokenOne: {
                     rendimentoTotal: {
@@ -240,7 +144,6 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                         qtd: 0,
                         total: tokenOne?._sum?.amount || 0
                     }
-
                 },
                 tokenTeem: {
                     rendimentoTotal: {
@@ -251,7 +154,6 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                 }
             },
             status: 200
-
         });
     } catch (err) {
         if (err.name === 'ValidationError') {

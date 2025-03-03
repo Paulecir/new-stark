@@ -632,9 +632,11 @@ async function arrumar() {
 
     let negativo = []
 
+
     await Prisma.$transaction(async (Prisma) => {  
+        await Prisma.$queryRaw`DELETE FROM balance_history WHERE name = 'Corrección binario'`
         for (const correcao of correcoes) {
-            const diference = parseFloat(correcao.desconto_no_saldo) * -1
+            const diference = parseFloat(correcao.desconto_no_saldo.replace('.', '').replace(',', '.')) * -1
 
             const history =  await decBalance({
                 name: "Corrección binario"
@@ -645,6 +647,8 @@ async function arrumar() {
                 , ref_id: 0
                 , extra_info: correcao
             }, Prisma, true)
+
+            console.log("D", diference)
             
         }
 
