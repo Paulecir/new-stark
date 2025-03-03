@@ -47,6 +47,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                 _sum: { amount: true },
                 where: { user_id: requestData.user.id, identify: "WINWIN_BONUS" }
             }),
+            
             Prisma.category.findFirst({ where: { id: 4 } }),
             Prisma.$queryRaw`SELECT SUM(order_item.amount * order_item.quantity) as amount FROM order_item INNER JOIN \`order\` ON \`order\`.id = order_item.order_id INNER JOIN products ON products.id = order_item.product_id WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = 'done' GROUP BY null`,
             Prisma.balanceHistory.aggregate({
