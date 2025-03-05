@@ -75,7 +75,7 @@ export const payCommission = async () => {
                         obs: "",
                         total: commission.amount,
                         user_id: commission.user_id,
-                        date_ref: moment().format(),
+                        date_ref: moment(endDateFormated).format("YYYY-MM-DD"),
                         category_id: commission.category_id
                     }
                 })
