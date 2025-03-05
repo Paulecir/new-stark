@@ -50,7 +50,7 @@ export const makeCommission = async () => {
             }
 
             if (category.commission_yield_type_commission === "dynamic") {
-                let config = ((category.commission_yield_config as any)?.calendar || []).find(f => f.date === moment().format("YYYY-MM-DD"))
+                let config = ((category.commission_yield_config as any)?.calendar || []).find(f => f.date === moment(commission.date).format("YYYY-MM-DD"))
                 if (!config) {
 
                     await Prisma.commissionScheduler.update({
