@@ -543,7 +543,7 @@ model Withdraw {
 
   wallet String? @db.MediumText // Carteira
 
-  original_amount Decimal @db.Decimal(20, 8) // Quantidade original do saque
+  original_amount Decimal @db.Decimal(20, 8) @default(0) // Quantidade original do saque
   amount          Decimal @db.Decimal(20, 8) // Quantidade do saque
 
   obs String? @db.MediumText // Observação do saque
@@ -649,6 +649,7 @@ enum SchedulerCommisionType {
 enum SchedulerCommisionStatus {
   SCHEDULER // Agendado
   DONE // Concluído
+  PAYED // Pago
   CANCEL // Cancelado
 }
 

@@ -67,7 +67,7 @@ function getNextOccurrence(referenceDate, schedulerType, scheduleData, type: Sch
 
         case 'monthly': {
             // const { day, hour, minute } = scheduleData;
-            nextOccurrence = ref.clone().date(0).startOf("day");
+            nextOccurrence = ref.clone().date(scheduleData.day).startOf("day");
             if (nextOccurrence.isBefore(ref)) {
                 nextOccurrence.add(1, 'month');
             }

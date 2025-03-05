@@ -18,8 +18,8 @@ export const approvePayCommission = async () => {
         for (const commission of commissions) {
             console.log("C", ct--)
             await addBalance({
-                name: `Bonus ${commission.category.name} Earnings [0.55%]`
-                , wallet: "MAIN"
+                name: `Bonus ${commission.category.name} Earnings`
+                , wallet: (commission.category?.commission_pay_config as any)?.wallet || "MAIN"
                 , user_id: commission.user_id
                 , amount: commission.total.toNumber()
                 , ref_type: 'commissionOrder'

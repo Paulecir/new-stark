@@ -21,6 +21,9 @@ export const initCronjob = async () => {
     rule.hour = 22
     rule.minute = 10
 
+
+  
+
     nodeSchedule.scheduleJob("1 22 * * *", async (job) => {
         const categories = await Prisma.category.findMany({
             where: {
