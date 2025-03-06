@@ -131,6 +131,7 @@ export const approvePayBinary = async ({ date = moment().subtract(1, "days").for
                 })
 
             } catch (err) {
+                console.log("E", err)
                 await Prisma.strategyBinaryPay.updateMany({
                     where: {
                         status: "PENDING",

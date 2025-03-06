@@ -2,7 +2,7 @@ import Prisma from "../../src/infra/db/prisma";
 
 async function arrumar() {
 
-    const users: any = await Prisma.$queryRaw`SELECT * FROM strategy_binary WHERE hier like "LLLLLLLLLLLLLRRRRRRRRRRRRRRRRRRRRRRRRRRRR%" ORDER BY level`
+    const users: any = await Prisma.$queryRaw`SELECT * FROM strategy_binary WHERE hier like "LLLRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR%" ORDER BY level`
     let ct = users.length
     for (const user of users) {
         console.log(`Faltam ${ct--}`)

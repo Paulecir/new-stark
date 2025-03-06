@@ -7,7 +7,17 @@ import moment from "moment";
 
 export const dashboardProductStatsController = async (requestData: IRequest) => {
     try {
-        // Executa as consultas em paralelo
+        const startTimes = {};
+        const endTimes = {};
+
+        const measureTime = async (label: string, promise: Promise<any>) => {
+            startTimes[label] = Date.now();
+            const result = await promise;
+            endTimes[label] = Date.now();
+            console.log(`${label} took ${endTimes[label] - startTimes[label]} ms`);
+            return result;
+        };
+
         const [
             direct,
             binary,
@@ -24,7 +34,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
             nextWinwin,
             nextTokenWay
         ] = await Promise.all([
-            Prisma.balanceHistory.aggregate({
+            measureTime("direct", Prisma.balanceHistory.aggregate({
                 where: {
                     user_id: requestData.user.id,
                     wallet: "MAIN",
@@ -34,61 +44,60 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
                     ]
                 },
                 _sum: { amount: true }
-            }),
-            Prisma.balanceHistory.aggregate({
+            })),
+            measureTime("binary", Prisma.balanceHistory.aggregate({
                 where: {
                     user_id: requestData.user.id,
                     wallet: "MAIN",
                     name: { startsWith: "Bonus Binary" }
                 },
                 _sum: { amount: true }
-            }),
-            Prisma.balanceHistory.aggregate({
+            })),
+            measureTime("winwin", Prisma.balanceHistory.aggregate({
                 _sum: { amount: true },
                 where: { user_id: requestData.user.id, identify: "WINWIN_BONUS" }
-            }),
-            
-            Prisma.category.findFirst({ where: { id: 4 } }),
-            Prisma.$queryRaw`SELECT SUM(order_item.amount * order_item.quantity) as amount FROM order_item INNER JOIN \`order\` ON \`order\`.id = order_item.order_id INNER JOIN products ON products.id = order_item.product_id WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = 'done' GROUP BY null`,
-            Prisma.balanceHistory.aggregate({
+            })),
+            measureTime("categorywinwWin", Prisma.category.findFirst({ where: { id: 4 } })),
+            measureTime("winwWinOrder", Prisma.$queryRaw`SELECT SUM(order_item.amount * order_item.quantity) as amount FROM order_item INNER JOIN \`order\` ON \`order\`.id = order_item.order_id INNER JOIN products ON products.id = order_item.product_id WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 4 AND \`order\`.status = 'done' GROUP BY null`),
+            measureTime("tokenWay", Prisma.balanceHistory.aggregate({
                 _sum: { amount: true },
                 where: { user_id: requestData.user.id, identify: "TOKENWAY_BONUS" }
-            }),
-            Prisma.category.findFirst({ where: { id: 1 } }),
-            Prisma.$queryRaw`SELECT SUM(order_item.amount * order_item.quantity) as amount, SUM(order_item.quantity) as quantity FROM order_item INNER JOIN \`order\` ON \`order\`.id = order_item.order_id INNER JOIN products ON products.id = order_item.product_id WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1 AND \`order\`.status = 'done'`,
-            Prisma.balanceHistory.aggregate({
+            })),
+            measureTime("categoryTokenWay", Prisma.category.findFirst({ where: { id: 1 } })),
+            measureTime("tokenWayOrder", Prisma.$queryRaw`SELECT SUM(order_item.amount * order_item.quantity) as amount, SUM(order_item.quantity) as quantity FROM order_item INNER JOIN \`order\` ON \`order\`.id = order_item.order_id INNER JOIN products ON products.id = order_item.product_id WHERE \`order\`.user_id = ${requestData.user.id} AND products.category_id = 1 AND \`order\`.status = 'done'`),
+            measureTime("tokenOne", Prisma.balanceHistory.aggregate({
                 _sum: { amount: true },
                 where: { user_id: requestData.user.id, identify: "TOKENONE_BONUS" }
-            }),
-            Prisma.balanceHistory.aggregate({
+            })),
+            measureTime("tokenTeem", Prisma.balanceHistory.aggregate({
                 _sum: { amount: true },
                 where: { user_id: requestData.user.id, identify: "TOKENTEEN_BONUS" }
-            }),
-            Prisma.user.count({
+            })),
+            measureTime("total", Prisma.user.count({
                 where: { ancestry: { contains: `#${requestData.user.id}#` } }
-            }),
-            Prisma.user.count({
+            })),
+            measureTime("ativos", Prisma.user.count({
                 where: {
                     ancestry: { contains: `#${requestData.user.id}#` },
                     Order: { some: {} }
                 }
-            }),
-            Prisma.commission.aggregate({
+            })),
+            measureTime("nextWinwin", Prisma.commission.aggregate({
                 where: {
                     user_id: requestData.user.id,
                     status: "PENDING",
                     scheduler: { category_id: 4 }
                 },
                 _sum: { total: true }
-            }),
-            Prisma.commission.aggregate({
+            })),
+            measureTime("nextTokenWay", Prisma.commission.aggregate({
                 where: {
                     user_id: requestData.user.id,
                     status: "PENDING",
                     scheduler: { category_id: 1 }
                 },
                 _sum: { total: true }
-            })
+            }))
         ]);
 
         let percentwinwWin = 0;
