@@ -70,7 +70,7 @@ export const dashboardVendasStats = async ({ user }: any) => {
 
   for (const day of days) {
     retDay[day.payment_method] = day
-    retDay.total.amount += day.amount
+    retDay.total.amount += Number(day.amount)
     retDay.total.qtd += Number(day.qtd)
   }
 
@@ -78,7 +78,7 @@ export const dashboardVendasStats = async ({ user }: any) => {
 
   for (const month of months) {
     retMonth[month.payment_method] = month
-    retMonth.total.amount += month.amount
+    retMonth.total.amount += Number(month.amount)
     retMonth.total.qtd += Number(month.qtd)
   }
 
@@ -86,7 +86,7 @@ export const dashboardVendasStats = async ({ user }: any) => {
 
   for (const total of totals) {
     retTotal[total.payment_method] = total
-    retTotal.total.amount += total.amount
+    retTotal.total.amount += Number(total.amount)
     retTotal.total.qtd += Number(total.qtd)
   }
 
