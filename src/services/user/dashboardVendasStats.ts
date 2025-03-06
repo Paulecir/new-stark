@@ -1,12 +1,11 @@
-import Prisma from "@/infra/db/prisma";
-import moment from "moment";
-
+import Prisma from "@/infra/db/prisma"
+import moment from "moment"
 
 export const dashboardVendasStats = async ({ user }: any) => {
-    const startOfDay = moment().startOf('day').format('YYYY-MM-DD HH:mm:ss');
-    const startOfMonth = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss');
+  const startOfDay = moment().startOf("day").format("YYYY-MM-DD HH:mm:ss")
+  const startOfMonth = moment().startOf("month").format("YYYY-MM-DD HH:mm:ss")
 
-    const days: any = await Prisma.$queryRaw`
+  const days: any = await Prisma.$queryRaw`
         SELECT
             o.payment_method,
             sum(oi.amount * oi.quantity) as amount,
@@ -17,9 +16,9 @@ export const dashboardVendasStats = async ({ user }: any) => {
         WHERE 
             o.status = "DONE" and o.created_at > ${startOfDay}
         GROUP BY o.payment_method;
-    `;
+    `
 
-    const months: any = await Prisma.$queryRaw`
+  const months: any = await Prisma.$queryRaw`
         SELECT
             o.payment_method,
             sum(oi.amount * oi.quantity) as amount,
@@ -30,9 +29,9 @@ export const dashboardVendasStats = async ({ user }: any) => {
         WHERE 
             o.status = "DONE" and o.created_at > ${startOfMonth}
         GROUP BY o.payment_method;
-    `;
+    `
 
-    const totals: any = await Prisma.$queryRaw`
+  const totals: any = await Prisma.$queryRaw`
         SELECT
             o.payment_method,
             sum(oi.amount * oi.quantity) as amount,
@@ -43,51 +42,57 @@ export const dashboardVendasStats = async ({ user }: any) => {
         WHERE 
             o.status = "DONE"
         GROUP BY o.payment_method;
-    `;
+    `
 
-    let retDay = {
-        total: {
-            amount: 0,
-            qtd: 0
-        }
-    };
-
-    for (const day of days) {
-        retDay[day.payment_method] = day;
-        retDay.total.amount += day.amount;
-        retDay.total.qtd += day.qtd;
+  let valuesDefault = {
+    total: {
+      amount: 0,
+      qtd: 0
+    },
+    UNKNOWN: {
+      payment_method: "UNKNOWN",
+      amount: 0,
+      qtd: 0
+    },
+    BALANCE: {
+      payment_method: "BALANCE",
+      amount: 0,
+      qtd: 0
+    },
+    PLISIO: {
+      payment_method: "PLISIO",
+      amount: 0,
+      qtd: 0
     }
+  }
 
-    let retMonth = {
-        total: {
-            amount: 0,
-            qtd: 0
-        }
-    };
+  let retDay = structuredClone(valuesDefault)
 
-    for (const month of months) {
-        retMonth[month.payment_method] = month;
-        retMonth.total.amount += month.amount;
-        retMonth.total.qtd += month.qtd;
-    }
+  for (const day of days) {
+    retDay[day.payment_method] = day
+    retDay.total.amount += day.amount
+    retDay.total.qtd += Number(day.qtd)
+  }
 
-    let retTotal = {
-        total: {
-            amount: 0,
-            qtd: 0
-        }
-    };
+  let retMonth = structuredClone(valuesDefault)
 
-    for (const total of totals) {
-        retTotal[total.payment_method] = total;
-        retTotal.total.amount += total.amount;
-        retTotal.total.qtd += total.qtd;
-    }
+  for (const month of months) {
+    retMonth[month.payment_method] = month
+    retMonth.total.amount += month.amount
+    retMonth.total.qtd += Number(month.qtd)
+  }
 
-    return {
-        day: retDay,
-        month: retMonth,
-        total: retTotal
-    };
+  let retTotal = structuredClone(valuesDefault)
 
+  for (const total of totals) {
+    retTotal[total.payment_method] = total
+    retTotal.total.amount += total.amount
+    retTotal.total.qtd += Number(total.qtd)
+  }
+
+  return {
+    day: retDay,
+    month: retMonth,
+    total: retTotal
+  }
 }
