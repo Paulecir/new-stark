@@ -7,6 +7,7 @@ import { dashboardBinaryResumeController } from "@/presentations/controllers/das
 import { dashboardUserStatsListController } from "@/presentations/controllers/dashboard/user-stats-list.controller"
 import { dashboardUserStatsController } from "@/presentations/controllers/dashboard/user-stats.controller"
 import { dashboardProductStatsController } from "@/presentations/controllers/dashboard/product-stats.controller"
+import { dashboardAdminVendasStatsController } from "@/presentations/controllers/dashboard/admin-vendas-stats.controller"
 
 const router = Router()
 
@@ -36,7 +37,10 @@ router.get("/admin/stats",
   expressRouteAdapter(dashboardAdminStatsController)
 )
 
-
+router.get("/admin/vendas/stats",
+  authMiddleware,
+  expressRouteAdapter(dashboardAdminVendasStatsController)
+)
 
 
 export default router;
