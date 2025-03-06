@@ -6,6 +6,7 @@ import { OrderService } from "@/services/order"
 import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
 import { addBinaryStrategy } from "@/services/strategies/binary/createBinary"
 import { payBinary } from "@/services/strategies/binary/payBinary"
+import moment from "moment"
 import nodeSchedule from "node-schedule"
 
 export const initCronjob = async () => {
@@ -57,7 +58,22 @@ export const initCronjob = async () => {
 
     nodeSchedule.scheduleJob("*/10 2 * * *", async (job) => {
         await payBinary()
-        await approvePayBinary({})
+        const date = moment().startOf("day").subtract(3, "day")
+
+        await Prisma.strategyBinaryPay.updateMany({
+            where: {
+                status: "ERROR"
+            },
+            data: {
+                status: "PENDING"
+            }
+        })
+    
+        do {
+            console.log("DATE", date.format("YYYY-MM-DD"))
+            await approvePayBinary({ date: date.format("YYYY-MM-DD")})
+            date.add("1", "days")
+        } while(date.isBefore(moment()))
     })
 
     nodeSchedule.scheduleJob("*/30 * * * *", async (job) => {
