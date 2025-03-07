@@ -81,12 +81,12 @@ export const payOrder = async (data: any, user: any, Prisma = PrismaLocal) => {
         }
 
         case "CRIPTO": {
-            const info = await axios.get(`https://api.plisio.net/api/v1/invoices/new?source_currency=USD&amount=10&order_number=${order.order_id}&currency=USDT_BSC&email=${order.user.email}&order_name=${order.user.name}&callback_url=${process.env.PLISIO_CALLBACK}&api_key=${process.env.PLISIO_KEY}&return_existing=true`)
+            const info = await axios.get(`https://api.plisio.net/api/v1/invoices/new?source_currency=USD&amount=${order.total.toFixed(3)}&order_number=${order.order_id}&currency=USDT_BSC&email=${order.user.email}&order_name=${order.user.name}&callback_url=${process.env.PLISIO_CALLBACK}&api_key=${process.env.PLISIO_KEY}&return_existing=true`)
                 .then(res => {
                     return res.data?.data
                 })
                 .catch(err => {
-                    console.error("EPLISIO",`https://api.plisio.net/api/v1/invoices/new?source_currency=USD&amount=10&order_number=${order.order_id}&currency=USDT_BSC&email=${order.user.email}&order_name=${order.user.name}&callback_url=${process.env.PLISIO_CALLBACK}&api_key=${process.env.PLISIO_KEY}&return_existing=true`, err)
+                    console.error("EPLISIO",`https://api.plisio.net/api/v1/invoices/new?source_currency=USD&amount=${order.total.toFixed(3)}&order_number=${order.order_id}&currency=USDT_BSC&email=${order.user.email}&order_name=${order.user.name}&callback_url=${process.env.PLISIO_CALLBACK}&api_key=${process.env.PLISIO_KEY}&return_existing=true`, err)
                     return err.data
                 })
 
