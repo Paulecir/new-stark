@@ -11,7 +11,7 @@ export const updateBinary = async (id: number, data: any) => {
 
         return modate;
     } catch (err) {
-        console.log("E", err)
+        console.error("E", err)
         return null
     }
 

@@ -51,23 +51,19 @@ import { PrismaClient, Prisma as PrismaDefault } from '@prisma/client';
                     }
                 }).catch(async (err) => {
                     i++
-                    console.log("E2", JSON.stringify(err))
                 })
                 return
             }
 
             if (err.meta?.target === "users_email_unique") {
-                console.log("users_phone_unique", user)
                 i++
                 return
             }
             if (err.meta?.target === "users_login_unique") {
-                console.log("users_login_unique", user)
                 i++
                 return
             }
             i++
-            console.log("E", JSON.stringify(err))
         })
 
     }

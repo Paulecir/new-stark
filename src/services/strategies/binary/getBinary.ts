@@ -32,7 +32,6 @@ export const getBinaryById = async ({ user, level = 1000 }: any, Prisma = Prisma
             ref: 'asc'
         }]
     });
-    console.log(treeData.filter(f => !f.user))
 
     const addEmpty = []
     let _idx = 100000

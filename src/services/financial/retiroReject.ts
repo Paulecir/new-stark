@@ -62,7 +62,7 @@ export const retiroReject = async (
                 , maxWait: 100000
             })
         } catch (err) {
-            console.log("E", err)
+            console.error("E", err)
             // await PrismaLocal.withdraw.update({
             //     where: {
             //         id: approve.id

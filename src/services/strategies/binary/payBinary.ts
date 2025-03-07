@@ -15,7 +15,6 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
                     ]
                 }
             })
-            console.log("?", strategy)
             if (!strategy) return null;
 
             const current = await Prisma.user.findFirst({
@@ -158,8 +157,6 @@ export const payBinary = async (date: string = moment().subtract(1, "days").form
             timeout: 100000,
             maxWait: 100000
         })
-
-        console.log("I", info?.id)
 
         if (!info) break
 

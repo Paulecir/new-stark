@@ -43,14 +43,12 @@ export async function arrumarBinario() {
     let i = orders.length
     let date: any = null
     for (const item of orders) {
-        console.log("I", item.id, i)
         const current = moment(item.created_at).startOf("day").add(2, "hours")
         if (date === null) {
             date = current
         }
 
         if (date.format() !== current.format()) {
-            console.log(moment(date).format())
 
             const binaries = await Prisma.strategyBinary.findMany()
 

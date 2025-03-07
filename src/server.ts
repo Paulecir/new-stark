@@ -18,7 +18,7 @@ const endpointsFiles = ['./dist/routes/index.ts'];
 moment.tz.setDefault("America/Sao_Paulo")
 
 process.on('uncaughtException', err => {
-  console.log(err);
+  console.error(err);
 });
 
 ;(async () => {

@@ -23,9 +23,6 @@ router.post("/plisio/callback",
   upload.none(),
   // #swagger.tags = ['Webhook']
   async (req, res) => {
-
-    console.log("A", req)
-    console.log("R", req.body)
     const info = req.body
     if (info && ["mismatch", "completed"].includes(info.status)) {
       await OrderService.approveOrder({ orderId: info.order_number }, Prisma)
@@ -65,8 +62,6 @@ router.get("/plisio/callback",
 router.post("/plisio/orders",
   // #swagger.tags = ['Webhook']
   async (req, res) => {
-    console.log("B", req)
-    console.log("C", req.body)
     await Prisma.webhook.create({
       data: {
         request: req.body

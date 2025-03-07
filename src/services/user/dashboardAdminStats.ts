@@ -87,8 +87,6 @@ export const dashboardAdminStats = async ({ user }: any) => {
     ORDER BY
         ano, mes;`
 
-    console.log("O", ordersExtract)
-
     const orders = []
     const date = moment().startOf("year")
     for (let i = 1; i <= 12; i++) {

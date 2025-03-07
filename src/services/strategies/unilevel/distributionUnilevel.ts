@@ -24,7 +24,7 @@ export const distributionUnilevel = async ({ order, item }: any, Prisma = Prisma
             order: true
         }
     }).catch(err => {
-        console.log(err)
+        console.error(err)
     })
 
     const sum = (items || []).reduce((acc: any, item: any) => {

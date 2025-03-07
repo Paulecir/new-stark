@@ -15,7 +15,6 @@ export const checkPaymentPlisio = async (id: any) => {
         if (!order) {
             return
         }
-        console.log("A 2")
         // @ts-ignore
         const info = await axios.get(`https://api.plisio.net/api/v1/operations/${order.payment?.txn_id}?api_key=${process.env.PLISIO_KEY}`)
             .then(res => {
@@ -24,7 +23,6 @@ export const checkPaymentPlisio = async (id: any) => {
             .catch(err => {
                 return err.data
             })
-        console.log("A 3", info)
         if (info && ["mismatch", "completed"].includes(info.status)) {
             await OrderService.approveOrder({ orderId: order.order_id }, Prisma)
             await Prisma.order.update({

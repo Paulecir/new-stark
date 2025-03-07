@@ -146,7 +146,7 @@ export const makeCommission = async () => {
             maxWait: 100000000
         })
     } catch (err) {
-        console.log("E", err)
+        console.error("E", err)
         return false;
     } finally {
         return true;

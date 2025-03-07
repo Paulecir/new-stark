@@ -14,7 +14,7 @@ export const dashboardProductStatsController = async (requestData: IRequest) => 
             startTimes[label] = Date.now();
             const result = await promise;
             endTimes[label] = Date.now();
-            console.log(`${label} took ${endTimes[label] - startTimes[label]} ms`);
+            // console.log(`${label} took ${endTimes[label] - startTimes[label]} ms`);
             return result;
         };
 

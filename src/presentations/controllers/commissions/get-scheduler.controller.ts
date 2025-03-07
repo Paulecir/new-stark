@@ -16,7 +16,7 @@ export const getCommissionsSchedulerController = async (requestData: IRequest) =
             status: 200
         });
     } catch (err) {
-        console.log("E", err)
+        console.error("E", err)
         if (err.name === 'ValidationError') {
             return HttpResponse.errorResponse({ message: err.message, errors: err.errors });
         }

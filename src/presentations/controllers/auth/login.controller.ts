@@ -118,7 +118,7 @@ export const loginController = async (httpRequest: IRequest) => {
 
         })
     } catch (error) {
-        console.log("E", error)
+        console.error("E", error)
         return HttpResponse.serverError(error)
     }
 }

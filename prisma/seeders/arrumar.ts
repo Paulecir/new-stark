@@ -11,7 +11,6 @@ async function arrumar() {
         },
     })
 
-    console.log("U", users)
     for (const user of users) {
 
         let ancestry: any = []

@@ -11,7 +11,7 @@ export const updateScheduler = async (id: number, data: any, Prisma = PrismaLoca
 
         return modate;
     } catch (err) {
-        console.log("E", err)
+        console.error("E", err)
         return null
     }
 

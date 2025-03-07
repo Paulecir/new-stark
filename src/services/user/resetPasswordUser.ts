@@ -239,7 +239,7 @@ export const resetPasswordUser = async (data: any) => {
             console.log("R", res)
         })
             .catch(err => {
-                console.log("E", err)
+                console.error("E", err)
             })
 
         return null;

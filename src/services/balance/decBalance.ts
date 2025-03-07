@@ -42,7 +42,6 @@ export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type,
     })
 
     if (balance.amount.toNumber() < 0 && !force) {
-        console.log("F", { name, wallet, user_id, amount, ref_type, ref_id })
         throw new Error("INSUFICIENT_FUNDS")
     }
 

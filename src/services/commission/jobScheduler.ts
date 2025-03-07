@@ -6,7 +6,6 @@ const jobRegistry = {};
 
 // Função para criar um job
 export const createJob = async (data) => {
-    console.log("D", data)
 
     const commissionScheduler = await Prisma.commissionScheduler.upsert({
         where: {
@@ -20,7 +19,6 @@ export const createJob = async (data) => {
         update: data
     })
 
-    console.log("B", commissionScheduler)
 
     await cancelJob(commissionScheduler.id)
     if (commissionScheduler.status === "SCHEDULER") await startJob(commissionScheduler.id, commissionScheduler.date)
@@ -37,9 +35,7 @@ export const startJob = async (id, date) => {
             status: "SCHEDULER"
         }
     })
-    console.log("??????")
     const job = schedule.scheduleJob(date, async (job) => {
-        console.log("J", job, a)
 
         const _job = getJob(id.toString());
         _job.cancel()

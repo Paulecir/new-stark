@@ -81,23 +81,7 @@ export const makeResidual = async () => {
 
 
                             if (categoryItem.level_values[i] > 0) {
-                                console.log({
-                                    name: `${categoryItem.category.name} Residual - Consultor: ${currentUser.name} [${i + 1}º Nível]`
-                                    , wallet: "MAIN"
-                                    , user_id: current.id
-                                    , amount: commission.residual
-                                    , ref_type: 'orderItem'
-                                    , ref_id: commission.id
-                                    , extra_info: {
-                                        from: currentUser.id,
-                                        fromName: currentUser.name,
-                                        fromLogin: currentUser.login,
-                                        to: current?.id,
-                                        toName: current?.name,
-                                        toLogin: current?.login,
-                                        commission
-                                    }
-                                })
+                               
                                 await addBalance({
                                     name: `${categoryItem.category.name} Residual - Consultor: ${currentUser.name} [${i + 1}º Nível]`
                                     , wallet: "MAIN"

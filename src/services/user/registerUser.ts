@@ -38,7 +38,6 @@ export const registerUser = async (data: any) => {
                 return res?.data?.data?.data || null
             })
                 .catch(res => {
-                    console.log("R", res)
                     return null
                 })
 
@@ -196,15 +195,14 @@ export const registerUser = async (data: any) => {
                     </body>
                     </html>`
         }).then(res => {
-            console.log("R", res)
         })
             .catch(err => {
-                console.log("E", err)
+                console.error("E", err)
             })
 
         return user;
     } catch (err) {
-        console.log("E", err)
+        console.error("E", err)
         return null
     }
 
