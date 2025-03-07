@@ -19,7 +19,7 @@ export const UserService = {
     filterUserSelect,
     dashboardStats,
     dashboardVendasStats,
-    dashboardCommissionsStats,
+    // dashboardCommissionsStats,
     dashboardStatsList,
     resetPasswordUser,
     changePasswordUser,

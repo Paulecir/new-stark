@@ -42,10 +42,10 @@ router.get("/admin/vendas/stats",
   expressRouteAdapter(dashboardAdminVendasStatsController)
 )
 
-router.get("/admin/commissions/stats",
-  authMiddleware,
-  expressRouteAdapter(dashboardAdminCommissionsStatsController)
-)
+// router.get("/admin/commissions/stats",
+//   authMiddleware,
+//   expressRouteAdapter(dashboardAdminCommissionsStatsController)
+// )
 
 
 export default router;
