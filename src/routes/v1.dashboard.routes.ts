@@ -8,6 +8,7 @@ import { dashboardUserStatsListController } from "@/presentations/controllers/da
 import { dashboardUserStatsController } from "@/presentations/controllers/dashboard/user-stats.controller"
 import { dashboardProductStatsController } from "@/presentations/controllers/dashboard/product-stats.controller"
 import { dashboardAdminVendasStatsController } from "@/presentations/controllers/dashboard/admin-vendas-stats.controller"
+import { dashboardAdminCommissionsStatsController } from "@/presentations/controllers/dashboard/admin-commissions-stats.controller"
 
 const router = Router()
 
@@ -42,10 +43,10 @@ router.get("/admin/vendas/stats",
   expressRouteAdapter(dashboardAdminVendasStatsController)
 )
 
-// router.get("/admin/commissions/stats",
-//   authMiddleware,
-//   expressRouteAdapter(dashboardAdminCommissionsStatsController)
-// )
+router.get("/admin/commissions/stats",
+  authMiddleware,
+  expressRouteAdapter(dashboardAdminCommissionsStatsController)
+)
 
 
 export default router;

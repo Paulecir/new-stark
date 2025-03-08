@@ -7,13 +7,13 @@ export const dashboardAdminCommissionsStatsController = async (requestData: IReq
     try {
         // Validar os dados da requisição
         // Criar o usuário no banco de dados
-        // const data = await UserService.dashboardCommissionsStats(
-        //     requestData.user
-        // )
+        const data = await UserService.dashboardCommissionsStats(
+            requestData.user
+        )
 
         return HttpResponse.successResponse({
-            // ...data,
-            data: {},
+            ...data,
+            data: data,
             status: 200
         });
     } catch (err) {
