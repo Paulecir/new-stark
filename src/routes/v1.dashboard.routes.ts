@@ -9,6 +9,7 @@ import { dashboardUserStatsController } from "@/presentations/controllers/dashbo
 import { dashboardProductStatsController } from "@/presentations/controllers/dashboard/product-stats.controller"
 import { dashboardAdminVendasStatsController } from "@/presentations/controllers/dashboard/admin-vendas-stats.controller"
 import { dashboardAdminCommissionsStatsController } from "@/presentations/controllers/dashboard/admin-commissions-stats.controller"
+import { dashboardAdminRankingController } from "@/presentations/controllers/dashboard/admin-ranking.controller"
 
 const router = Router()
 
@@ -46,6 +47,11 @@ router.get("/admin/vendas/stats",
 router.get("/admin/commissions/stats",
   authMiddleware,
   expressRouteAdapter(dashboardAdminCommissionsStatsController)
+)
+
+router.get("/admin/ranking",
+  authMiddleware,
+  expressRouteAdapter(dashboardAdminRankingController)
 )
 
 
