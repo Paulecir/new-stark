@@ -11,7 +11,6 @@ INNER JOIN balance_history BH ON BH.ref_id = withdraw.id AND ref_type ="withdraw
 WHERE 
     withdraw.status = "SCHEDULER" and withdraw.created_at < "2025-02-02T00:00:00"`
 
-    console.log("?", balanceHistory)
     for (const bh of balanceHistory) {
 
         await Prisma.$transaction(async (db) => {

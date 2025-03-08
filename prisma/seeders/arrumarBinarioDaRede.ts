@@ -2,7 +2,7 @@ import Prisma from "../../src/infra/db/prisma";
 
 async function arrumar() {
 
-    const users: any = await Prisma.$queryRaw`SELECT * FROM strategy_binary WHERE hier like "LLLRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR%" ORDER BY level`
+    const users: any = await Prisma.$queryRaw`SELECT * FROM strategy_binary WHERE hier like "LLL%" ORDER BY level`
     let ct = users.length
     for (const user of users) {
         console.log(`Faltam ${ct--}`)
@@ -45,23 +45,36 @@ async function arrumar() {
 
         const totalDireita = direita?.[0]?.total || 0
 
-
-        await Prisma.balance.updateMany({
+        await Prisma.balance.upsert({
             where: {
-                user_id: user.user_id,
-                wallet: "BINARY_LEFT_POINT_TOTAL_NEW"
+                user_id_wallet: {
+                    user_id: user.user_id,
+                    wallet: "BINARY_LEFT_POINT_TOTAL_NEW"
+                }
             },
-            data: {
+            create: {
+                user_id: user.user_id,
+                wallet: "BINARY_LEFT_POINT_TOTAL_NEW",
+                amount: totalEsquerda
+            },
+            update: {
                 amount: totalEsquerda
             }
         })
 
-        await Prisma.balance.updateMany({
+        await Prisma.balance.upsert({
             where: {
-                user_id: user.user_id,
-                wallet: "BINARY_RIGHT_POINT_TOTAL_NEW"
+                user_id_wallet: {
+                    user_id: user.user_id,
+                    wallet: "BINARY_RIGHT_POINT_TOTAL_NEW"
+                }
             },
-            data: {
+            create: {
+                user_id: user.user_id,
+                wallet: "BINARY_RIGHT_POINT_TOTAL_NEW",
+                amount: totalDireita
+            },
+            update: {
                 amount: totalDireita
             }
         })
