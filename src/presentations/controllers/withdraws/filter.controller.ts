@@ -35,9 +35,7 @@ export const filterWithdrawController = async (requestData: IRequest) => {
             if (requestData.query.email) orFilter.push({ email: { contains: requestData.query.email } })
             if (requestData.query.status) orFilter.push({ status: requestData.query.status.toUpperCase() })
             if (orFilter.length > 0) {
-                filter.push({
-                    OR: orFilter
-                })
+                filter.push(orFilter)
             }
             userFilter = await WithdrawService.filterAdminWithdraw(filter, { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
         } else if (requestData.params.previleges === "user") {

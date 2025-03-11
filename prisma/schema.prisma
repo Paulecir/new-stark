@@ -48,11 +48,12 @@ model User {
   binary_parent_id BigInt?         @db.UnsignedBigInt // ID do pai binário
   position         users_position? // Posição do usuário
   is_active        Boolean         @default(false) // Status de atividade do usuário
-
-  ancestry String? @db.Text // Ancestralidade do usuário
+  status           StatusUser      @default(ACTIVE) // Status do usuário
+  ancestry         String?         @db.Text // Ancestralidade do usuário
 
   created_at DateTime? @default(now()) // Data de criação do usuário
   updated_at DateTime? @updatedAt // Data de atualização do usuário
+  blocked_at DateTime?
 
   users_users_binary_parent_idTousers       User?  @relation("users_binary_parent_idTousers", fields: [binary_parent_id], references: [id], onUpdate: Restrict, map: "users_binary_parent_id_foreign")
   other_users_users_binary_parent_idTousers User[] @relation("users_binary_parent_idTousers")
@@ -79,6 +80,12 @@ model User {
   @@index([binary_parent_id], map: "users_binary_parent_id_foreign")
   @@index([sponsor_id], map: "users_sponsor_id_foreign")
   @@map("users")
+}
+
+enum StatusUser {
+  ACTIVE
+  INACTIVE
+  BLOCKED
 }
 
 // Modelo de saldo
@@ -543,7 +550,7 @@ model Withdraw {
 
   wallet String? @db.MediumText // Carteira
 
-  original_amount Decimal @db.Decimal(20, 8) @default(0) // Quantidade original do saque
+  original_amount Decimal @default(0) @db.Decimal(20, 8) // Quantidade original do saque
   amount          Decimal @db.Decimal(20, 8) // Quantidade do saque
 
   obs String? @db.MediumText // Observação do saque
@@ -787,4 +794,17 @@ enum StrategyBinaryDirection {
 enum DocumentType {
   CPF // CPF
   CNPJ // CNPJ
+}
+
+// Modelo de log de alterações
+model ChangeLog {
+  id          BigInt    @id @default(autoincrement()) @db.UnsignedBigInt // ID do log de alteração
+  table       String    @db.VarChar(255) // Nome da tabela alterada
+  record_id   BigInt    @db.UnsignedBigInt // ID do registro alterado
+  action      String    @db.VarChar(50) // Ação realizada (INSERT, UPDATE, DELETE)
+  changes     Json      // Alterações realizadas
+  user_id     BigInt?   @db.UnsignedBigInt // ID do usuário que realizou a alteração
+  created_at  DateTime  @default(now()) // Data de criação do log
+
+  @@map("change_logs")
 }
