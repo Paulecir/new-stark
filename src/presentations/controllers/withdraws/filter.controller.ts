@@ -30,12 +30,12 @@ export const filterWithdrawController = async (requestData: IRequest) => {
         if (requestData.params.previleges === "admin") {
             const filter = []
             const orFilter = []
-            if (requestData.query.name) orFilter.push({ name: { contains: requestData.query.name } })
-            if (requestData.query.login) orFilter.push({ login: { contains: requestData.query.login } })
-            if (requestData.query.email) orFilter.push({ email: { contains: requestData.query.email } })
+            if (requestData.query.name) orFilter.push({ user: { name: { contains: requestData.query.name } } } )
+            if (requestData.query.login) orFilter.push({ user: { login: { contains: requestData.query.login } } })
+            if (requestData.query.email) orFilter.push({ user: { email: { contains: requestData.query.email } } })
             if (requestData.query.status) orFilter.push({ status: requestData.query.status.toUpperCase() })
             if (orFilter.length > 0) {
-                filter.push(orFilter)
+                filter.push({ AND: orFilter })
             }
             userFilter = await WithdrawService.filterAdminWithdraw(filter, { page: requestData.pagination.page || 1, pageSize: requestData.pagination.pageSize || 1 });
         } else if (requestData.params.previleges === "user") {
