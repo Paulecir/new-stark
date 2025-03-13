@@ -1,5 +1,4 @@
 import Prisma from "@/infra/db/prisma";
-import moment from "moment";
 
 
 export const dashboardAdminStats = async ({ user }: any) => {
@@ -13,6 +12,14 @@ export const dashboardAdminStats = async ({ user }: any) => {
     const userTotal = await Prisma.user.count({
         where: {
             // is_active: true
+        },
+    });
+
+    const userBlocked = await Prisma.user.count({
+        where: {
+            blocked_at: {
+                NOT: null
+            }
         },
     });
 
@@ -113,6 +120,7 @@ export const dashboardAdminStats = async ({ user }: any) => {
         , newRegister: newRegister
         , userInactive
         , useActive: userTotal - userInactive
+        , userBlocked
         , ordersTotal: ordersTotal._sum.total || 0
         , ordersTodayTotal: ordersTodayTotal._sum.total || 0
         , ordersTodayCriptoTotal: ordersTodayCriptoTotal._sum.total|| 0
