@@ -1,5 +1,5 @@
 import Prisma from "@/infra/db/prisma";
-
+import moment from "moment";
 
 export const dashboardAdminStats = async ({ user }: any) => {
 
@@ -18,7 +18,7 @@ export const dashboardAdminStats = async ({ user }: any) => {
     const userBlocked = await Prisma.user.count({
         where: {
             blocked_at: {
-                NOT: null
+                not: null
             }
         },
     });
