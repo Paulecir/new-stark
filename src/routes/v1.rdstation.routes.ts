@@ -7,10 +7,9 @@ const router = Router()
 
 router.get("/",
   // #swagger.tags = ['Webhook']
-  // authMiddleware,
+  // #swagger.summary = 'Hello RDStation'
+  // #swagger.description = 'Endpoint de exemplo para RDStation.'
   expressRouteAdapter(helloRdstationController)
 )
-
-
 
 export default router;

@@ -22,6 +22,8 @@ const router = Router()
 router.post("/plisio/callback",
   upload.none(),
   // #swagger.tags = ['Webhook']
+  // #swagger.summary = 'Callback Plisio'
+  // #swagger.description = 'Callback para o serviço Plisio.'
   async (req, res) => {
     const info = req.body
     if (info && ["mismatch", "completed"].includes(info.status)) {
@@ -48,6 +50,8 @@ router.post("/plisio/callback",
 
 router.get("/plisio/callback",
   // #swagger.tags = ['Webhook']
+  // #swagger.summary = 'Callback Plisio (GET)'
+  // #swagger.description = 'Callback para o serviço Plisio via GET.'
   async (req, res) => {
     await Prisma.webhook.create({
       data: {
@@ -61,6 +65,8 @@ router.get("/plisio/callback",
 
 router.post("/plisio/orders",
   // #swagger.tags = ['Webhook']
+  // #swagger.summary = 'Pedidos Plisio'
+  // #swagger.description = 'Recebe pedidos do serviço Plisio.'
   async (req, res) => {
     await Prisma.webhook.create({
       data: {

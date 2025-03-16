@@ -7,27 +7,35 @@ import moment from "moment";
 import NodeMailer from "@/infra/mailer/nodemailer";
 import SendgridMailer from "@/infra/mailer/sendgrid";
 
+/**
+ * Registra um novo usuário no sistema.
+ * 
+ * Esta função recebe os dados do usuário, valida o patrocinador, cria uma carteira BEP20, 
+ * gera a senha do usuário, salva os dados no banco de dados e envia um email de confirmação.
+ * 
+ * @param {Object} data - Os dados do usuário a ser registrado.
+ * @returns {Promise<Object|null>} Os dados do usuário registrado ou null em caso de erro.
+ */
 export const registerUser = async (data: any) => {
     try {
+        // Busca o patrocinador no banco de dados
         const sponsor = await Prisma.user.findFirst({
             where: {
                 login: data.sponsor_login
             }
         })
 
-        let bep20_address = null;
-        let bep20_public_key = null;
-        let bep20_private_key = null;
+        // let bep20_address = null;
+        // let bep20_public_key = null;
+        // let bep20_private_key = null;
 
+        // Autentica na API da carteira e cria uma nova carteira BEP20
         const info = await axios.post(`${process.env.WALLET_URI}/api/v1/auth/signin`, {
             "email": process.env.WALLET_LOGIN,
             "password": process.env.WALLET_PASSWORD,
         }).then(res => {
-
             return res.data
-        })
-            .catch(res => null)
-
+        }).catch(res => null)
 
         if (info?.token) {
             const wallet = await axios.get(`${process.env.WALLET_URI}/api/v1/wallet/create`, {
@@ -36,18 +44,18 @@ export const registerUser = async (data: any) => {
                 }
             }).then(res => {
                 return res?.data?.data?.data || null
+            }).catch(res => {
+                return null
             })
-                .catch(res => {
-                    return null
-                })
 
-            if (wallet) {
-                bep20_address = wallet.address;
-                bep20_public_key = wallet.publicKey;
-                bep20_private_key = wallet.encryptedPrivateKey;
-            }
+            // if (wallet) {
+            //     bep20_address = wallet.address;
+            //     bep20_public_key = wallet.publicKey;
+            //     bep20_private_key = wallet.encryptedPrivateKey;
+            // }
         }
 
+        // Monta a árvore de ancestrais do usuário
         let ancestry: any = []
         let sponsor_id = sponsor.id
         let checkSponsor: any = null
@@ -66,9 +74,11 @@ export const registerUser = async (data: any) => {
 
         } while (checkSponsor)
 
+        // Gera a senha do usuário
         const dataPassword = data.password || faker.internet.password()
-
         const password = data.password ? await bcrypt.hash(data.password, 12) : await bcrypt.hash(dataPassword, 12);
+
+        // Cria o usuário no banco de dados
         const user = await Prisma.user.create({
             data: {
                 name: data.name,
@@ -79,14 +89,15 @@ export const registerUser = async (data: any) => {
                 country_code: data.country_code,
                 sponsor_id: sponsor.id,
                 password, // Idealmente, você deve hash a senha antes de salvar,
-                bep20_address,
-                bep20_public_key,
-                bep20_private_key,
+                // bep20_address,
+                // bep20_public_key,
+                // bep20_private_key,
                 is_active: true,
                 ancestry: ancestry.reverse().join('')
             },
         });
 
+        // Envia um email de confirmação para o usuário
         await SendgridMailer.send({
             from: `${process.env.MAIL_FROM_NAME} <${process.env.MAIL_FROM_ADDRESS}>`, // sender address
             to: data.email, // list of receivers
@@ -171,7 +182,7 @@ export const registerUser = async (data: any) => {
                             <div class="email-body">
                                 <p>Hola,</p>
                                 <p>Hemos recibido una solicitud para registro de usuario de acceso a <span class="highlight">StarkTecnología</span>.</p>
-                                <p>Para ingresar a la plataforma, utilice las siguientes credenciales:</p>
+                                <p>Para ingresar a la plataforma, utilice las seguintes credenciais:</p>
                                 <p>
                                     <b>Username:</b> ${user.login}<br />
                                     <b>Senha:</b> ${dataPassword}
@@ -195,15 +206,13 @@ export const registerUser = async (data: any) => {
                     </body>
                     </html>`
         }).then(res => {
+        }).catch(err => {
+            console.error("E", err)
         })
-            .catch(err => {
-                console.error("E", err)
-            })
 
         return user;
     } catch (err) {
         console.error("E", err)
         return null
     }
-
 }

@@ -11,23 +11,31 @@ const router = Router()
 
 router.get("/",
   // #swagger.tags = ['Wallet']
+  // #swagger.summary = 'Filtrar Wallets'
+  // #swagger.description = 'Filtra wallets com base nos critérios fornecidos.'
   authMiddleware,
   expressRouteAdapter(filterWalletController)
 )
 
 router.post("/create",
   // #swagger.tags = ['Wallet']
+  // #swagger.summary = 'Criar Wallet'
+  // #swagger.description = 'Cria uma nova wallet.'
   expressRouteAdapter(createWalletController)
 )
 
 router.get("/:id",
   // #swagger.tags = ['Wallet']
+  // #swagger.summary = 'Obter Wallet'
+  // #swagger.description = 'Obtém uma wallet pelo ID.'
   authMiddleware,
   expressRouteAdapter(getWalletController)
 )
 
 router.put("/:id",
   // #swagger.tags = ['Wallet']
+  // #swagger.summary = 'Atualizar Wallet'
+  // #swagger.description = 'Atualiza uma wallet pelo ID.'
   authMiddleware,
   expressRouteAdapter(updateWalletController)
 )
