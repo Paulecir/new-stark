@@ -1,14 +1,15 @@
 import { WalletType } from "@prisma/client";
 import Prisma from "../../infra/db/prisma"
 
-export const addBalance = async ({ name = "", wallet, user_id, amount, ref_type, ref_id, extra_info = {} }: {
+export const addBalance = async ({ name = "", wallet, user_id, amount, ref_type, ref_id, extra_info = {}, identify = null }: {
     name: string,
     wallet: WalletType,
     user_id: any,
     amount: number,
     ref_type: string,
     ref_id: number,
-    extra_info?: any
+    extra_info?: any,
+    identify?: string | null
 }, db = Prisma) => {
 
     const extra: any = {}
@@ -27,7 +28,7 @@ export const addBalance = async ({ name = "", wallet, user_id, amount, ref_type,
 
     const last = await db.balanceHistory.create({
         data: {
-            name, direction: "CREDIT", wallet, user_id, amount, ref_type, ref_id, extra_info, last_balance: lastBalance?.amount || 0
+            name, direction: "CREDIT", wallet, user_id, amount, ref_type, ref_id, extra_info, last_balance: lastBalance?.amount || 0, identify
         }
     })
 

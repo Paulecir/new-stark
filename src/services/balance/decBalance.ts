@@ -1,6 +1,6 @@
 import Prisma from "../../infra/db/prisma"
 
-export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type, ref_id }: any, db = Prisma, force = false) => {
+export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type, ref_id, identify = null }: any, db = Prisma, force = false) => {
 
     await db.$queryRawUnsafe(
         `SELECT * FROM balance WHERE user_id = ? AND wallet = ? FOR UPDATE`,
@@ -16,7 +16,7 @@ export const decBalance = async ({ name = "", wallet, user_id, amount, ref_type,
 
     const last = await db.balanceHistory.create({
         data: {
-            name, direction: "DEBIT", wallet, user_id, amount, ref_type, ref_id, last_balance: lastBalance?.amount || 0
+            name, direction: "DEBIT", wallet, user_id, amount, ref_type, ref_id, last_balance: lastBalance?.amount || 0, identify
         }
     })
 

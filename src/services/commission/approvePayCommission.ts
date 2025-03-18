@@ -14,6 +14,7 @@ export const approvePayCommission = async () => {
                 category: true
             }
         })
+     
         let ct = commissions.length
         for (const commission of commissions) {
             console.log("C", ct--)
@@ -25,6 +26,7 @@ export const approvePayCommission = async () => {
                 , ref_type: 'commissionOrder'
                 , ref_id: commission.id as any
                 , extra_info: commission
+                , identify: commission.category.id === 1 ? 'TOKENWAY_BONUS' : commission.category.id === 2 ? "TOKENONE_BONUS" : commission.category.id === 3 ? "TOKENTEEN_BONUS" : commission.category.id === 4 ? "WINWIN_BONUS" : "BINARY_BONUS"
             }, Prisma)
             await Prisma.commissionOrder.updateMany({
                 where: {
