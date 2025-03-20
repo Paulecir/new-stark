@@ -26,7 +26,11 @@ export const approvePayCommission = async () => {
                 , ref_type: 'commissionOrder'
                 , ref_id: commission.id as any
                 , extra_info: commission
-                , identify: commission.category.id === 1 ? 'TOKENWAY_BONUS' : commission.category.id === 2 ? "TOKENONE_BONUS" : commission.category.id === 3 ? "TOKENTEEN_BONUS" : commission.category.id === 4 ? "WINWIN_BONUS" : "BINARY_BONUS"
+                , identify: !commission.category ? null
+                            : Number(commission.category.id) === 1 ? 'TOKENWAY_BONUS' 
+                            : Number(commission.category.id) === 2 ? "TOKENONE_BONUS" 
+                            : Number(commission.category.id) === 3 ? "TOKENTEEN_BONUS" 
+                            : Number(commission.category.id) === 4 ? "WINWIN_BONUS" : null
             }, Prisma)
             await Prisma.commissionOrder.updateMany({
                 where: {
@@ -48,10 +52,9 @@ export const approvePayCommission = async () => {
             })
 
         }
-        throw new Error("ERROR")
     }, {
-        maxWait: 1000000,
-        timeout: 1000000
+        maxWait: 10000000,
+        timeout: 10000000
     })
 
 

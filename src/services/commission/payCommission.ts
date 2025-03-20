@@ -1,7 +1,5 @@
 import PrismaLocal from "@/infra/db/prisma"
-import { addBalance } from "../balance/addBalance";
 import moment from "moment";
-import { E } from "@faker-js/faker/dist/airline-D6ksJFwG";
 
 export const payCommission = async () => {
     const categories = await PrismaLocal.category.findMany({
@@ -80,19 +78,19 @@ export const payCommission = async () => {
                     }
                 })
 
-                console.log("?", `UPDATE commission 
-                    INNER JOIN commission_scheduler ON commission.scheduler_id = commission_scheduler.id
-                    SET 
-                        commission.commission_order_id = ${order.id}, 
-                        commission.status = "ASSOCIATED" 
-                    
-                    WHERE 
-                        user_id = ${commission.user_id} 
-                        AND commission.status = 'PENDING' 
-                        AND commission_scheduler.date < "${endDateFormated}"
-                        AND commission_scheduler.date > "${startDateFormated}"
-                        AND commission_scheduler.category_id = ${category.id}`)
-                        await Prisma.$executeRaw`
+                // console.log("?", `UPDATE commission 
+                //     INNER JOIN commission_scheduler ON commission.scheduler_id = commission_scheduler.id
+                //     SET 
+                //         commission.commission_order_id = ${order.id}, 
+                //         commission.status = "ASSOCIATED" 
+
+                //     WHERE 
+                //         user_id = ${commission.user_id} 
+                //         AND commission.status = 'PENDING' 
+                //         AND commission_scheduler.date < "${endDateFormated}"
+                //         AND commission_scheduler.date > "${startDateFormated}"
+                //         AND commission_scheduler.category_id = ${category.id}`)
+                await Prisma.$executeRaw`
                     UPDATE commission 
                     INNER JOIN commission_scheduler ON commission.scheduler_id = commission_scheduler.id
                     SET 

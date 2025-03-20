@@ -1,5 +1,6 @@
 import PrismaLocal from "@/infra/db/prisma";
 import { addBalance } from "@/services/balance/addBalance";
+import { Order, OrderItem } from "@prisma/client";
 
 export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLocal) => {
 
@@ -9,7 +10,7 @@ export const distributionBinary = async ({ order, item }: any, Prisma = PrismaLo
         },
     })
 
-    const point = item.amount.toNumber() * (category.binary_bonus_point_percent.toNumber() / 100)
+    const point = (item.amount.toNumber() * item.quantity) * (category.binary_bonus_point_percent.toNumber() / 100)
 
     let binary = await Prisma.strategyBinary.findFirst({
         where: {
