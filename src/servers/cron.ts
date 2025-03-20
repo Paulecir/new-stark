@@ -1,8 +1,6 @@
 import Prisma from "@/infra/db/prisma"
 import { CommissionService } from "@/services/commission"
 import { makeCommission } from "@/services/commission/makeCommission"
-import { arrumarBinario } from "@/services/fix/arrumarBinario"
-import { OrderService } from "@/services/order"
 import { approvePayBinary } from "@/services/strategies/binary/approvePayBinary"
 import { addBinaryStrategy } from "@/services/strategies/binary/createBinary"
 import { payBinary } from "@/services/strategies/binary/payBinary"
@@ -21,9 +19,6 @@ export const initCronjob = async () => {
     rule.tz = "America/Sao_Paulo"
     rule.hour = 22
     rule.minute = 10
-
-
-  
 
     nodeSchedule.scheduleJob("1 22 * * *", async (job) => {
         const categories = await Prisma.category.findMany({

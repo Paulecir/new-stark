@@ -26,7 +26,7 @@ export const getDirectById = async ({ id, level = 2, user }: any, Prisma = Prism
     // Mapeando os dados para o formato necessário
     const formattedData = users.map((node: any) => ({
         id: node.id,
-        level: node.level || parseInt(level.toString()),
+        level: (node.level || parseInt(level.toString())) - 1,
         name: node.name, // Nome do usuário
         email: node.email,
         phone: node.phone,
